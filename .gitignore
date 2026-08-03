@@ -1,0 +1,21 @@
+# artefactos de compilación LaTeX
+*.aux
+*.bbl
+*.bcf
+*.blg
+*.fdb_latexmk
+*.fls
+*.lof
+*.log
+*.lot
+*.out
+*.run.xml
+*.synctex.gz
+*.toc
+*.dvi
+# sitio y cachés
+_site/
+.quarto/
+.work/
+*.sha
+__pycache__/
