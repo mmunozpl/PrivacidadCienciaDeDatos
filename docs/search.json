@@ -1,0 +1,102 @@
+[
+  {
+    "objectID": "qmd/index.html",
+    "href": "qmd/index.html",
+    "title": "Privacidad para la ciencia de datos",
+    "section": "",
+    "text": "Edición web, en abierto, del libro Privacidad para la ciencia de datos (Manuel Muñoz Plá, qWORD.dev): del riesgo de reidentificación a las tecnologías de privacidad con código —privacidad diferencial, datos sintéticos, aprendizaje federado, computación cifrada— y la norma (RGPD, AI Act, ENS) tratada como ingeniería.\nCada capítulo de la edición web omite la sección «Marcos frente a frente: ENS/UE vs NIST», disponible en la obra completa.",
+    "crumbs": [
+      "Privacidad para la ciencia de datos"
+    ]
+  },
+  {
+    "objectID": "qmd/index.html#capítulos",
+    "href": "qmd/index.html#capítulos",
+    "title": "Privacidad para la ciencia de datos",
+    "section": "Capítulos",
+    "text": "Capítulos\n\n1. El dato personal como objeto de ingeniería",
+    "crumbs": [
+      "Privacidad para la ciencia de datos"
+    ]
+  },
+  {
+    "objectID": "qmd/cap01.html",
+    "href": "qmd/cap01.html",
+    "title": "El dato personal como objeto de ingeniería",
+    "section": "",
+    "text": "Una tabla con edad, sexo y código postal parece inocente: no hay nombres, no hay números de documento, no hay nada que un lector humano reconozca como «identificativo». Y sin embargo, con esas tres columnas basta para señalar de forma única a la mayoría de la población de un país. La intuición de que «sin el nombre ya es anónimo» es la primera que este libro necesita desmontar, y conviene hacerlo con números y no con opiniones: esa intuición rota es la causa de la mayor parte de las fugas de privacidad documentadas en ciencia de datos.\nEste capítulo define el objeto del libro desde la técnica, no desde el derecho: qué convierte un campo en identificador, un conjunto de campos en huella, y un pipeline en tratamiento de datos personales. El derecho aparecerá enseguida —el RGPD nombra y clasifica— pero como requisito de ingeniería, no como trámite.\n\n\nPensemos en cada columna de una tabla según el papel que puede jugar para un adversario que intenta averiguar a quién corresponde cada fila. Un identificador directo señala por sí solo (el NIF, el correo electrónico). Un atributo sensible es lo que el adversario quiere aprender (un diagnóstico, una afiliación). Y entre ambos queda la categoría interesante: columnas que no identifican por separado pero sí en combinación.\n\n Sea \\(T\\) una tabla con atributos \\(A_1,\\dots,A_m\\) sobre una población \\(P\\). Un subconjunto \\(Q \\subseteq \\{A_1,\\dots,A_m\\}\\) es un cuasi-identificador si existe una fracción no despreciable de individuos de \\(P\\) para los que la proyección \\(\\pi_Q\\) es única, es decir, si \\[\\Pr_{x \\sim P}\\bigl[\\,\\lvert\\{y \\in P : \\pi_Q(y)=\\pi_Q(x)\\}\\rvert = 1\\,\\bigr]\\] no es despreciable. La unicidad se mide contra la población, no contra la muestra: una fila única en la tabla puede no serlo en el censo.\n\n\nEl resultado clásico de Sweeney: el 87 % de la población de EE. UU. queda determinada de forma única por la terna \\(\\{\\)código postal, fecha de nacimiento, sexo\\(\\}\\) (Sweeney 2002). Dos décadas después, el resultado se generaliza: con 15 atributos demográficos, el 99,98 % de los estadounidenses es reidentificable incluso en muestras incompletas (Rocher et al. 2019).\n\nLa consecuencia operativa se escribe en tres listas, y conviene mantenerlas explícitas en el código desde el primer día:\n# se separan las columnas por su papel frente a la reidentificacion\nIDENTIFICADORES = [\"nif\", \"email\", \"num_historia\"]\nCUASI = [\"edad\", \"sexo\", \"codigo_postal\", \"profesion\"]\nSENSIBLES = [\"diagnostico\"]\n\n\n\nEl RGPD (Reglamento (UE) 2016/679, General de Protección de Datos (RGPD) 2016) reserva un régimen reforzado para las «categorías especiales»: salud, biometría, origen étnico, ideología, vida sexual. Leído desde la ingeniería, el artículo 9 es una anotación de esquema: marca columnas —y, cada vez más, modelos— cuyo tratamiento exige base jurídica reforzada y medidas técnicas a la altura. La frontera ya no pasa solo por el dataset: el EDPB exige evaluar caso por caso si un modelo entrenado con datos personales puede considerarse anónimo, «por todos los medios razonablemente probables» (European Data Protection Board 2024). Los parámetros del modelo entran, así, en el mapa del dato personal.\n\n\n\nLa figura 1.1 recorre las cinco estaciones por las que pasa el dato en un proyecto típico. La observación central es que la privacidad no es una propiedad de una estación, sino del recorrido: un dato minimizado en la captura puede volver a ser identificante tras un join en la preparación, y un modelo puede memorizar en el entrenamiento lo que la publicación creía haber agregado.\n\n\n\nCiclo de vida del dato y superficie de exposición en cada estación del pipeline.\n\n\n\n\n\nCada estación expone el dato por canales distintos: copias en crudo y credenciales en la captura; retención y copias de seguridad en el almacenamiento; datasets intermedios y cuadernos en la preparación; memorización y fuga por gradientes en el entrenamiento (Nasr et al. 2023); y las salidas agregadas, las API y los propios pesos en la publicación. El resto del libro es, en esencia, un catálogo medido de cómo reducir cada uno de esos canales sin destruir la utilidad del proyecto.\n\n\n\nUn campo no es identificador por su nombre sino por su distribución; la unicidad se mide contra la población; y el perímetro del dato personal incluye hoy a los modelos entrenados. El capítulo 1 deja definido el objeto; el siguiente adopta el punto de vista del adversario y reproduce, con código, los ataques que convierten estas definiciones en riesgo medible.\n\n\n\n\nCreer que suprimir los identificadores directos anonimiza: deja intactos los cuasi-identificadores (definición [def:cuasi]).\nMedir la unicidad sobre la muestra y extrapolarla sin corrección a la población.\nTratar el artículo 9 como una etiqueta documental y no como una anotación de esquema que obliga en el código.\nSuponer que un modelo entrenado «ya no contiene» datos personales: la posición del EDPB exige demostrarlo caso por caso (European Data Protection Board 2024).\n\n\n\n\nGenerar el dataset sintético de cuasi-identificadores del libro y medir su riesgo de partida:\npython3 codigo/cap01/generar_dataset.py\nEl script fija semillas (comun/determinismo.py), registra el progreso (comun/registro.py), guarda data/processed/poblacion_sintetica.parquet y cierra con el artefacto de verificación del libro: quince observaciones aleatorias del resultado y el \\(k\\)-anonimato del conjunto \\(\\{\\)edad, sexo, código postal\\(\\}\\).\n\nMarcos frente a frente: ENS/UE vs NIST — sección disponible en la obra completa.",
+    "crumbs": [
+      "El dato personal como objeto de ingeniería"
+    ]
+  },
+  {
+    "objectID": "qmd/cap01.html#sec:cap01-cuasi",
+    "href": "qmd/cap01.html#sec:cap01-cuasi",
+    "title": "El dato personal como objeto de ingeniería",
+    "section": "",
+    "text": "Pensemos en cada columna de una tabla según el papel que puede jugar para un adversario que intenta averiguar a quién corresponde cada fila. Un identificador directo señala por sí solo (el NIF, el correo electrónico). Un atributo sensible es lo que el adversario quiere aprender (un diagnóstico, una afiliación). Y entre ambos queda la categoría interesante: columnas que no identifican por separado pero sí en combinación.\n\n Sea \\(T\\) una tabla con atributos \\(A_1,\\dots,A_m\\) sobre una población \\(P\\). Un subconjunto \\(Q \\subseteq \\{A_1,\\dots,A_m\\}\\) es un cuasi-identificador si existe una fracción no despreciable de individuos de \\(P\\) para los que la proyección \\(\\pi_Q\\) es única, es decir, si \\[\\Pr_{x \\sim P}\\bigl[\\,\\lvert\\{y \\in P : \\pi_Q(y)=\\pi_Q(x)\\}\\rvert = 1\\,\\bigr]\\] no es despreciable. La unicidad se mide contra la población, no contra la muestra: una fila única en la tabla puede no serlo en el censo.\n\n\nEl resultado clásico de Sweeney: el 87 % de la población de EE. UU. queda determinada de forma única por la terna \\(\\{\\)código postal, fecha de nacimiento, sexo\\(\\}\\) (Sweeney 2002). Dos décadas después, el resultado se generaliza: con 15 atributos demográficos, el 99,98 % de los estadounidenses es reidentificable incluso en muestras incompletas (Rocher et al. 2019).\n\nLa consecuencia operativa se escribe en tres listas, y conviene mantenerlas explícitas en el código desde el primer día:\n# se separan las columnas por su papel frente a la reidentificacion\nIDENTIFICADORES = [\"nif\", \"email\", \"num_historia\"]\nCUASI = [\"edad\", \"sexo\", \"codigo_postal\", \"profesion\"]\nSENSIBLES = [\"diagnostico\"]",
+    "crumbs": [
+      "El dato personal como objeto de ingeniería"
+    ]
+  },
+  {
+    "objectID": "qmd/cap01.html#sec:cap01-art9",
+    "href": "qmd/cap01.html#sec:cap01-art9",
+    "title": "El dato personal como objeto de ingeniería",
+    "section": "",
+    "text": "El RGPD (Reglamento (UE) 2016/679, General de Protección de Datos (RGPD) 2016) reserva un régimen reforzado para las «categorías especiales»: salud, biometría, origen étnico, ideología, vida sexual. Leído desde la ingeniería, el artículo 9 es una anotación de esquema: marca columnas —y, cada vez más, modelos— cuyo tratamiento exige base jurídica reforzada y medidas técnicas a la altura. La frontera ya no pasa solo por el dataset: el EDPB exige evaluar caso por caso si un modelo entrenado con datos personales puede considerarse anónimo, «por todos los medios razonablemente probables» (European Data Protection Board 2024). Los parámetros del modelo entran, así, en el mapa del dato personal.",
+    "crumbs": [
+      "El dato personal como objeto de ingeniería"
+    ]
+  },
+  {
+    "objectID": "qmd/cap01.html#sec:cap01-ciclo",
+    "href": "qmd/cap01.html#sec:cap01-ciclo",
+    "title": "El dato personal como objeto de ingeniería",
+    "section": "",
+    "text": "La figura 1.1 recorre las cinco estaciones por las que pasa el dato en un proyecto típico. La observación central es que la privacidad no es una propiedad de una estación, sino del recorrido: un dato minimizado en la captura puede volver a ser identificante tras un join en la preparación, y un modelo puede memorizar en el entrenamiento lo que la publicación creía haber agregado.\n\n\n\nCiclo de vida del dato y superficie de exposición en cada estación del pipeline.",
+    "crumbs": [
+      "El dato personal como objeto de ingeniería"
+    ]
+  },
+  {
+    "objectID": "qmd/cap01.html#sec:cap01-superficie",
+    "href": "qmd/cap01.html#sec:cap01-superficie",
+    "title": "El dato personal como objeto de ingeniería",
+    "section": "",
+    "text": "Cada estación expone el dato por canales distintos: copias en crudo y credenciales en la captura; retención y copias de seguridad en el almacenamiento; datasets intermedios y cuadernos en la preparación; memorización y fuga por gradientes en el entrenamiento (Nasr et al. 2023); y las salidas agregadas, las API y los propios pesos en la publicación. El resto del libro es, en esencia, un catálogo medido de cómo reducir cada uno de esos canales sin destruir la utilidad del proyecto.",
+    "crumbs": [
+      "El dato personal como objeto de ingeniería"
+    ]
+  },
+  {
+    "objectID": "qmd/cap01.html#síntesis-y-puente",
+    "href": "qmd/cap01.html#síntesis-y-puente",
+    "title": "El dato personal como objeto de ingeniería",
+    "section": "",
+    "text": "Un campo no es identificador por su nombre sino por su distribución; la unicidad se mide contra la población; y el perímetro del dato personal incluye hoy a los modelos entrenados. El capítulo 1 deja definido el objeto; el siguiente adopta el punto de vista del adversario y reproduce, con código, los ataques que convierten estas definiciones en riesgo medible.",
+    "crumbs": [
+      "El dato personal como objeto de ingeniería"
+    ]
+  },
+  {
+    "objectID": "qmd/cap01.html#errores-comunes",
+    "href": "qmd/cap01.html#errores-comunes",
+    "title": "El dato personal como objeto de ingeniería",
+    "section": "",
+    "text": "Creer que suprimir los identificadores directos anonimiza: deja intactos los cuasi-identificadores (definición [def:cuasi]).\nMedir la unicidad sobre la muestra y extrapolarla sin corrección a la población.\nTratar el artículo 9 como una etiqueta documental y no como una anotación de esquema que obliga en el código.\nSuponer que un modelo entrenado «ya no contiene» datos personales: la posición del EDPB exige demostrarlo caso por caso (European Data Protection Board 2024).",
+    "crumbs": [
+      "El dato personal como objeto de ingeniería"
+    ]
+  },
+  {
+    "objectID": "qmd/cap01.html#práctica-medida",
+    "href": "qmd/cap01.html#práctica-medida",
+    "title": "El dato personal como objeto de ingeniería",
+    "section": "",
+    "text": "Generar el dataset sintético de cuasi-identificadores del libro y medir su riesgo de partida:\npython3 codigo/cap01/generar_dataset.py\nEl script fija semillas (comun/determinismo.py), registra el progreso (comun/registro.py), guarda data/processed/poblacion_sintetica.parquet y cierra con el artefacto de verificación del libro: quince observaciones aleatorias del resultado y el \\(k\\)-anonimato del conjunto \\(\\{\\)edad, sexo, código postal\\(\\}\\).\n\nMarcos frente a frente: ENS/UE vs NIST — sección disponible en la obra completa.",
+    "crumbs": [
+      "El dato personal como objeto de ingeniería"
+    ]
+  }
+]

@@ -1,0 +1,28 @@
+project:
+  type: website
+  output-dir: docs
+  render:
+    - qmd/*.qmd
+  # resources:
+  #   - CNAME              # cuando haya dominio propio
+
+lang: es
+bibliography: latex/referencias.bib
+
+website:
+  title: "Privacidad para la ciencia de datos"
+  search: true
+  sidebar:
+    style: docked
+    contents:
+      - qmd/index.qmd
+      - qmd/cap01.qmd
+      # cap02..cap17 en orden, conforme se publiquen
+
+format:
+  html:
+    theme: cosmo
+    toc: true
+    code-copy: true
+    code-overflow: wrap
+    html-math-method: mathjax

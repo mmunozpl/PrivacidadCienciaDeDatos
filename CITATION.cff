@@ -1,0 +1,20 @@
+cff-version: 1.2.0
+message: "Si usas esta obra, cítala así."
+title: "Privacidad para la ciencia de datos"
+authors:
+  - family-names: "Muñoz Plá"
+    given-names: "Manuel"
+    website: "https://manpla.net"
+repository-code: "https://github.com/mmunozpl/PrivacidadCienciaDeDatos"
+url: "https://mmunozpl.github.io/PrivacidadCienciaDeDatos/"
+license: CC-BY-NC-ND-4.0
+preferred-citation:
+  type: book
+  title: "Privacidad para la ciencia de datos"
+  authors:
+    - family-names: "Muñoz Plá"
+      given-names: "Manuel"
+  year: 2026
+  publisher:
+    name: "qWORD.dev"
+  url: "https://mmunozpl.github.io/PrivacidadCienciaDeDatos/"

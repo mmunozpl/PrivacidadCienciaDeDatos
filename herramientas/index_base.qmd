@@ -1,0 +1,16 @@
+---
+title: "Privacidad para la ciencia de datos"
+---
+
+Edición web, en abierto, del libro **Privacidad para la ciencia de
+datos** (Manuel Muñoz Plá, qWORD.dev): del riesgo de reidentificación a
+las tecnologías de privacidad con código —privacidad diferencial, datos
+sintéticos, aprendizaje federado, computación cifrada— y la norma
+(RGPD, AI Act, ENS) tratada como ingeniería.
+
+Cada capítulo de la edición web omite la sección «Marcos frente a
+frente: ENS/UE vs NIST», disponible en la obra completa.
+
+## Capítulos
+
+- [1. El dato personal como objeto de ingeniería](cap01.qmd)

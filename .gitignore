@@ -19,3 +19,11 @@ _site/
 .work/
 *.sha
 __pycache__/
+
+/.quarto/
+**/*.quarto_ipynb
+
+# pdf: artefactos de compilación; el de la obra completa es el
+# producto de pago y NUNCA se publica
+latex/main.pdf
+latex/figs/**/*.pdf
