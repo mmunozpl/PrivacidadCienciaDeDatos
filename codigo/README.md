@@ -15,7 +15,7 @@ la raíz del repositorio).
 
 | Carpeta | Qué contiene |
 |---|---|
-| `comun/` | utilidades transversales: semillas (`determinismo.py`), logging con progreso y verificación de artefactos (`registro.py`), mecanismos de Laplace y Gauss (`ruido_dp.py`), métricas de reidentificación (`reident.py`) |
+| `comun/` | utilidades transversales: semillas (`determinismo.py`), logging con progreso y verificación de artefactos (`registro.py`), mecanismos de Laplace y Gauss (`ruido_dp.py`), métricas de reidentificación (`reident.py`), esquema anotado con validación (`esquema.py`) |
 | `cap01/` | dataset sintético de cuasi-identificadores y riesgo de partida |
 
 ## Convenciones

@@ -18,6 +18,7 @@ RAIZ = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(RAIZ / "codigo"))
 
 from comun.determinismo import fijar_semillas
+from comun.esquema import columnas, validar
 from comun.registro import crear_registro, muestra_final, progreso
 from comun.reident import k_anonimato, unicidad_muestral
 
@@ -34,7 +35,7 @@ ESQUEMA = {
     "profesion": "cuasi",
     "diagnostico": "sensible",        # art. 9: salud
 }
-CUASI = [c for c, papel in ESQUEMA.items() if papel == "cuasi"]
+CUASI = columnas(ESQUEMA, "cuasi")
 
 PROFESIONES = ["sanidad", "educacion", "comercio", "industria",
                "tecnologia", "administracion", "agricultura",
@@ -83,6 +84,7 @@ def main() -> None:
     partes = [generar(rng) for _ in progreso(range(1), 1, log,
                                             cada=1, tarea="sintesis")]
     df = pd.concat(partes, ignore_index=True)
+    validar(df, ESQUEMA)
 
     SALIDA.parent.mkdir(parents=True, exist_ok=True)
     df.to_parquet(SALIDA, index=False)
