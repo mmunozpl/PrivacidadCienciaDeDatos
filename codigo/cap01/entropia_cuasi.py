@@ -24,7 +24,10 @@ from comun.reident import k_anonimato, unicidad_muestral
 
 DATOS = RAIZ / "data" / "processed" / "poblacion_sintetica.parquet"
 CUASI = ["edad", "sexo", "codigo_postal", "profesion"]
-POBLACION_ES = 48_600_000
+
+# poblacion residente real (INE, Cifras de Poblacion a 1-1-2025)
+_PIRAMIDE = pd.read_csv(RAIZ / "data" / "ine" / "edad_sexo.csv")
+POBLACION_ES = int(_PIRAMIDE[["hombres", "mujeres"]].to_numpy().sum())
 
 
 def entropia(serie: pd.Series) -> float:

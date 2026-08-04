@@ -7,11 +7,19 @@ Las del entorno base del libro: `numpy`, `pandas`, `pyarrow`.
 ## Comandos
 
 ```bash
+# marginales reales del INE (si data/ine/ no existe o hay que refrescar)
+python3 herramientas/descargar_ine.py
+
 # genera data/processed/poblacion_sintetica.parquet y mide su riesgo
 python3 codigo/cap01/generar_dataset.py
+
+# entropías, unicidad esperada y gemelos poblacionales (lambda)
+python3 codigo/cap01/entropia_cuasi.py
 ```
 
-El script fija semillas, guarda el dataset transversal de la Parte I
-y cierra con el k-anonimato del conjunto {edad, sexo, código postal,
-profesión}, la unicidad muestral y las 15 observaciones aleatorias de
-verificación.
+El generador muestrea las marginales reales del INE (`data/ine/`,
+cifras a 1-1-2025): pirámide de edad y sexo, y código postal con el
+prefijo provincial verdadero; profesión y diagnóstico son
+estilizados. Fija semillas, valida el esquema anotado, guarda el
+dataset transversal de la Parte I y cierra con el k-anonimato, la
+unicidad muestral y las 15 observaciones aleatorias de verificación.

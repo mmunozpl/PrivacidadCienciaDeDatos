@@ -1,11 +1,22 @@
 """genera el dataset sintetico de cuasi-identificadores del libro.
 
-Construye una poblacion sintetica con identificadores, cuasi-
-identificadores y un atributo sensible, la guarda en parquet y mide
-su riesgo de partida (k-anonimato y unicidad muestral). Es el dataset
-transversal de la Parte I.
+Construye una poblacion sintetica CALIBRADA con las cifras reales del
+INE (data/ine/, Cifras de Poblacion a 1 de enero de 2025, descargadas
+con herramientas/descargar_ine.py):
+
+- (edad, sexo) se muestrea de la piramide nacional real, conjunta.
+- el codigo postal lleva el prefijo provincial real (dos digitos del
+  codigo INE de provincia), con la provincia muestreada por su
+  poblacion; el sufijo de tres digitos es estilizado (decae hacia los
+  numeros altos, como decaen los CP perifericos).
+- profesion y diagnostico son estilizados: categorias y pesos
+  plausibles, sin pretension de exactitud estadistica.
+
+Guarda el parquet, valida el esquema anotado y mide el riesgo de
+partida (k-anonimato y unicidad muestral).
 
 Uso: python3 codigo/cap01/generar_dataset.py
+     (si data/ine/ no existe: python3 herramientas/descargar_ine.py)
 """
 
 import sys
@@ -23,6 +34,7 @@ from comun.registro import crear_registro, muestra_final, progreso
 from comun.reident import k_anonimato, unicidad_muestral
 
 N = 20_000
+INE = RAIZ / "data" / "ine"
 SALIDA = RAIZ / "data" / "processed" / "poblacion_sintetica.parquet"
 
 # el esquema anotado viaja con el dato: papel de cada columna frente
@@ -45,7 +57,7 @@ DIAGNOSTICOS = ["ninguno", "hipertension", "diabetes", "asma",
 
 
 def generar(rng: np.random.Generator) -> pd.DataFrame:
-    """Construye la poblacion sintetica fila a fila vectorizada.
+    """Construye la poblacion sintetica calibrada con el INE.
 
     Args:
         rng: generador sembrado (ver comun/determinismo.py).
@@ -54,13 +66,31 @@ def generar(rng: np.random.Generator) -> pd.DataFrame:
         Tabla con identificador directo, cuasi-identificadores y el
         atributo sensible.
     """
-    # edades con piramide simplificada y codigos postales sesgados
-    edad = np.clip(rng.normal(45, 19, N).round(), 0, 99).astype(int)
-    sexo = rng.choice(["M", "F"], size=N)
-    codigo_postal = rng.choice(
-        [f"{p:05d}" for p in rng.integers(1000, 52999, 400)],
-        size=N,
+    # (edad, sexo) conjuntos desde la piramide real
+    piramide = pd.read_csv(INE / "edad_sexo.csv")
+    celdas = piramide.melt(id_vars=["edad"],
+                           value_vars=["hombres", "mujeres"],
+                           var_name="sexo", value_name="poblacion")
+    celdas["sexo"] = celdas["sexo"].map(
+        {"hombres": "M", "mujeres": "F"}
     )
+    idx = rng.choice(len(celdas), size=N,
+                     p=celdas["poblacion"] / celdas["poblacion"].sum())
+    edad = celdas["edad"].to_numpy()[idx]
+    sexo = celdas["sexo"].to_numpy()[idx]
+
+    # provincia por poblacion real; el CP hereda su prefijo INE
+    prov = pd.read_csv(INE / "provincias.csv",
+                       dtype={"codigo": str})
+    codigo = rng.choice(prov["codigo"], size=N,
+                        p=prov["poblacion"] / prov["poblacion"].sum())
+    # sufijo estilizado: decae hacia los numeros altos
+    pesos = 1.0 / (np.arange(1000) + 5.0)
+    sufijo = rng.choice(1000, size=N, p=pesos / pesos.sum())
+    codigo_postal = np.array(
+        [f"{c}{s:03d}" for c, s in zip(codigo, sufijo)]
+    )
+
     profesion = rng.choice(PROFESIONES, size=N,
                            p=np.linspace(2, 1, 10) / 15)
     diagnostico = rng.choice(DIAGNOSTICOS, size=N,
@@ -80,7 +110,7 @@ def main() -> None:
     log = crear_registro("cap01.generar_dataset")
     rng = fijar_semillas()
 
-    log.info("generando %d registros sinteticos", N)
+    log.info("generando %d registros con marginales INE 2025", N)
     partes = [generar(rng) for _ in progreso(range(1), 1, log,
                                             cada=1, tarea="sintesis")]
     df = pd.concat(partes, ignore_index=True)
