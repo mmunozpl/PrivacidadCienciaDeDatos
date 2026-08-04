@@ -11,10 +11,10 @@ Las del entorno base del libro: `numpy`, `pandas`, `pyarrow`.
 python3 herramientas/descargar_ine.py
 
 # genera data/processed/poblacion_sintetica.parquet y mide su riesgo
-python3 codigo/cap01/generar_dataset.py
+python3 src/cap01/generar_dataset.py
 
 # entropías, unicidad esperada y gemelos poblacionales (lambda)
-python3 codigo/cap01/entropia_cuasi.py
+python3 src/cap01/entropia_cuasi.py
 ```
 
 El generador muestrea las marginales reales del INE (`data/ine/`,

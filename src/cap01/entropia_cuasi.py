@@ -5,8 +5,8 @@ cada cuasi-identificador, su suma (cota bajo independencia), la
 entropia conjunta empirica y los bits necesarios para senalar a un
 individuo en Espana; cierra con el k-anonimato y la unicidad muestral.
 
-Uso: python3 codigo/cap01/entropia_cuasi.py
-     (antes: python3 codigo/cap01/generar_dataset.py)
+Uso: python3 src/cap01/entropia_cuasi.py
+     (antes: python3 src/cap01/generar_dataset.py)
 """
 
 import math
@@ -17,7 +17,7 @@ import numpy as np
 import pandas as pd
 
 RAIZ = Path(__file__).resolve().parents[2]
-sys.path.insert(0, str(RAIZ / "codigo"))
+sys.path.insert(0, str(RAIZ / "src"))
 
 from comun.registro import crear_registro
 from comun.reident import k_anonimato, unicidad_muestral

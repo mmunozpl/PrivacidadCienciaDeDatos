@@ -15,7 +15,7 @@ con herramientas/descargar_ine.py):
 Guarda el parquet, valida el esquema anotado y mide el riesgo de
 partida (k-anonimato y unicidad muestral).
 
-Uso: python3 codigo/cap01/generar_dataset.py
+Uso: python3 src/cap01/generar_dataset.py
      (si data/ine/ no existe: python3 herramientas/descargar_ine.py)
 """
 
@@ -26,7 +26,7 @@ import numpy as np
 import pandas as pd
 
 RAIZ = Path(__file__).resolve().parents[2]
-sys.path.insert(0, str(RAIZ / "codigo"))
+sys.path.insert(0, str(RAIZ / "src"))
 
 from comun.determinismo import fijar_semillas
 from comun.esquema import columnas, validar

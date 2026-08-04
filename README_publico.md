@@ -1,49 +1,67 @@
-# Privacidad para la ciencia de datos
+# Privacy · Data Science
 
-<!-- Este es el README que viaja al repositorio PÚBLICO. El README.md
-     de la raíz privada es otro documento (con notas de proceso) y NO
-     se publica. Secciones y orden según FORMATO_PUBLICO.md §5. -->
+🇬🇧 English · 🇪🇸 [Español](LEEME.md)
 
-## Contenido
+**Manuel Muñoz Plá**
 
-Privacidad aplicada a la ciencia de datos, con afán divulgativo y
-rigor técnico y matemático: 17 capítulos en cuatro partes.
+Applied privacy for data science, written to be readable and
+mathematically rigorous at once: from re-identification risk —measured
+in bits over a synthetic population calibrated with Spain's official
+2025 census figures— to privacy-enhancing technologies with working
+code (differential privacy, synthetic data, federated learning,
+encrypted computation) and the European rules (GDPR, AI Act) treated
+as engineering requirements. Seventeen chapters in four parts: *Data
+and its risk*, *PETs with code*, *Special categories as the thread*,
+and *Regulation as engineering*.
 
-- **I. El dato y su riesgo** — identificadores y cuasi-identificadores,
-  ataques a la privacidad y cuantificación del riesgo.
-- **II. PETs con código** — anonimización clásica, privacidad
-  diferencial (central y local), datos sintéticos, aprendizaje
-  federado y computación cifrada.
-- **III. Categorías especiales como hilo** — biometría, dato de salud
-  e imagen médica, procedencia y autenticidad.
-- **IV. La norma como ingeniería** — RGPD operativo, AI Act, privacy
-  by design y un caso integral clínico.
+This repository holds a **browsable web preview** of the book and the
+**reproducible code** behind every measured figure. The «ENS/EU vs
+NIST» closing section of each chapter lives only in the **complete
+work** (print and PDF), distributed separately.
 
-## Leer el libro
+> 📘 **Book page** and more of the author's work:
+> [manpla.net/libros/privacidad-ciencia-datos](https://manpla.net/libros/privacidad-ciencia-datos/)
 
-La edición web, en abierto:
-<https://mmunozpl.github.io/PrivacidadCienciaDeDatos/>
+## Contents
 
-Cada capítulo de la edición web omite la sección «Marcos frente a
-frente: ENS/UE vs NIST», disponible en la obra completa.
-
-## Ejecutar el código
-
-Python ≥ 3.10 con `numpy`, `pandas` y `pyarrow`; los capítulos con
-dependencias propias las documentan en su `README.md`. Por ejemplo:
-
-```bash
-python3 codigo/cap01/generar_dataset.py
+```
+.
+├── docs/                # web edition (Quarto): one HTML page per chapter,
+│                        #   SVG figures rendered with the book's own LaTeX
+├── src/                 # reproducible code per chapter + shared utilities
+└── data/                # synthetic dataset + INE (Spanish statistics office)
+                         #   marginals that calibrate it
 ```
 
-## Licencia
+## Read the book
 
-El **texto, las figuras y la edición web** se publican bajo
+The web edition is published with GitHub Pages from `docs/`:
+
+> https://mmunozpl.github.io/PrivacidadCienciaDeDatos/
+
+Each chapter of the web edition omits the «ENS/EU vs NIST» section,
+available in the complete work.
+
+## Run the code
+
+Python ≥ 3.10 with `numpy`, `pandas` and `pyarrow`; chapters with
+extra dependencies document them in their own `README.md`. For
+example:
+
+```bash
+python3 src/cap01/generar_dataset.py
+python3 src/cap01/entropia_cuasi.py
+```
+
+## License
+
+The **text, figures and web edition** are released under
 [CC BY-NC-ND 4.0](LICENSE).
-El **código y los ejemplos** de `codigo/`, bajo
-[MIT](codigo/LICENSE).
-Los datos de terceros conservan su propia licencia.
+The **code and examples** in `src/` are released under
+[MIT](src/LICENSE).
+Population marginals in `data/ine/` come from INE (Instituto Nacional
+de Estadística, Spain) open data and keep their own attribution terms.
 
-## Cómo citar
+## How to cite
 
-Ver [`CITATION.cff`](CITATION.cff).
+See [`CITATION.cff`](CITATION.cff).

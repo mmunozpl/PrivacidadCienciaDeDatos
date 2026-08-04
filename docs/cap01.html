@@ -535,7 +535,7 @@ La información mutua es el solapamiento: el ejemplo calculado a mano, dibujado.
 </tbody>
 </table>
 </div>
-<p>El modelo se deja comprobar. El script <code>codigo/cap01/entropia_cuasi.py</code> estima <span class="math inline">\(p_q\)</span> fila a fila como producto de frecuencias marginales (la hipótesis de independencia de la sección&nbsp;<a href="#sec:cap01-bits" data-reference-type="ref" data-reference="sec:cap01-bits">1.1.1</a>) y calcula la unicidad esperada <span class="math inline">\(\overline{(1-p_q)^{N-1}}\)</span>. Sobre el dataset del libro predice un 99,4 % de filas únicas; la medida directa da 99,5 %. El acierto no es casualidad ni mérito: el dataset se generó con columnas independientes, así que la hipótesis del modelo es cierta por construcción. Sobre datos reales las correlaciones la rompen, y el error del modelo —que ya sabemos medir— se convierte él mismo en información: cuánta estructura tiene la población que un atacante podría explotar. Retomaremos esa idea con los modelos generativos del capítulo&nbsp;3.</p>
+<p>El modelo se deja comprobar. El script <code>src/cap01/entropia_cuasi.py</code> estima <span class="math inline">\(p_q\)</span> fila a fila como producto de frecuencias marginales (la hipótesis de independencia de la sección&nbsp;<a href="#sec:cap01-bits" data-reference-type="ref" data-reference="sec:cap01-bits">1.1.1</a>) y calcula la unicidad esperada <span class="math inline">\(\overline{(1-p_q)^{N-1}}\)</span>. Sobre el dataset del libro predice un 99,4 % de filas únicas; la medida directa da 99,5 %. El acierto no es casualidad ni mérito: el dataset se generó con columnas independientes, así que la hipótesis del modelo es cierta por construcción. Sobre datos reales las correlaciones la rompen, y el error del modelo —que ya sabemos medir— se convierte él mismo en información: cuánta estructura tiene la población que un atacante podría explotar. Retomaremos esa idea con los modelos generativos del capítulo&nbsp;3.</p>
 </section>
 </section>
 <section id="sec:cap01-art9" class="level2">
@@ -867,8 +867,8 @@ La frontera utilidad–privacidad: las técnicas de la Parte&nbsp;II son maneras
 <section id="práctica-medida" class="level2 unnumbered">
 <h2 class="unnumbered anchored" data-anchor-id="práctica-medida">Práctica medida</h2>
 <p>Generar el dataset sintético de cuasi-identificadores del libro y medir su información identificante:</p>
-<pre><code>python3 codigo/cap01/generar_dataset.py
-python3 codigo/cap01/entropia_cuasi.py</code></pre>
+<pre><code>python3 src/cap01/generar_dataset.py
+python3 src/cap01/entropia_cuasi.py</code></pre>
 <p>El primer script fija semillas (<code>comun/determinismo.py</code>), valida el esquema anotado (<code>comun/esquema.py</code>), registra el progreso (<code>comun/registro.py</code>) y muestrea las marginales <em>reales</em> del INE que viven en <code>data/ine/</code> —la pirámide de edad y sexo y la población por provincias, cifras a 1 de enero de 2025 <span class="citation" data-cites="ine2025cifras">(<a href="#ref-ine2025cifras" role="doc-biblioref">Instituto Nacional de Estadística 2025</a>)</span>, descargadas de la API con <code>herramientas/descargar_ine.py</code>—, de modo que la edad, el sexo y el prefijo provincial del código postal del dataset siguen las distribuciones de la España real (profesión y diagnóstico quedan estilizados). Guarda <code>data/processed/poblacion_sintetica.parquet</code> y cierra con el artefacto de verificación del libro: quince observaciones aleatorias del resultado. El segundo mide lo que este capítulo enseñó a mirar; a fecha de redacción produce, entre otros:</p>
 <pre><code>H(edad) = 6.47 bits (104 valores distintos)
 H(codigo_postal) = 12.45 bits (9580 valores distintos)

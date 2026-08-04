@@ -23,6 +23,10 @@ __pycache__/
 /.quarto/
 **/*.quarto_ipynb
 
+# Publico/ es un ARTEFACTO: lo construye herramientas/publicar.sh por
+# lista blanca y será su propio repositorio; no se versiona aquí
+/Publico/
+
 # pdf: artefactos de compilación; el de la obra completa es el
 # producto de pago y NUNCA se publica
 latex/main.pdf
