@@ -27,3 +27,5 @@ __pycache__/
 # producto de pago y NUNCA se publica
 latex/main.pdf
 latex/figs/**/*.pdf
+# excepción: el logo editorial de la portada es recurso, no artefacto
+!latex/figs/portada/qword_editorial_5.5cm.pdf
