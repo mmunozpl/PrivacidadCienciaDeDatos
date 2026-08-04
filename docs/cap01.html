@@ -288,7 +288,6 @@ window.Quarto = {
   </ul></li>
   <li><a href="#síntesis-y-puente" id="toc-síntesis-y-puente" class="nav-link" data-scroll-target="#síntesis-y-puente">Síntesis y puente</a></li>
   <li><a href="#errores-comunes" id="toc-errores-comunes" class="nav-link" data-scroll-target="#errores-comunes">Errores comunes</a></li>
-  <li><a href="#práctica-medida" id="toc-práctica-medida" class="nav-link" data-scroll-target="#práctica-medida">Práctica medida</a></li>
   </ul></li>
   </ul>
 </nav>
@@ -863,22 +862,9 @@ La frontera utilidad–privacidad: las técnicas de la Parte&nbsp;II son maneras
 <li><p>Suponer que un modelo entrenado «ya no contiene» datos personales: la posición del EDPB exige demostrarlo caso por caso <span class="citation" data-cites="edpb2024opinion28">(<a href="#ref-edpb2024opinion28" role="doc-biblioref">European Data Protection Board 2024</a>)</span>.</p></li>
 <li><p>Borrar el dataset y dar el riesgo por cerrado mientras sobreviven sus copias (figura&nbsp;<a href="#fig:cap01-copias" data-reference-type="ref" data-reference="fig:cap01-copias">1.7</a>), sus cuadernos y los modelos entrenados con él.</p></li>
 </ul>
-</section>
-<section id="práctica-medida" class="level2 unnumbered">
-<h2 class="unnumbered anchored" data-anchor-id="práctica-medida">Práctica medida</h2>
-<p>Generar el dataset sintético de cuasi-identificadores del libro y medir su información identificante:</p>
-<pre><code>python3 src/cap01/generar_dataset.py
-python3 src/cap01/entropia_cuasi.py</code></pre>
-<p>El primer script fija semillas (<code>comun/determinismo.py</code>), valida el esquema anotado (<code>comun/esquema.py</code>), registra el progreso (<code>comun/registro.py</code>) y muestrea las marginales <em>reales</em> del INE que viven en <code>data/ine/</code> —la pirámide de edad y sexo y la población por provincias, cifras a 1 de enero de 2025 <span class="citation" data-cites="ine2025cifras">(<a href="#ref-ine2025cifras" role="doc-biblioref">Instituto Nacional de Estadística 2025</a>)</span>, descargadas de la API con <code>herramientas/descargar_ine.py</code>—, de modo que la edad, el sexo y el prefijo provincial del código postal del dataset siguen las distribuciones de la España real (profesión y diagnóstico quedan estilizados). Guarda <code>data/processed/poblacion_sintetica.parquet</code> y cierra con el artefacto de verificación del libro: quince observaciones aleatorias del resultado. El segundo mide lo que este capítulo enseñó a mirar; a fecha de redacción produce, entre otros:</p>
-<pre><code>H(edad) = 6.47 bits (104 valores distintos)
-H(codigo_postal) = 12.45 bits (9580 valores distintos)
-suma de entropias (cota si independientes): 23.21 bits
-bits para senalar a 1 entre 49128297 espanoles: 25.55
-k-anonimato: k=1; unicidad muestral: 99.5%
-unicidad esperada (modelo de independencia): 99.4%
-gemelos esperados en Espana por fila: min=0.0, mediana=4, max=329
-filas con lambda&lt;1 (unicas esperables en poblacion): 5.75%</code></pre>
-<p>Cinco preguntas para leer esos números: ¿por qué el 99,5 % de las filas son únicas si 23,21 bits no bastan para señalar a un español (sección&nbsp;<a href="#sec:cap01-muestra" data-reference-type="ref" data-reference="sec:cap01-muestra">1.1.3</a>)? ¿Cómo pueden convivir esa unicidad muestral con una mediana de solo 4 gemelos poblacionales por fila y un 5,75 % de filas ya únicas esperables en toda España —y cuál de esas cifras le contaría usted a un comité de ética—? ¿Por qué el modelo de independencia acierta tanto aquí, y qué signo tendría su error sobre un censo real (sección&nbsp;<a href="#sec:cap01-gemelos" data-reference-type="ref" data-reference="sec:cap01-gemelos">1.1.4</a>)? ¿Qué le pasaría a la unicidad muestral si el dataset creciera a un millón de filas con las mismas columnas? ¿Y qué columna eliminaría usted primero para maximizar bits retirados por utilidad perdida?</p>
+<blockquote class="blockquote">
+<p><em>Práctica medida y ejercicios — disponibles en la obra completa (papel, PDF y EPUB).</em></p>
+</blockquote>
 <blockquote class="blockquote">
 <p><em>Marcos frente a frente: ENS/UE vs NIST — sección disponible en la obra completa.</em></p>
 </blockquote>

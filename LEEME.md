@@ -16,10 +16,11 @@ con código*, *Categorías especiales como hilo* y *La norma como
 ingeniería*.
 
 Este repositorio reúne una **vista previa web navegable** del libro y
-el **código reproducible** que genera cada cifra medida. La sección de
-cierre «Marcos frente a frente: ENS/UE vs NIST» de cada capítulo vive
-solo en la **obra completa** (papel y PDF), que se distribuye por
-separado.
+el **código reproducible** que genera cada cifra medida. Los cierres
+de cada capítulo —la práctica medida, los ejercicios con su apéndice
+de soluciones y la sección «Marcos frente a frente: ENS/UE vs NIST»—
+viven solo en la **obra completa** (papel, PDF y EPUB), que se
+distribuye por separado.
 
 > 📘 **Ficha del libro** y más obras del autor:
 > [manpla.net/libros/privacidad-ciencia-datos](https://manpla.net/libros/privacidad-ciencia-datos/)
@@ -41,8 +42,9 @@ La edición web se publica con GitHub Pages desde `docs/`:
 
 > https://mmunozpl.github.io/PrivacidadCienciaDeDatos/
 
-Cada capítulo de la edición web omite la sección «Marcos frente a
-frente: ENS/UE vs NIST», disponible en la obra completa.
+Cada capítulo de la edición web omite sus cierres de pago (práctica
+medida, ejercicios y «Marcos frente a frente: ENS/UE vs NIST»),
+disponibles en la obra completa.
 
 ## Ejecutar el código
 

@@ -38,3 +38,7 @@ latex/figs/**/*.pdf
 # latex/ tiene su propio git LOCAL sin remoto; qmd/ es generado
 /latex/
 /qmd/
+
+# .md de implementación: JAMÁS suben al repositorio (política §4.2)
+/ESTADO.md
+/Bibliografia.md

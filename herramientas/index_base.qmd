@@ -13,8 +13,10 @@ sintéticos, aprendizaje federado, computación cifrada— y la norma
 divulgativo y rigor técnico y matemático: la intuición primero, la
 formalización completa después.
 
-Cada capítulo de la edición web omite la sección «Marcos frente a
-frente: ENS/UE vs NIST», disponible en la obra completa.
+Cada capítulo de la edición web omite sus cierres de pago —la
+práctica medida, los ejercicios (con soluciones en apéndice) y la
+sección «Marcos frente a frente: ENS/UE vs NIST»—, disponibles en la
+obra completa (papel, PDF y EPUB).
 
 ## Parte I — El dato y su riesgo
 

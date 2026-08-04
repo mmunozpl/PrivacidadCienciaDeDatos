@@ -5,8 +5,8 @@
 #
 #   herramientas/publicar.sh          # construye y verifica Publico/
 #
-# Al público van SOLO: README.md (desde README_publico.md), LEEME.md
-# (desde LEEME_publico.md), LICENSE, CITATION.cff, docs/, src/ y los
+# Al público van SOLO: README.md y LEEME.md (los de la raíz, que YA
+# son los públicos), LICENSE, CITATION.cff, docs/, src/ y los
 # datos redistribuibles. JAMÁS: latex/, qmd/, el PDF, Bibliografia.md
 # ni ningún .md de implementación.
 #
@@ -23,8 +23,8 @@ rm -rf Publico
 mkdir -p Publico
 
 # ── lista blanca ─────────────────────────────────────────────────────
-cp README_publico.md Publico/README.md
-cp LEEME_publico.md  Publico/LEEME.md
+cp README.md Publico/README.md
+cp LEEME.md  Publico/LEEME.md
 cp LICENSE CITATION.cff Publico/
 
 cp -r docs Publico/docs
