@@ -42,3 +42,7 @@ latex/figs/**/*.pdf
 # .md de implementación: JAMÁS suben al repositorio (política §4.2)
 /ESTADO.md
 /Bibliografia.md
+
+# biblioteca de imágenes del autor (portada, logo): material de la
+# obra, plano LOCAL — no sube a GitHub
+/Imagenes/
