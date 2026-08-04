@@ -72,11 +72,15 @@ $(QMD_DIR)/figs/portada_web.jpg: $(LATEX_DIR)/main.pdf
 $(LATEX_DIR)/main.pdf:
 	$(MAKE) completa
 
-# docs/ se regenera DE CERO: es salida pura de quarto. Si algún día
-# lleva CNAME o .nojekyll, van como resources del armazón, no a mano.
+# docs/ se regenera DE CERO: es salida pura de quarto. El .nojekyll lo
+# repone el propio objetivo: sin él Pages ignora todo lo que empieza
+# por guion bajo, y como el gitignore global tapa los ocultos hay que
+# forzarlo con -f al versionarlo. Se perdió dos veces por el rm -rf.
 web: qmd
 	rm -rf docs
 	quarto render $(QMD_DIR)
+	touch docs/.nojekyll
+	git add -f docs/.nojekyll 2> /dev/null || true
 
 # ── obra completa ────────────────────────────────────────────────────
 completa: $(FIG_PDF) $(SOL_PDF)
