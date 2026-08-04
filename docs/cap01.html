@@ -272,7 +272,11 @@ window.Quarto = {
   <ul>
   <li><a href="#cap:dato-personal" id="toc-cap:dato-personal" class="nav-link active" data-scroll-target="#cap\:dato-personal">El dato personal como objeto de ingeniería</a>
   <ul class="collapse">
-  <li><a href="#sec:cap01-cuasi" id="toc-sec:cap01-cuasi" class="nav-link" data-scroll-target="#sec\:cap01-cuasi">Identificadores, cuasi-identificadores y atributos sensibles</a></li>
+  <li><a href="#sec:cap01-cuasi" id="toc-sec:cap01-cuasi" class="nav-link" data-scroll-target="#sec\:cap01-cuasi">Identificadores, cuasi-identificadores y atributos sensibles</a>
+  <ul class="collapse">
+  <li><a href="#sec:cap01-bits" id="toc-sec:cap01-bits" class="nav-link" data-scroll-target="#sec\:cap01-bits">La aritmética de la identificación</a></li>
+  <li><a href="#sec:cap01-muestra" id="toc-sec:cap01-muestra" class="nav-link" data-scroll-target="#sec\:cap01-muestra">Única en la muestra no es única en la población</a></li>
+  </ul></li>
   <li><a href="#sec:cap01-art9" id="toc-sec:cap01-art9" class="nav-link" data-scroll-target="#sec\:cap01-art9">Las categorías especiales del artículo 9 RGPD, vistas desde el dato</a></li>
   <li><a href="#sec:cap01-ciclo" id="toc-sec:cap01-ciclo" class="nav-link" data-scroll-target="#sec\:cap01-ciclo">Ciclo de vida del dato en un proyecto de ciencia de datos</a></li>
   <li><a href="#sec:cap01-superficie" id="toc-sec:cap01-superficie" class="nav-link" data-scroll-target="#sec\:cap01-superficie">Superficie de exposición de un pipeline típico</a></li>
@@ -292,25 +296,96 @@ window.Quarto = {
 <section id="cap:dato-personal" class="level1">
 <h1>El dato personal como objeto de ingeniería</h1>
 <p>Una tabla con edad, sexo y código postal parece inocente: no hay nombres, no hay números de documento, no hay nada que un lector humano reconozca como «identificativo». Y sin embargo, con esas tres columnas basta para señalar de forma única a la mayoría de la población de un país. La intuición de que «sin el nombre ya es anónimo» es la primera que este libro necesita desmontar, y conviene hacerlo con números y no con opiniones: esa intuición rota es la causa de la mayor parte de las fugas de privacidad documentadas en ciencia de datos.</p>
-<p>Este capítulo define el objeto del libro desde la técnica, no desde el derecho: qué convierte un campo en identificador, un conjunto de campos en huella, y un <em>pipeline</em> en tratamiento de datos personales. El derecho aparecerá enseguida —el RGPD nombra y clasifica— pero como requisito de ingeniería, no como trámite.</p>
+<p>Este capítulo define el objeto del libro desde la técnica, no desde el derecho: qué convierte un campo en identificador, un conjunto de campos en huella, y un <em>pipeline</em> en tratamiento de datos personales. El derecho aparecerá enseguida —el RGPD nombra y clasifica— pero como requisito de ingeniería, no como trámite. El plan es sencillo: primero clasificamos las columnas por el papel que juegan en una reidentificación (sección&nbsp;<a href="#sec:cap01-cuasi" data-reference-type="ref" data-reference="sec:cap01-cuasi">1.1</a>) y aprendemos a <em>contar</em> la información que llevan; después leemos el artículo&nbsp;9 del RGPD como lo que es para nosotros, una anotación de esquema (sección&nbsp;<a href="#sec:cap01-art9" data-reference-type="ref" data-reference="sec:cap01-art9">1.2</a>); seguimos el dato por las cinco estaciones de un proyecto real (sección&nbsp;<a href="#sec:cap01-ciclo" data-reference-type="ref" data-reference="sec:cap01-ciclo">1.3</a>); y terminamos dibujando el mapa de los canales por los que ese dato se escapa (sección&nbsp;<a href="#sec:cap01-superficie" data-reference-type="ref" data-reference="sec:cap01-superficie">1.4</a>), que es también el mapa de este libro.</p>
 <section id="sec:cap01-cuasi" class="level2">
 <h2 class="anchored" data-anchor-id="sec:cap01-cuasi">Identificadores, cuasi-identificadores y atributos sensibles</h2>
-<p>Pensemos en cada columna de una tabla según el papel que puede jugar para un adversario que intenta averiguar a quién corresponde cada fila. Un <em>identificador directo</em> señala por sí solo (el NIF, el correo electrónico). Un <em>atributo sensible</em> es lo que el adversario quiere aprender (un diagnóstico, una afiliación). Y entre ambos queda la categoría interesante: columnas que no identifican por separado pero sí en combinación.</p>
+<p>Pensemos en cada columna de una tabla según el papel que puede jugar para un adversario que intenta averiguar a quién corresponde cada fila. Un <em>identificador directo</em> señala por sí solo: el NIF, el correo electrónico, el número de historia clínica. Un <em>atributo sensible</em> es lo que el adversario quiere aprender: un diagnóstico, una afiliación, una orientación. Y entre ambos queda la categoría interesante, la que sostiene medio libro: columnas que no identifican por separado pero sí en combinación.</p>
+<p>El propio reglamento apunta en esta dirección si se lee con ojos de ingeniería. El artículo&nbsp;4.1 del RGPD <span class="citation" data-cites="ue2016rgpd">(<a href="#ref-ue2016rgpd" role="doc-biblioref">Reglamento (UE) 2016/679, General de Protección de Datos (RGPD) 2016</a>)</span> llama dato personal a toda información sobre una persona «identificada o identificable», y su considerando&nbsp;26 precisa que identificable es aquella persona que puede señalarse «por todos los medios que razonablemente pueda utilizar» un actor. Eso no es una definición jurídica abstracta: es un <em>modelo de adversario</em>. Decidir si una tabla contiene datos personales exige postular quién ataca, con qué información auxiliar y a qué coste —exactamente la pregunta con la que la criptografía define sus garantías—. La respuesta, por tanto, no es una propiedad intrínseca del fichero: cambia cuando cambia el mundo alrededor (un censo publicado, una brecha ajena, una red social nueva).</p>
 <div class="definicion">
-<p><span id="def:cuasi" data-label="def:cuasi"></span> Sea <span class="math inline">\(T\)</span> una tabla con atributos <span class="math inline">\(A_1,\dots,A_m\)</span> sobre una población <span class="math inline">\(P\)</span>. Un subconjunto <span class="math inline">\(Q \subseteq \{A_1,\dots,A_m\}\)</span> es un <em>cuasi-identificador</em> si existe una fracción no despreciable de individuos de <span class="math inline">\(P\)</span> para los que la proyección <span class="math inline">\(\pi_Q\)</span> es única, es decir, si <span class="math display">\[\Pr_{x \sim P}\bigl[\,\lvert\{y \in P : \pi_Q(y)=\pi_Q(x)\}\rvert = 1\,\bigr]\]</span> no es despreciable. La unicidad se mide contra la población, no contra la muestra: una fila única en la tabla puede no serlo en el censo.</p>
+<p><span id="def:cuasi" data-label="def:cuasi"></span> Sea <span class="math inline">\(T\)</span> una tabla con atributos <span class="math inline">\(A_1,\dots,A_m\)</span> sobre una población <span class="math inline">\(P\)</span>. Un subconjunto <span class="math inline">\(Q \subseteq \{A_1,\dots,A_m\}\)</span> es un <em>cuasi-identificador</em> si la fracción de individuos de <span class="math inline">\(P\)</span> cuya proyección <span class="math inline">\(\pi_Q\)</span> es única, <span class="math display">\[u_P(Q) \;=\; \Pr_{x \sim P}\bigl[\,\lvert\{y \in P :
+  \pi_Q(y)=\pi_Q(x)\}\rvert = 1\,\bigr],\]</span> no es despreciable. La unicidad se mide contra la población, no contra la muestra: una fila única en la tabla puede no serlo en el censo.</p>
 </div>
 <div class="ejemplo">
-<p>El resultado clásico de Sweeney: el 87 % de la población de EE. UU. queda determinada de forma única por la terna <span class="math inline">\(\{\)</span>código postal, fecha de nacimiento, sexo<span class="math inline">\(\}\)</span> <span class="citation" data-cites="sweeney2002kanonymity">(<a href="#ref-sweeney2002kanonymity" role="doc-biblioref">Sweeney 2002</a>)</span>. Dos décadas después, el resultado se generaliza: con 15 atributos demográficos, el 99,98 % de los estadounidenses es reidentificable incluso en muestras incompletas <span class="citation" data-cites="rocher2019estimating">(<a href="#ref-rocher2019estimating" role="doc-biblioref">Rocher et&nbsp;al. 2019</a>)</span>.</p>
+<p><span id="ej:sweeney" data-label="ej:sweeney"></span> El resultado clásico de Sweeney: el 87 % de la población de EE. UU. queda determinada de forma única por la terna <span class="math inline">\(\{\)</span>código postal, fecha de nacimiento completa, sexo<span class="math inline">\(\}\)</span> <span class="citation" data-cites="sweeney2002kanonymity">(<a href="#ref-sweeney2002kanonymity" role="doc-biblioref">Sweeney 2002</a>)</span>. Con esa terna, Sweeney reidentificó el historial médico del gobernador de Massachusetts en un dataset hospitalario «anónimo» cruzándolo con el censo electoral, que costaba veinte dólares. Dos décadas después el resultado se generaliza: con 15 atributos demográficos, el 99,98 % de los estadounidenses es reidentificable incluso en muestras incompletas <span class="citation" data-cites="rocher2019estimating">(<a href="#ref-rocher2019estimating" role="doc-biblioref">Rocher et&nbsp;al. 2019</a>)</span>.</p>
 </div>
 <p>La consecuencia operativa se escribe en tres listas, y conviene mantenerlas explícitas en el código desde el primer día:</p>
 <pre><code># se separan las columnas por su papel frente a la reidentificacion
 IDENTIFICADORES = ["nif", "email", "num_historia"]
 CUASI = ["edad", "sexo", "codigo_postal", "profesion"]
 SENSIBLES = ["diagnostico"]</code></pre>
+<p>Un aviso antes de seguir: el papel de una columna <strong>depende del contexto</strong>, no de su nombre. La fecha de ingreso es inocua en un censo nacional y cuasi-identificadora en un hospital comarcal; y en el caso del premio Netflix, las columnas que reidentificaron a los usuarios no fueron demográficas, sino las <em>películas puntuadas y sus fechas</em>, cruzadas con los perfiles públicos de IMDb <span class="citation" data-cites="narayanan2008robust">(<a href="#ref-narayanan2008robust" role="doc-biblioref">Narayanan y Shmatikov 2008</a>)</span>. Cualquier columna con suficiente variedad, observable por un tercero, puede ejercer de cuasi-identificador. Las tres listas del listado anterior no son una clasificación eterna: son una <em>hipótesis de adversario</em> que se revisa cuando el contexto cambia.</p>
+<section id="sec:cap01-bits" class="level3">
+<h3 class="anchored" data-anchor-id="sec:cap01-bits">La aritmética de la identificación</h3>
+<p>¿Cuánta identificación cabe en una columna? La pregunta tiene respuesta exacta, y da una intuición que vale más que cualquier lista de columnas prohibidas. La herramienta es la entropía de Shannon: para una variable <span class="math inline">\(X\)</span> que toma valores con probabilidades <span class="math inline">\(p_1,\dots,p_n\)</span>, <span class="math display">\[H(X) \;=\; -\sum_{i=1}^{n} p_i \log_2 p_i \quad \text{bits},\]</span> que mide la información media que revela observar <span class="math inline">\(X\)</span>. Si las componentes de un cuasi-identificador <span class="math inline">\(Q=\{X_1,\dots,X_q\}\)</span> fueran independientes, la información conjunta sería la suma <span class="math inline">\(H(X_1)+\cdots+H(X_q)\)</span>; con dependencias (el código postal predice en parte la profesión) la conjunta es menor, así que la suma es una <em>cota superior</em>.</p>
+<p>Para señalar de forma única a una persona entre <span class="math inline">\(N\)</span> hacen falta <span class="math inline">\(\log_2 N\)</span> bits. España tiene unos 48,6 millones de habitantes: <span class="math inline">\(\log_2(48{,}6\cdot 10^6) \approx 25{,}5\)</span> bits. La cuenta de la vieja resulta entonces reveladora. El sexo aporta 1&nbsp;bit. La edad en años, como mucho <span class="math inline">\(\log_2 100 \approx 6{,}6\)</span>. La fecha de nacimiento completa, en cambio, unos <span class="math inline">\(\log_2(365 \cdot 80) \approx 14{,}8\)</span>; y un código postal, hasta <span class="math inline">\(\log_2 11\,752 \approx 13{,}5\)</span>. Por eso la terna de Sweeney (fecha completa + CP + sexo <span class="math inline">\(\approx 29\)</span> bits) sobra para EE. UU. y sobraría para España, mientras que sustituir la fecha de nacimiento por la edad en años deja la suma en torno a 21 bits y ya no alcanza, <em>en media</em>, para señalar a todo el mundo. Reducir resolución —edad en vez de fecha, provincia en vez de CP— es literalmente restar bits al adversario; el capítulo&nbsp;4 convertirá esta idea en las jerarquías de generalización.</p>
+<p>Dos matices para no abusar de la cuenta. Primero, la entropía es un promedio: aunque la suma no llegue a <span class="math inline">\(\log_2 N\)</span>, las personas de combinaciones raras (99 años, profesión infrecuente, CP rural) quedan únicas mucho antes que la media —la privacidad se pierde primero en las colas—. Segundo, la suma ignora las correlaciones entre columnas y la estructura real de la población; estimar bien la unicidad poblacional exige modelos generativos ajustados, que es exactamente lo que hace <span class="citation" data-cites="rocher2019estimating">Rocher et&nbsp;al. (<a href="#ref-rocher2019estimating" role="doc-biblioref">2019</a>)</span> y lo que implementaremos en el capítulo&nbsp;3.</p>
+</section>
+<section id="sec:cap01-muestra" class="level3">
+<h3 class="anchored" data-anchor-id="sec:cap01-muestra">Única en la muestra no es única en la población</h3>
+<p>La definición&nbsp;<a href="#def:cuasi" data-reference-type="ref" data-reference="def:cuasi">[def:cuasi]</a> midió la unicidad contra la población. Casi siempre, sin embargo, lo que tenemos delante es una muestra: los 20 000 pacientes de un estudio, no los 48 millones del país. La relación entre ambas unicidades tiene una dirección fácil y una trampa.</p>
+<div class="proposicion">
+<p><span id="prop:muestra" data-label="prop:muestra"></span> Sea <span class="math inline">\(S \subseteq P\)</span> una muestra y <span class="math inline">\(x \in S\)</span>. Si <span class="math inline">\(\pi_Q(x)\)</span> es única en <span class="math inline">\(P\)</span>, entonces es única en <span class="math inline">\(S\)</span>. El recíproco es falso en general.</p>
+</div>
+<div class="proof">
+<p><span class="proof-title"><em>Demostración</em>. </span><em>Proof.</em> Si no hubiera en <span class="math inline">\(P\)</span> ningún otro individuo con la misma proyección, tampoco puede haberlo en <span class="math inline">\(S \subseteq P\)</span>. Para el recíproco basta un contraejemplo: dos gemelos estadísticos en <span class="math inline">\(P\)</span> de los que solo uno cae en la muestra dejan una fila única en <span class="math inline">\(S\)</span> que no lo es en <span class="math inline">\(P\)</span>.&nbsp;◻</p>
+</div>
+<p>En consecuencia, la unicidad medida sobre la muestra <em>sobreestima</em> la poblacional: toda fila única en la población que entre en la muestra seguirá siendo única, y a ellas se suman los falsos únicos cuyo gemelo quedó fuera. El dataset sintético de este libro lo exhibe con números redondos: sus cuatro cuasi-identificadores suman <span class="math inline">\(H \approx 19{,}2\)</span> bits —por debajo de los 25,5 que exige España, luego <em>no</em> podrían señalar de forma única a la mayoría de la población— y aun así el 95,9 % de las 20 000 filas de la muestra son únicas, porque <span class="math inline">\(\log_2 20\,000 \approx 14{,}3\)</span> bits son muchos menos que 19,2. Una tabla puede ser un colador dentro de sí misma y decir poco sobre el riesgo poblacional: distinguir ambas cosas es la diferencia entre medir y asustarse, y ocupará el capítulo&nbsp;3.</p>
+</section>
 </section>
 <section id="sec:cap01-art9" class="level2">
 <h2 class="anchored" data-anchor-id="sec:cap01-art9">Las categorías especiales del artículo 9 RGPD, vistas desde el dato</h2>
-<p>El RGPD <span class="citation" data-cites="ue2016rgpd">(<a href="#ref-ue2016rgpd" role="doc-biblioref">Reglamento (UE) 2016/679, General de Protección de Datos (RGPD) 2016</a>)</span> reserva un régimen reforzado para las «categorías especiales»: salud, biometría, origen étnico, ideología, vida sexual. Leído desde la ingeniería, el artículo 9 es una anotación de esquema: marca columnas —y, cada vez más, <em>modelos</em>— cuyo tratamiento exige base jurídica reforzada y medidas técnicas a la altura. La frontera ya no pasa solo por el dataset: el EDPB exige evaluar caso por caso si un modelo entrenado con datos personales puede considerarse anónimo, «por todos los medios razonablemente probables» <span class="citation" data-cites="edpb2024opinion28">(<a href="#ref-edpb2024opinion28" role="doc-biblioref">European Data Protection Board 2024</a>)</span>. Los parámetros del modelo entran, así, en el mapa del dato personal.</p>
+<p>El RGPD reserva un régimen reforzado para las «categorías especiales» de su artículo&nbsp;9: origen étnico o racial, opiniones políticas, convicciones religiosas o filosóficas, afiliación sindical, datos genéticos, datos biométricos dirigidos a identificar de manera unívoca, salud, y vida u orientación sexual <span class="citation" data-cites="ue2016rgpd">(<a href="#ref-ue2016rgpd" role="doc-biblioref">Reglamento (UE) 2016/679, General de Protección de Datos (RGPD) 2016</a>)</span>. Leído desde la ingeniería, el artículo&nbsp;9 es una <strong>anotación de esquema</strong>: marca columnas cuyo tratamiento exige base jurídica reforzada y medidas técnicas a la altura. La tabla&nbsp;<a href="#tab:cap01-art9" data-reference-type="ref" data-reference="tab:cap01-art9">1.1</a> recorre cómo aparecen esas categorías en un proyecto de datos real —y por qué vía entran sin que el esquema las nombre.</p>
+<div id="tab:cap01-art9">
+<table class="caption-top table">
+<caption>Las categorías especiales del artículo 9 en un proyecto de ciencia de datos: la columna derecha es la que se olvida.</caption>
+<colgroup>
+<col style="width: 26%">
+<col style="width: 33%">
+<col style="width: 33%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;"><strong>Categoría (art. 9)</strong></th>
+<th style="text-align: left;"><strong>Forma típica en el dato</strong></th>
+<th style="text-align: left;"><strong>Vía de entrada no obvia</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">salud</td>
+<td style="text-align: left;">diagnósticos, EHR, imagen médica</td>
+<td style="text-align: left;">apps de hábitos, compras, bajas laborales</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">biometría</td>
+<td style="text-align: left;">plantilla facial, huella, voz</td>
+<td style="text-align: left;">cualquier foto o audio del que se extraiga una plantilla</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">genética</td>
+<td style="text-align: left;">VCF, paneles, parentesco</td>
+<td style="text-align: left;">el dato de un familiar informa del resto</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">origen étnico</td>
+<td style="text-align: left;">campo explícito (raro)</td>
+<td style="text-align: left;">proxies: nombre, lengua, barrio</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">ideología, religión, sindicato</td>
+<td style="text-align: left;">afiliaciones declaradas</td>
+<td style="text-align: left;">historial de navegación, «me gusta», donaciones</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">vida u orientación sexual</td>
+<td style="text-align: left;">campo explícito (raro)</td>
+<td style="text-align: left;">apps, grafo social, patrones de consumo</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>La columna derecha encierra la lección técnica del artículo&nbsp;9: <strong>lo sensible se infiere</strong>. Un modelo entrenado para otra cosa puede acabar prediciendo salud desde el consumo o ideología desde el lenguaje, y esa <em>predicción</em> es a todos los efectos un dato de categoría especial que el esquema original no contenía. La disciplina que este libro adopta es anotar como sensibles no solo las columnas que lo son, sino también las <em>salidas</em> de cualquier modelo que las infiera con acierto mejor que el azar.</p>
+<p>El perímetro, además, ya no termina en el dataset. El EDPB exige evaluar caso por caso si un modelo entrenado con datos personales puede considerarse anónimo: solo lo es si la probabilidad de identificación «por todos los medios razonablemente probables» resulta insignificante, también a partir de sus parámetros <span class="citation" data-cites="edpb2024opinion28">(<a href="#ref-edpb2024opinion28" role="doc-biblioref">European Data Protection Board 2024</a>)</span>. Dicho en términos de esta sección: <strong>los pesos de un modelo son una columna más del esquema</strong>, con el papel —identificante, sensible o ambos— que le otorguen los ataques del capítulo&nbsp;2. Hasta que no se demuestre lo contrario, un modelo hereda la clasificación de los datos que lo entrenaron. Para gobernar ese perímetro completo existen marcos operativos: las orientaciones de anonimización de la AEPD <span class="citation" data-cites="aepd2022orientaciones">(<a href="#ref-aepd2022orientaciones" role="doc-biblioref">Agencia Española de Protección de Datos 2022b</a>)</span>, su guía básica con herramienta <span class="citation" data-cites="aepd2022guiabasica">(<a href="#ref-aepd2022guiabasica" role="doc-biblioref">Agencia Española de Protección de Datos 2022a</a>)</span> y el marco de desidentificación de ISO/IEC&nbsp;27559, que organiza el riesgo a lo largo de todo el ciclo de vida <span class="citation" data-cites="iso27559">(<a href="#ref-iso27559" role="doc-biblioref">ISO/IEC 27559 2022</a>)</span> —justo el ciclo que toca recorrer ahora.</p>
 </section>
 <section id="sec:cap01-ciclo" class="level2">
 <h2 class="anchored" data-anchor-id="sec:cap01-ciclo">Ciclo de vida del dato en un proyecto de ciencia de datos</h2>
@@ -321,29 +396,105 @@ SENSIBLES = ["diagnostico"]</code></pre>
 Ciclo de vida del dato y superficie de exposición en cada estación del <em>pipeline</em>.
 </figcaption>
 </figure>
+<p>En la <strong>captura</strong> se decide, para siempre, cuánta información entra. El principio de minimización del artículo&nbsp;5.1.c <span class="citation" data-cites="ue2016rgpd">(<a href="#ref-ue2016rgpd" role="doc-biblioref">Reglamento (UE) 2016/679, General de Protección de Datos (RGPD) 2016</a>)</span> tiene aquí su traducción exacta en bits: cada campo del formulario que no se necesita es entropía regalada al adversario de la sección&nbsp;<a href="#sec:cap01-bits" data-reference-type="ref" data-reference="sec:cap01-bits">1.1.1</a>. Pedir la edad en vez de la fecha de nacimiento no es cosmética: son ocho bits menos, para siempre, en todas las copias posteriores.</p>
+<p>En el <strong>almacenamiento</strong> el dato se multiplica: réplicas, copias de seguridad, entornos de prueba. Cada copia hereda el riesgo del original pero no sus controles —la base de producción tiene control de acceso; el volcado de hace tres meses en el portátil de un analista, no—. La retención es la otra decisión silenciosa: el dato que ya no existe es el único que no puede fugarse.</p>
+<p>La <strong>preparación</strong> es la estación más traicionera, porque es donde el equipo se siente seguro: «ya está anonimizado». La figura&nbsp;<a href="#fig:cap01-join" data-reference-type="ref" data-reference="fig:cap01-join">1.2</a> muestra el mecanismo por el que deja de estarlo: un <em>join</em> con una fuente auxiliar por las columnas compartidas —los cuasi-identificadores— reidentifica todas las filas cuya combinación sea única en ambas tablas, que como vimos son casi todas. A ello se suman los subproductos: datasets intermedios, cuadernos con celdas ejecutadas y sus salidas dentro, muestras «para probar» que nadie borra.</p>
+<figure id="fig:cap01-join" data-latex-placement="htbp" class="figure">
+<img src="figs/cap01/fig_02.svg" style="width:90.0%" class="figure-img">
+<figcaption>
+El <em>join</em> que reidentifica: el mecanismo de Sweeney y de Netflix, disponible para cualquiera con la fuente auxiliar adecuada.
+</figcaption>
+</figure>
+<p>En el <strong>entrenamiento</strong> el dato cambia de forma: deja de ser filas y pasa a ser gradientes y pesos. El error clásico es creer que ese cambio de forma es una anonimización. No lo es: los modelos memorizan parte de sus datos de entrenamiento, y el capítulo&nbsp;2 demostrará con código cuánto y cómo extraerlo.</p>
+<p>En la <strong>publicación</strong>, por fin, el proyecto emite: tablas agregadas, una API de predicción, los propios pesos. Todo lo emitido es irrevocable —no hay «derecho de supresión» sobre lo ya copiado— y por eso esta estación concentra las garantías formales de la Parte&nbsp;II: lo que salga debe llevar la privacidad puesta, no prometida.</p>
+<p>La disciplina transversal que este libro adopta es que <strong>el esquema anotado viaja con el dato</strong>: una declaración explícita del papel de cada columna que acompaña al dataset por las cinco estaciones, se revisa en cada <em>join</em> y decide qué controles aplican. El generador del dataset del libro (<code>codigo/cap01/generar_dataset.py</code>) la emite así:</p>
+<pre><code>ESQUEMA = {
+    "num_historia": "identificador",  # se suprime al preparar
+    "edad": "cuasi",
+    "sexo": "cuasi",
+    "codigo_postal": "cuasi",
+    "profesion": "cuasi",
+    "diagnostico": "sensible",        # art. 9: salud
+}</code></pre>
 </section>
 <section id="sec:cap01-superficie" class="level2">
 <h2 class="anchored" data-anchor-id="sec:cap01-superficie">Superficie de exposición de un pipeline típico</h2>
-<p>Cada estación expone el dato por canales distintos: copias en crudo y credenciales en la captura; retención y copias de seguridad en el almacenamiento; datasets intermedios y cuadernos en la preparación; memorización y fuga por gradientes en el entrenamiento <span class="citation" data-cites="nasr2023extraction">(<a href="#ref-nasr2023extraction" role="doc-biblioref"><span class="nocase">Nasr et&nbsp;al.</span> 2023</a>)</span>; y las salidas agregadas, las API y los propios pesos en la publicación. El resto del libro es, en esencia, un catálogo medido de cómo reducir cada uno de esos canales sin destruir la utilidad del proyecto.</p>
+<p>Con el ciclo de vida delante, el último paso del capítulo es sistemático: enumerar por dónde sale el dato de cada estación. La tabla&nbsp;<a href="#tab:cap01-superficie" data-reference-type="ref" data-reference="tab:cap01-superficie">1.2</a> lo hace, y de paso dibuja el mapa del libro: cada canal apunta al capítulo que lo mide y al que lo mitiga.</p>
+<div id="tab:cap01-superficie">
+<table class="caption-top table">
+<caption>Superficie de exposición por estación, el ataque que la explota y los capítulos donde se mide y se mitiga.</caption>
+<thead>
+<tr class="header">
+<th style="text-align: left;"><strong>Estación</strong></th>
+<th style="text-align: left;"><strong>Canal de fuga</strong></th>
+<th style="text-align: left;"><strong>Ataque tipo</strong></th>
+<th style="text-align: left;"><strong>Caps.</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">captura</td>
+<td style="text-align: left;">campos de más, credenciales</td>
+<td style="text-align: left;">ingeniería social</td>
+<td style="text-align: left;">14, 16</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">almacenamiento</td>
+<td style="text-align: left;">copias, retención, accesos</td>
+<td style="text-align: left;">brecha, insider</td>
+<td style="text-align: left;">14, 16</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">preparación</td>
+<td style="text-align: left;"><em>joins</em>, intermedios, cuadernos</td>
+<td style="text-align: left;">linkage</td>
+<td style="text-align: left;">2, 3, 4</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">entrenamiento</td>
+<td style="text-align: left;">memorización, gradientes</td>
+<td style="text-align: left;">MIA, inversión</td>
+<td style="text-align: left;">2, 6, 9</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">publicación</td>
+<td style="text-align: left;">agregados, API, pesos</td>
+<td style="text-align: left;">extracción, reconstr.</td>
+<td style="text-align: left;">2, 5, 8</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>Conviene fijar desde ya el vocabulario con el que evaluaremos cada canal. Un <em>adversario</em> queda descrito por tres cosas: su <strong>conocimiento auxiliar</strong> (qué otras fuentes puede cruzar), su <strong>acceso</strong> (¿ve la tabla entera, solo una API, solo los pesos?) y su <strong>objetivo</strong> (reidentificar una fila, confirmar una pertenencia, reconstruir un atributo). Toda afirmación de privacidad de este libro se hará <em>relativa a una clase de adversarios</em> así descrita; las garantías fuertes de la Parte&nbsp;II lo serán precisamente por cuantificar sobre <em>todos</em> los conocimientos auxiliares posibles, no sobre los que se nos ocurrieron.</p>
+<p>Que la amenaza del entrenamiento y la publicación no es teórica lo cuantifica la extracción de datos de modelos en producción: <span class="citation" data-cites="nasr2023extraction"><span class="nocase">Nasr et&nbsp;al.</span> (<a href="#ref-nasr2023extraction" role="doc-biblioref">2023</a>)</span> recuperaron gigabytes de datos de entrenamiento de modelos de lenguaje comerciales, con un ataque de divergencia que multiplicaba por 150 la tasa a la que el modelo emitía texto memorizado, por un coste del orden de doscientos dólares. En sentido contrario, la evidencia reciente también desinfla alarmas mal calibradas: los ataques de inferencia de pertenencia sobre grandes modelos de lenguaje apenas superan al azar cuando se controla la contaminación temporal de los benchmarks <span class="citation" data-cites="duan2024mia">(<a href="#ref-duan2024mia" role="doc-biblioref"><span class="nocase">Duan et&nbsp;al.</span> 2024</a>)</span>. Las dos cosas son la misma lección: sin medir, ni el optimismo ni el pánico son defendibles. Medir es lo que haremos a partir del capítulo siguiente.</p>
 </section>
 <section id="síntesis-y-puente" class="level2 unnumbered">
 <h2 class="unnumbered anchored" data-anchor-id="síntesis-y-puente">Síntesis y puente</h2>
-<p>Un campo no es identificador por su nombre sino por su distribución; la unicidad se mide contra la población; y el perímetro del dato personal incluye hoy a los modelos entrenados. El capítulo&nbsp;<a href="#cap:dato-personal" data-reference-type="ref" data-reference="cap:dato-personal">1</a> deja definido el objeto; el siguiente adopta el punto de vista del adversario y reproduce, con código, los ataques que convierten estas definiciones en riesgo medible.</p>
+<p>Un campo no es identificador por su nombre sino por su distribución, y la identificación se cuenta en bits: reducir resolución es restar información al adversario. La unicidad se mide contra la población —la muestral la sobreestima (proposición&nbsp;<a href="#prop:muestra" data-reference-type="ref" data-reference="prop:muestra">[prop:muestra]</a>)—. El artículo&nbsp;9 es una anotación de esquema que alcanza a las inferencias y, tras la Opinion 28/2024, a los propios pesos de los modelos. Y la privacidad es una propiedad del recorrido completo del dato, no de una estación. El capítulo&nbsp;<a href="#cap:dato-personal" data-reference-type="ref" data-reference="cap:dato-personal">1</a> deja definido el objeto y el vocabulario del adversario; el siguiente adopta su punto de vista y reproduce, con código, los ataques que convierten estas definiciones en riesgo medible.</p>
 </section>
 <section id="errores-comunes" class="level2 unnumbered">
 <h2 class="unnumbered anchored" data-anchor-id="errores-comunes">Errores comunes</h2>
 <ul>
-<li><p>Creer que suprimir los identificadores directos anonimiza: deja intactos los cuasi-identificadores (definición&nbsp;<a href="#def:cuasi" data-reference-type="ref" data-reference="def:cuasi">[def:cuasi]</a>).</p></li>
-<li><p>Medir la unicidad sobre la muestra y extrapolarla sin corrección a la población.</p></li>
-<li><p>Tratar el artículo 9 como una etiqueta documental y no como una anotación de esquema que obliga en el código.</p></li>
+<li><p>Creer que suprimir los identificadores directos anonimiza: deja intactos los cuasi-identificadores (definición&nbsp;<a href="#def:cuasi" data-reference-type="ref" data-reference="def:cuasi">[def:cuasi]</a> y figura&nbsp;<a href="#fig:cap01-join" data-reference-type="ref" data-reference="fig:cap01-join">1.2</a>).</p></li>
+<li><p>Clasificar las columnas una vez y para siempre: el papel depende del contexto y del conocimiento auxiliar disponible (Netflix se reidentificó por las películas, no por la demografía).</p></li>
+<li><p>Medir la unicidad sobre la muestra y venderla como riesgo poblacional: lo sobreestima sistemáticamente (proposición&nbsp;<a href="#prop:muestra" data-reference-type="ref" data-reference="prop:muestra">[prop:muestra]</a>).</p></li>
+<li><p>Tratar el artículo 9 como una etiqueta documental: las inferencias de un modelo sobre categorías especiales son dato sensible aunque el esquema no las nombre.</p></li>
 <li><p>Suponer que un modelo entrenado «ya no contiene» datos personales: la posición del EDPB exige demostrarlo caso por caso <span class="citation" data-cites="edpb2024opinion28">(<a href="#ref-edpb2024opinion28" role="doc-biblioref">European Data Protection Board 2024</a>)</span>.</p></li>
+<li><p>Borrar el dataset y dar el riesgo por cerrado mientras sobreviven sus copias, sus cuadernos y los modelos entrenados con él.</p></li>
 </ul>
 </section>
 <section id="práctica-medida" class="level2 unnumbered">
 <h2 class="unnumbered anchored" data-anchor-id="práctica-medida">Práctica medida</h2>
-<p>Generar el dataset sintético de cuasi-identificadores del libro y medir su riesgo de partida:</p>
-<pre><code>python3 codigo/cap01/generar_dataset.py</code></pre>
-<p>El script fija semillas (<code>comun/determinismo.py</code>), registra el progreso (<code>comun/registro.py</code>), guarda <code>data/processed/poblacion_sintetica.parquet</code> y cierra con el artefacto de verificación del libro: quince observaciones aleatorias del resultado y el <span class="math inline">\(k\)</span>-anonimato del conjunto <span class="math inline">\(\{\)</span>edad, sexo, código postal<span class="math inline">\(\}\)</span>.</p>
+<p>Generar el dataset sintético de cuasi-identificadores del libro y medir su información identificante:</p>
+<pre><code>python3 codigo/cap01/generar_dataset.py
+python3 codigo/cap01/entropia_cuasi.py</code></pre>
+<p>El primer script fija semillas (<code>comun/determinismo.py</code>), registra el progreso (<code>comun/registro.py</code>), guarda <code>data/processed/poblacion_sintetica.parquet</code> y cierra con el artefacto de verificación del libro: quince observaciones aleatorias del resultado. El segundo mide lo que este capítulo enseñó a mirar; a fecha de redacción produce, entre otros:</p>
+<pre><code>H(edad) = 6.25 bits (100 valores distintos)
+H(codigo_postal) = 8.63 bits (400 valores distintos)
+suma de entropias (cota si independientes): 19.17 bits
+bits para senalar a 1 entre 48600000 espanoles: 25.53
+k-anonimato: k=1; unicidad muestral: 95.9%</code></pre>
+<p>Tres preguntas para leer esos números: ¿por qué el 95,9 % de las filas son únicas si 19,17 bits no bastan para señalar a un español (sección&nbsp;<a href="#sec:cap01-muestra" data-reference-type="ref" data-reference="sec:cap01-muestra">1.1.2</a>)? ¿Qué le pasaría a la unicidad muestral si el dataset creciera a un millón de filas con las mismas columnas? ¿Y qué columna eliminaría usted primero para maximizar bits retirados por utilidad perdida?</p>
 <blockquote class="blockquote">
 <p><em>Marcos frente a frente: ENS/UE vs NIST — sección disponible en la obra completa.</em></p>
 </blockquote>
@@ -354,8 +505,23 @@ Ciclo de vida del dato y superficie de exposición en cada estación del <em>pip
 </section>
 
 <div id="quarto-appendix" class="default"><section class="quarto-appendix-contents" role="doc-bibliography" id="quarto-bibliography"><h2 class="anchored quarto-appendix-heading">Referencias</h2><div id="refs" class="references csl-bib-body hanging-indent" role="list">
+<div id="ref-aepd2022guiabasica" class="csl-entry" role="listitem">
+Agencia Española de Protección de Datos. 2022a. <em>Guía básica de anonimización</em>. AEPD.
+</div>
+<div id="ref-aepd2022orientaciones" class="csl-entry" role="listitem">
+Agencia Española de Protección de Datos. 2022b. <em>Orientaciones y garantías en los procedimientos de anonimización de datos personales</em>. AEPD.
+</div>
+<div id="ref-duan2024mia" class="csl-entry" role="listitem">
+<span class="nocase">Duan, Michael, Anshuman Suri, Niloofar Mireshghallah, et&nbsp;al.</span> 2024. <span>«Do Membership Inference Attacks Work on Large Language Models?»</span> <em>Conference on Language Modeling (COLM)</em>. <a href="https://arxiv.org/abs/2402.07841">https://arxiv.org/abs/2402.07841</a>.
+</div>
 <div id="ref-edpb2024opinion28" class="csl-entry" role="listitem">
 European Data Protection Board. 2024. <em>Opinion 28/2024 on Certain Data Protection Aspects Related to the Processing of Personal Data in the Context of AI Models</em>. EDPB.
+</div>
+<div id="ref-iso27559" class="csl-entry" role="listitem">
+ISO/IEC 27559:2022 — Privacy Enhancing Data De-identification Framework (2022).
+</div>
+<div id="ref-narayanan2008robust" class="csl-entry" role="listitem">
+Narayanan, Arvind, y Vitaly Shmatikov. 2008. <span>«Robust De-anonymization of Large Sparse Datasets»</span>. <em>IEEE Symposium on Security and Privacy</em>.
 </div>
 <div id="ref-nasr2023extraction" class="csl-entry" role="listitem">
 <span class="nocase">Nasr, Milad, Nicholas Carlini, Jonathan Hayase, et&nbsp;al.</span> 2023. <em>Scalable Extraction of Training Data from (Production) Language Models</em>. <a href="https://arxiv.org/abs/2311.17035">https://arxiv.org/abs/2311.17035</a>.

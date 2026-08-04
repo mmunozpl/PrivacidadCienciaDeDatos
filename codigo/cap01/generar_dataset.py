@@ -24,8 +24,17 @@ from comun.reident import k_anonimato, unicidad_muestral
 N = 20_000
 SALIDA = RAIZ / "data" / "processed" / "poblacion_sintetica.parquet"
 
-# se separan las columnas por su papel frente a la reidentificacion
-CUASI = ["edad", "sexo", "codigo_postal", "profesion"]
+# el esquema anotado viaja con el dato: papel de cada columna frente
+# a la reidentificacion (cap. 1, seccion 1.3)
+ESQUEMA = {
+    "num_historia": "identificador",  # se suprime al preparar
+    "edad": "cuasi",
+    "sexo": "cuasi",
+    "codigo_postal": "cuasi",
+    "profesion": "cuasi",
+    "diagnostico": "sensible",        # art. 9: salud
+}
+CUASI = [c for c, papel in ESQUEMA.items() if papel == "cuasi"]
 
 PROFESIONES = ["sanidad", "educacion", "comercio", "industria",
                "tecnologia", "administracion", "agricultura",
@@ -79,6 +88,8 @@ def main() -> None:
     df.to_parquet(SALIDA, index=False)
     log.info("guardado %s (%.1f kB)", SALIDA.relative_to(RAIZ),
              SALIDA.stat().st_size / 1024)
+    for col, papel in ESQUEMA.items():
+        log.info("esquema: %s -> %s", col, papel)
 
     # riesgo de partida sobre los cuasi-identificadores del libro
     k = k_anonimato(df, CUASI)
