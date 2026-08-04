@@ -18,10 +18,15 @@ FIG_SRC := $(wildcard $(LATEX_DIR)/figs/cap*/fig_*.tex)
 FIG_PDF := $(FIG_SRC:.tex=.pdf)
 FIG_SVG := $(patsubst $(LATEX_DIR)/figs/%.tex,$(QMD_DIR)/figs/%.svg,$(FIG_SRC))
 
+# figuras de las SOLUCIONES: contenido de pago — solo PDF, jamás
+# SVG ni web (por eso quedan fuera de FIG_SRC/FIG_SVG)
+SOL_SRC := $(wildcard $(LATEX_DIR)/figs/soluciones/fig_*.tex)
+SOL_PDF := $(SOL_SRC:.tex=.pdf)
+
 .PHONY: figuras qmd web completa limpiar
 
 # ── figuras ──────────────────────────────────────────────────────────
-figuras: $(FIG_PDF) $(FIG_SVG)
+figuras: $(FIG_PDF) $(FIG_SVG) $(SOL_PDF)
 
 # pdf junto al fuente: main.tex lo resuelve con \includegraphics
 $(LATEX_DIR)/figs/%.pdf: $(LATEX_DIR)/figs/%.tex
@@ -70,7 +75,7 @@ web: qmd
 	quarto render $(QMD_DIR)
 
 # ── obra completa ────────────────────────────────────────────────────
-completa: $(FIG_PDF)
+completa: $(FIG_PDF) $(SOL_PDF)
 	cd $(LATEX_DIR) && latexmk -pdf -interaction=nonstopmode main.tex
 
 limpiar:
