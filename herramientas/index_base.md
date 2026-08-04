@@ -37,7 +37,7 @@ NIST»— se publicará en **papel, PDF y EPUB**.
 - [Capítulo 1. El dato personal como objeto de ingeniería](cap01.qmd)
 - [Capítulo 2. Ataques a la privacidad](cap02.qmd)
 - [Capítulo 3. Cuantificar el riesgo](cap03.qmd)
-- Capítulo 4. Seudonimización y anonimización clásica *(en preparación)*
+- [Capítulo 4. Seudonimización y anonimización clásica](cap04.qmd)
 - Capítulo 5. Privacidad diferencial *(en preparación)*
 - Capítulo 6. DP en el entrenamiento *(en preparación)*
 - Capítulo 7. Privacidad diferencial local *(en preparación)*

@@ -1,0 +1,1176 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="es" xml:lang="es"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.9.38">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>Capítulo 4. Seudonimización y anonimización clásica – Privacidad · Ciencia de datos</title>
+<style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for citations */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+}
+.hanging-indent div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<link href="./cap03.html" rel="prev">
+<script src="site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-15634bcf2e68342d4ad2dfa704d543f6.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap-c51ee271f6426d8ddbbd81f2fce6c0c5.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "language": {
+    "search-no-results-text": "No se han encontrado resultados",
+    "search-matching-documents-text": "documentos encontrados",
+    "search-copy-link-title": "Copiar el enlace en la búsqueda",
+    "search-hide-matches-text": "Ocultar resultados adicionales",
+    "search-more-match-text": "resultado adicional en este documento",
+    "search-more-matches-text": "resultados adicionales en este documento",
+    "search-clear-button-title": "Borrar",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancelar",
+    "search-submit-button-title": "Enviar",
+    "search-label": "Buscar"
+  }
+}</script>
+
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script defer="" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+</head>
+
+<body class="nav-sidebar docked quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Alternar barra lateral" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./cap04.html">Capítulo 4. Seudonimización y anonimización clásica</a></li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Alternar barra lateral" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+      <button type="button" class="btn quarto-search-button" aria-label="Buscar" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation docked overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header">
+    <div class="sidebar-title mb-0 py-0">
+      <a href="./">Privacidad · Ciencia de datos</a> 
+        <div class="sidebar-tools-main">
+  <a href="" class="quarto-reader-toggle quarto-navigation-tool px-1" onclick="window.quartoToggleReader(); return false;" title="Alternar modo lector">
+  <div class="quarto-reader-toggle-btn">
+  <i class="bi"></i>
+  </div>
+</a>
+</div>
+    </div>
+      </div>
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Buscar"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Inicio</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./cap01.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Capítulo 1. El dato personal como objeto de ingeniería</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./cap02.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Capítulo 2. Ataques a la privacidad</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./cap03.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Capítulo 3. Cuantificar el riesgo</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./cap04.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text">Capítulo 4. Seudonimización y anonimización clásica</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+ <span class="menu-text">5. Privacidad diferencial (en preparación)</span>
+  </li>
+        <li class="sidebar-item">
+ <span class="menu-text">6. DP en el entrenamiento (en preparación)</span>
+  </li>
+        <li class="sidebar-item">
+ <span class="menu-text">7. Privacidad diferencial local (en preparación)</span>
+  </li>
+        <li class="sidebar-item">
+ <span class="menu-text">8. Datos sintéticos (en preparación)</span>
+  </li>
+        <li class="sidebar-item">
+ <span class="menu-text">9. Aprendizaje federado (en preparación)</span>
+  </li>
+        <li class="sidebar-item">
+ <span class="menu-text">10. Computación cifrada (en preparación)</span>
+  </li>
+        <li class="sidebar-item">
+ <span class="menu-text">11. Biometría (en preparación)</span>
+  </li>
+        <li class="sidebar-item">
+ <span class="menu-text">12. Dato de salud e imagen médica (en preparación)</span>
+  </li>
+        <li class="sidebar-item">
+ <span class="menu-text">13. Procedencia y autenticidad (en preparación)</span>
+  </li>
+        <li class="sidebar-item">
+ <span class="menu-text">14. RGPD operativo (en preparación)</span>
+  </li>
+        <li class="sidebar-item">
+ <span class="menu-text">15. AI Act y gobernanza de modelos (en preparación)</span>
+  </li>
+        <li class="sidebar-item">
+ <span class="menu-text">16. Privacy by design en arquitectura (en preparación)</span>
+  </li>
+        <li class="sidebar-item">
+ <span class="menu-text">17. Caso integral (en preparación)</span>
+  </li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">En esta página</h2>
+   
+  <ul>
+  <li><a href="#sec:cap04-seudo" id="toc-sec:cap04-seudo" class="nav-link active" data-scroll-target="#sec\:cap04-seudo">Seudonimizar no es anonimizar</a>
+  <ul class="collapse">
+  <li><a href="#sec:cap04-articulado" id="toc-sec:cap04-articulado" class="nav-link" data-scroll-target="#sec\:cap04-articulado">Dónde aparece en el reglamento, y dónde no</a></li>
+  <li><a href="#sec:cap04-doctrina" id="toc-sec:cap04-doctrina" class="nav-link" data-scroll-target="#sec\:cap04-doctrina">El estado de la doctrina, y por qué está en movimiento</a></li>
+  </ul></li>
+  <li><a href="#sec:cap04-hash" id="toc-sec:cap04-hash" class="nav-link" data-scroll-target="#sec\:cap04-hash">Por qué el hash no anonimiza</a>
+  <ul class="collapse">
+  <li><a href="#sec:cap04-diccionario" id="toc-sec:cap04-diccionario" class="nav-link" data-scroll-target="#sec\:cap04-diccionario">El argumento, y el ataque</a></li>
+  <li><a href="#sec:cap04-taxis" id="toc-sec:cap04-taxis" class="nav-link" data-scroll-target="#sec\:cap04-taxis">El caso de los taxis de Nueva York</a></li>
+  <li><a href="#sec:cap04-hmac" id="toc-sec:cap04-hmac" class="nav-link" data-scroll-target="#sec\:cap04-hmac">Lo que sí funciona, y lo que sigue sin lograr</a></li>
+  <li><a href="#sec:cap04-arquitectura" id="toc-sec:cap04-arquitectura" class="nav-link" data-scroll-target="#sec\:cap04-arquitectura">La arquitectura, que es lo que de verdad protege</a></li>
+  <li><a href="#sec:cap04-tokenizacion" id="toc-sec:cap04-tokenizacion" class="nav-link" data-scroll-target="#sec\:cap04-tokenizacion">Tokenización y cifrado determinista</a></li>
+  </ul></li>
+  <li><a href="#sec:cap04-generalizar" id="toc-sec:cap04-generalizar" class="nav-link" data-scroll-target="#sec\:cap04-generalizar">Generalizar y suprimir, en serio</a>
+  <ul class="collapse">
+  <li><a href="#sec:cap04-familias" id="toc-sec:cap04-familias" class="nav-link" data-scroll-target="#sec\:cap04-familias">Global, local y multidimensional</a></li>
+  <li><a href="#sec:cap04-medido" id="toc-sec:cap04-medido" class="nav-link" data-scroll-target="#sec\:cap04-medido">Medido: Mondrian frente a la generalización global</a></li>
+  <li><a href="#sec:cap04-particion" id="toc-sec:cap04-particion" class="nav-link" data-scroll-target="#sec\:cap04-particion">La corrección, y la lección</a></li>
+  </ul></li>
+  <li><a href="#sec:cap04-familias2" id="toc-sec:cap04-familias2" class="nav-link" data-scroll-target="#sec\:cap04-familias2">Otras familias del control de divulgación</a>
+  <ul class="collapse">
+  <li><a href="#sec:cap04-microagregacion" id="toc-sec:cap04-microagregacion" class="nav-link" data-scroll-target="#sec\:cap04-microagregacion">Microagregación</a></li>
+  <li><a href="#sec:cap04-swapping" id="toc-sec:cap04-swapping" class="nav-link" data-scroll-target="#sec\:cap04-swapping">Intercambio, ruido y recodificación aleatoria</a></li>
+  </ul></li>
+  <li><a href="#sec:cap04-criterios" id="toc-sec:cap04-criterios" class="nav-link" data-scroll-target="#sec\:cap04-criterios">Las técnicas contra los tres criterios europeos</a></li>
+  <li><a href="#sec:cap04-composicion" id="toc-sec:cap04-composicion" class="nav-link" data-scroll-target="#sec\:cap04-composicion">Dos publicaciones no componen</a>
+  <ul class="collapse">
+  <li><a href="#sec:cap04-composicion-numeros" id="toc-sec:cap04-composicion-numeros" class="nav-link" data-scroll-target="#sec\:cap04-composicion-numeros">La cuenta, con números</a></li>
+  </ul></li>
+  <li><a href="#sec:cap04-aepd" id="toc-sec:cap04-aepd" class="nav-link" data-scroll-target="#sec\:cap04-aepd">Qué exige la doctrina española</a></li>
+  <li><a href="#sec:cap04-limites" id="toc-sec:cap04-limites" class="nav-link" data-scroll-target="#sec\:cap04-limites">Los límites, demostrados</a>
+  <ul class="collapse">
+  <li><a href="#sec:cap04-dimensionalidad" id="toc-sec:cap04-dimensionalidad" class="nav-link" data-scroll-target="#sec\:cap04-dimensionalidad">La maldición de la dimensionalidad</a></li>
+  <li><a href="#sec:cap04-brickell" id="toc-sec:cap04-brickell" class="nav-link" data-scroll-target="#sec\:cap04-brickell">«El coste de la privacidad», y su réplica</a></li>
+  <li><a href="#sec:cap04-donde" id="toc-sec:cap04-donde" class="nav-link" data-scroll-target="#sec\:cap04-donde">Dónde funciona, entonces</a></li>
+  </ul></li>
+  <li><a href="#sec:cap04-fuera" id="toc-sec:cap04-fuera" class="nav-link" data-scroll-target="#sec\:cap04-fuera">Fuera de la tabla rectangular</a></li>
+  <li><a href="#sec:cap04-sesgo" id="toc-sec:cap04-sesgo" class="nav-link" data-scroll-target="#sec\:cap04-sesgo">El coste oculto: qué le pasa al análisis</a></li>
+  <li><a href="#sec:cap04-modelos" id="toc-sec:cap04-modelos" class="nav-link" data-scroll-target="#sec\:cap04-modelos">Cuando el dato anonimizado entrena un modelo</a></li>
+  <li><a href="#sec:cap04-elegir" id="toc-sec:cap04-elegir" class="nav-link" data-scroll-target="#sec\:cap04-elegir">Cómo elegir, en la práctica</a></li>
+  <li><a href="#sec:cap04-caso" id="toc-sec:cap04-caso" class="nav-link" data-scroll-target="#sec\:cap04-caso">Un caso de principio a fin</a></li>
+  <li><a href="#sec:cap04-herramientas" id="toc-sec:cap04-herramientas" class="nav-link" data-scroll-target="#sec\:cap04-herramientas">Herramientas y flujo reproducible</a></li>
+  <li><a href="#síntesis-y-puente" id="toc-síntesis-y-puente" class="nav-link" data-scroll-target="#síntesis-y-puente">Síntesis y puente</a></li>
+  <li><a href="#errores-comunes" id="toc-errores-comunes" class="nav-link" data-scroll-target="#errores-comunes">Errores comunes</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Capítulo 4. Seudonimización y anonimización clásica</h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<p><span id="cap:clasica"></span> Con el capítulo anterior aprendimos a poner número al riesgo. Toca ahora recorrer las técnicas que ese número gobierna: las que la industria lleva treinta años aplicando y que siguen siendo, con diferencia, las más usadas. Sustituir un identificador por un código, generalizar una edad a una franja, suprimir las filas raras, promediar grupos pequeños. Son operaciones sencillas de entender y de implementar, y precisamente por eso conviene saber <em>exactamente</em> hasta dónde llegan.</p>
+<p>Este capítulo tiene, por tanto, dos mitades y una tesis. La primera mitad es de vocabulario jurídico, y no es un rodeo: la diferencia entre seudonimizar y anonimizar es la diferencia entre estar dentro y fuera del RGPD, y se confunde constantemente —también en pliegos, en contratos y en memorias de proyecto—. La segunda es técnica: las familias de métodos, implementadas y medidas sobre nuestros datos, con la comparación que interesa de verdad, que no es cuál conserva más bits sino cuál responde mejor la pregunta que motivaba la publicación. Y la tesis, que el capítulo demuestra midiendo, es que <strong>estas técnicas funcionan bien exactamente donde se inventaron</strong> —microdatos tabulares de dimensión moderada, con jerarquías declaradas y una finalidad conocida— y se degradan de forma abrupta fuera de ese terreno.</p>
+<section id="sec:cap04-seudo" class="level2">
+<h2 class="anchored" data-anchor-id="sec:cap04-seudo">Seudonimizar no es anonimizar</h2>
+<p>Empecemos por la distinción que más dinero cuesta en la práctica.</p>
+<div class="definicion">
+<p><span id="def:seudonimizacion" data-label="def:seudonimizacion"></span> El «tratamiento de datos personales de manera tal que ya no puedan atribuirse a un interesado sin utilizar información adicional, siempre que dicha información adicional figure por separado y esté sujeta a medidas técnicas y organizativas destinadas a garantizar que los datos personales no se atribuyan a una persona física identificada o identificable» <span class="citation" data-cites="ue2016rgpd">(<a href="#ref-ue2016rgpd" role="doc-biblioref">Reglamento (UE) 2016/679, General de Protección de Datos (RGPD) 2016</a>)</span>.</p>
+</div>
+<p>Léase con atención la estructura de la definición, porque contiene la respuesta: la seudonimización presupone que <em>existe</em> información adicional que permite volver atrás. No la destruye: la separa y la protege. Y de ahí se sigue lo que el considerando&nbsp;26 dice sin ambigüedad: los datos seudonimizados <strong>siguen siendo datos personales</strong> y siguen dentro del ámbito del reglamento. La anonimización, en cambio, aspira a que esa información adicional no exista para nadie, y solo entonces el resultado queda fuera.</p>
+<p>No son grados de lo mismo, sino <strong>categorías jurídicamente disjuntas</strong>: un dato está dentro o fuera. La confusión es tan frecuente que conviene fijar las consecuencias prácticas, que son enormes: sobre datos seudonimizados siguen aplicando la base jurídica, los derechos del interesado, la obligación de notificar brechas y las restricciones de transferencia internacional; sobre datos realmente anónimos, ninguna.</p>
+<section id="sec:cap04-articulado" class="level3">
+<h3 class="anchored" data-anchor-id="sec:cap04-articulado">Dónde aparece en el reglamento, y dónde no</h3>
+<p>Un mapa útil, porque la seudonimización aparece en más sitios de los que suele citarse —seis artículos y siete considerandos— y con papeles distintos:</p>
+<ul>
+<li><p><strong>Art. 4.5</strong>: la definición.</p></li>
+<li><p><strong>Art. 6.4.e)</strong>: como garantía que pesa en el juicio de compatibilidad de un tratamiento ulterior. Ojo: es un factor del test, no una autorización.</p></li>
+<li><p><strong>Art. 25.1</strong>: ejemplo de medida de protección desde el diseño.</p></li>
+<li><p><strong>Art. 32.1.a)</strong>: ejemplo de medida de seguridad.</p></li>
+<li><p><strong>Art. 40.2.d)</strong>: contenido posible de un código de conducta.</p></li>
+<li><p><strong>Art. 89.1</strong>: garantía para fines de archivo, investigación y estadística.</p></li>
+</ul>
+<p>Y ahora lo que <em>no</em> dice, que es donde se equivocan los pliegos: <strong>el RGPD no obliga en ningún sitio a seudonimizar</strong>. Los artículos 25 y 32 la mencionan como ejemplo —«medidas apropiadas, como la seudonimización»—, dentro de listas explícitamente ejemplificativas y condicionadas al riesgo. Es una medida recomendable y muchas veces exigible por el análisis de riesgo, pero no una obligación autónoma; el propio EDPB lo dice con todas las letras <span class="citation" data-cites="edpb2025seudonimizacion">(<a href="#ref-edpb2025seudonimizacion" role="doc-biblioref">European Data Protection Board 2025</a>)</span>.</p>
+</section>
+<section id="sec:cap04-doctrina" class="level3">
+<h3 class="anchored" data-anchor-id="sec:cap04-doctrina">El estado de la doctrina, y por qué está en movimiento</h3>
+<p>Aquí hay que ser especialmente cuidadoso con las fechas, porque este es de los pocos rincones del libro donde la doctrina ha cambiado mientras se escribía.</p>
+<p>El EDPB adoptó en enero de 2025 unas directrices sobre seudonimización <span class="citation" data-cites="edpb2025seudonimizacion">(<a href="#ref-edpb2025seudonimizacion" role="doc-biblioref">European Data Protection Board 2025</a>)</span> cuya tesis central es contundente: los datos seudonimizados son personales <em>también cuando los datos y la información adicional no están en las mismas manos</em>. Conviene saber dos cosas sobre ellas. La primera, que a fecha de redacción de este capítulo siguen siendo la <strong>versión para consulta pública</strong>: la consulta se cerró en marzo de 2025 y no hay texto final. La segunda, y más importante, que el Tribunal de Justicia de la Unión Europea se pronunció después —en septiembre de 2025, en el asunto C-413/23&nbsp;P <span class="citation" data-cites="tjue2025srb">(<a href="#ref-tjue2025srb" role="doc-biblioref"><em>Sentencia del Tribunal de Justicia de la Unión Europea, asunto C-413/23 P, EDPS contra Junta Única de Resolución</em> 2025</a>)</span>— matizando precisamente ese punto: el carácter personal de un dato seudonimizado debe valorarse también desde la perspectiva de <em>quien lo recibe</em>, con el criterio de los medios razonablemente utilizables del considerando&nbsp;26.</p>
+<p>La lectura prudente para un ingeniero, que es la que este libro adopta, evita los dos extremos. No es cierto que seudonimizar convierta un dato en anónimo para el receptor por el mero hecho de entregárselo sin la tabla de correspondencia; tampoco lo es que el dato sea personal para todo el mundo en toda circunstancia por definición. Lo que hay que hacer, y esto no ha cambiado, es <strong>analizar y documentar</strong> qué medios tiene realmente ese receptor —qué fuentes auxiliares, qué acceso, qué incentivo—, que es el análisis del capítulo&nbsp;2 aplicado a una entrega concreta. Quien tenga que decidir sobre un caso real debe además comprobar el estado de esta doctrina: es de las que se mueven.</p>
+</section>
+</section>
+<section id="sec:cap04-hash" class="level2">
+<h2 class="anchored" data-anchor-id="sec:cap04-hash">Por qué el hash no anonimiza</h2>
+<p>Pasemos a la técnica, empezando por el error más repetido de todo el sector: sustituir un identificador por su hash y llamar a eso anonimizar.</p>
+<section id="sec:cap04-diccionario" class="level3">
+<h3 class="anchored" data-anchor-id="sec:cap04-diccionario">El argumento, y el ataque</h3>
+<p>El razonamiento equivocado es tentador: una función hash criptográfica es de un solo sentido —dado el resumen, no se puede recuperar la entrada—, luego publicar el hash del DNI es seguro. El error está en confundir «irreversible» con «no invertible por enumeración». Una función hash es irreversible <em>en general</em>, para entradas arbitrariamente largas; pero si el adversario sabe que la entrada es un DNI, no necesita invertir nada: le basta con <strong>recorrer todos los DNI posibles</strong>, hashear cada uno y comparar.</p>
+<p>El coste de ese ataque es exactamente el tamaño del espacio de entrada, y los espacios de los identificadores reales son ridículamente pequeños. El script <code>src/cap04/hash_no_anonimiza.py</code> lo mide en la máquina en que se escribió este libro:</p>
+<pre><code>velocidad medida: 1.630.949 hashes/segundo (Python puro, un núcleo)
+
+  móvil español (6xx/7xx)     200.000.000 candidatos ·  122,6 s
+  DNI (8 dígitos + letra)     100.000.000 candidatos ·   61,3 s
+  matrícula española           64.000.000 candidatos ·   39,2 s
+  número de historia (6 díg.)   1.000.000 candidatos ·    0,6 s</code></pre>
+<p>Dos minutos para el espacio completo de móviles españoles, con Python puro y un solo núcleo. Con una tarjeta gráfica de gama media, que hace del orden de diez mil millones de SHA-256 por segundo, el mismo barrido baja a dos centésimas de segundo. No hay ninguna función hash que arregle esto: el problema no es la función, es que el espacio de entrada es enumerable. La AEPD y el Supervisor Europeo publicaron en 2019 una nota técnica con este mismo ejemplo sobre móviles españoles <span class="citation" data-cites="aepd2019hash">(<a href="#ref-aepd2019hash" role="doc-biblioref">Agencia Española de Protección de Datos y European Data Protection Supervisor 2019</a>)</span>, y su cifra de referencia —un millón de hashes por segundo— era ya entonces conservadora.</p>
+</section>
+<section id="sec:cap04-taxis" class="level3">
+<h3 class="anchored" data-anchor-id="sec:cap04-taxis">El caso de los taxis de Nueva York</h3>
+<p>El caso documentado que conviene contar entero, porque contiene tres lecciones y casi siempre se cuenta mal.</p>
+<p>En marzo de 2014, tras una solicitud de acceso a información pública, la comisión de taxis de Nueva York entregó los registros de unos 173 millones de viajes: recogida, destino, hora, tarifa y los identificadores de licencia y taxi, estos últimos «anonimizados» con MD5. Vijay Pandurangan comprobó que el espacio de licencias era diminuto —el formato es conocido y hay unas decenas de miles— y reconstruyó la tabla inversa completa en cuestión de minutos <span class="citation" data-cites="pandurangan2014taxis">(<a href="#ref-pandurangan2014taxis" role="doc-biblioref">Pandurangan 2014</a>)</span>. Poco después, Anthony Tockar mostró que con los viajes ya desanonimizados y algunas fuentes auxiliares —fotografías de famosos saliendo de un taxi con fecha y lugar— podía identificarse a pasajeros concretos, e incluso inferir visitas a domicilios particulares desde un club nocturno <span class="citation" data-cites="tockar2014riding">(<a href="#ref-tockar2014riding" role="doc-biblioref">Tockar 2014</a>)</span>.</p>
+<p>Las tres lecciones: <strong>el fallo no fue MD5</strong>. Con SHA-256, SHA-3 o cualquier función moderna el ataque habría sido igual de barato, porque el problema era el espacio de entrada. <strong>El fallo no fue del organismo que pidió los datos</strong>, sino de quien los publicó creyendo que hashear bastaba. Y <strong>la reidentificación de pasajeros no dependía del hash</strong>: venía de las coordenadas y las horas, es decir, de la huella de comportamiento del capítulo&nbsp;1.</p>
+</section>
+<section id="sec:cap04-hmac" class="level3">
+<h3 class="anchored" data-anchor-id="sec:cap04-hmac">Lo que sí funciona, y lo que sigue sin lograr</h3>
+<p>La técnica correcta para seudonimizar un identificador es un <strong>hash con clave</strong> —un HMAC, o un cifrado determinista con clave—, donde la clave es secreta y se custodia separada de los datos. Sin la clave, el adversario no puede construir la tabla inversa aunque conozca el espacio entero. Es lo que recomienda la guía de desidentificación de NIST <span class="citation" data-cites="nist2023sp800188">(<a href="#ref-nist2023sp800188" role="doc-biblioref">Garfinkel et&nbsp;al. 2023</a>)</span> y lo que hace la última línea de nuestro script.</p>
+<p>Dos advertencias que rara vez se dan juntas. La primera: añadir una <em>sal</em> pública no resuelve nada. La sal impide reutilizar tablas precalculadas entre publicaciones, que es útil, pero si la sal se publica junto a los datos —como suele ocurrir para que las tablas sean unibles— el barrido del espacio vuelve a funcionar tal cual; el script lo comprueba.</p>
+<p>La segunda, y es la que cierra el círculo con la sección anterior: <strong>el HMAC bien hecho seudonimiza, no anonimiza</strong>. Existe una clave que revierte la operación; existe, por tanto, información adicional; el resultado sigue siendo un dato personal en el sentido del artículo&nbsp;4.5. Hacerlo bien no saca el tratamiento del RGPD: reduce el riesgo y lo hace defendible, que ya es mucho.</p>
+</section>
+<section id="sec:cap04-arquitectura" class="level3">
+<h3 class="anchored" data-anchor-id="sec:cap04-arquitectura">La arquitectura, que es lo que de verdad protege</h3>
+<p>Si el HMAC solo seudonimiza, lo que decide el nivel real de protección no es la función sino <strong>la arquitectura que rodea a la clave</strong>. Cuatro decisiones, en orden de importancia:</p>
+<p><strong>1. Dónde vive la clave.</strong> La definición del artículo&nbsp;4.5 exige que la información adicional «figure por separado». Separado significa en otro sistema, con otro control de acceso y otro responsable —no en otra tabla de la misma base de datos, que es lo que suele encontrarse—. Un almacén de secretos o un módulo de seguridad hardware convierten esa exigencia en algo comprobable.</p>
+<p><strong>2. Quién puede revertir, y con qué traza.</strong> La reversión debe ser una operación registrada, autorizada y auditable. El considerando&nbsp;29 del RGPD llega a pedir que se indique quiénes son las personas autorizadas: sin ese registro, la organización no puede saber —ni demostrar— si alguien revirtió.</p>
+<p><strong>3. Un seudónimo por finalidad.</strong> Si el mismo código identifica a la persona en investigación, en facturación y en el portal público, cualquiera que vea dos de esas bases puede cruzarlas. La práctica correcta es derivar seudónimos distintos por finalidad —con claves o etiquetas distintas— de modo que la vinculación entre dominios exija volver al custodio de la clave.</p>
+<p><strong>4. Rotación, y su precio.</strong> Cambiar la clave periódicamente limita el daño de una filtración, pero rompe la continuidad de los análisis longitudinales: el mismo paciente pasa a ser dos personas distintas antes y después de la rotación. Es un compromiso real que hay que decidir con el analista, no una buena práctica automática.</p>
+<figure id="fig:cap04-arquitectura" data-latex-placement="htbp" class="figure">
+<img src="figs/cap04/fig_04.svg" style="width:96.0%" class="figure-img">
+<figcaption>
+La arquitectura de seudonimización: lo que protege no es la función, es dónde vive la clave y quién puede usarla.
+</figcaption>
+</figure>
+</section>
+<section id="sec:cap04-tokenizacion" class="level3">
+<h3 class="anchored" data-anchor-id="sec:cap04-tokenizacion">Tokenización y cifrado determinista</h3>
+<p>Dos variantes que aparecen mucho en sistemas transaccionales y que conviene distinguir del hash.</p>
+<p>La <strong>tokenización</strong> sustituye el identificador por un valor sin relación matemática con él —un número de serie— y guarda la correspondencia en una tabla custodiada. Su ventaja sobre cualquier esquema criptográfico es que no hay nada que romper: sin la tabla, el token no dice absolutamente nada. Su inconveniente es operativo: la tabla crece, hay que replicarla y protegerla, y se convierte en el punto único de fallo.</p>
+<p>El <strong>cifrado determinista</strong> —cifrar el identificador con una clave, siempre con el mismo resultado— permite unir tablas sin tabla de correspondencia, porque el mismo DNI produce siempre el mismo criptograma. Es cómodo y tiene un coste que hay que conocer: <em>filtra la igualdad</em>. Un adversario ve qué registros pertenecen a la misma persona y, con eso, puede contar frecuencias y atacar por análisis de frecuencia igual que en un cifrado clásico por sustitución. Sirve para unir; no protege el patrón de aparición.</p>
+<p>La regla práctica que se sigue de todo esto: <strong>si dos registros del mismo sujeto deben poder unirse, esa capacidad de unión es información, y hay que decidir conscientemente quién la tiene</strong>. No es un detalle de implementación: es la diferencia entre un seudónimo que protege y uno que solo cambia la etiqueta.</p>
+</section>
+</section>
+<section id="sec:cap04-generalizar" class="level2">
+<h2 class="anchored" data-anchor-id="sec:cap04-generalizar">Generalizar y suprimir, en serio</h2>
+<p>El capítulo&nbsp;3 recorrió a mano una escalera de generalización global. Toca ahora ver cómo se hace de verdad, con las tres familias que implementan las herramientas.</p>
+<section id="sec:cap04-familias" class="level3">
+<h3 class="anchored" data-anchor-id="sec:cap04-familias">Global, local y multidimensional</h3>
+<p>La <strong>generalización global de dominio</strong> elige un nivel de la jerarquía por columna y lo aplica a toda la tabla: todas las edades a quinquenios, todos los códigos postales a provincia. Es lo que hicimos en el capítulo&nbsp;3, es fácil de explicar y produce una tabla homogénea que cualquier analista entiende. Su defecto es estructural: para proteger a la persona más rara hay que generalizar a todo el mundo. Los algoritmos clásicos de esta familia son Datafly <span class="citation" data-cites="sweeney1997datafly">(<a href="#ref-sweeney1997datafly" role="doc-biblioref">Sweeney 1997</a>)</span>, que generaliza iterativamente el atributo con más valores distintos, e Incognito <span class="citation" data-cites="lefevre2005incognito">(<a href="#ref-lefevre2005incognito" role="doc-biblioref">LeFevre et&nbsp;al. 2005</a>)</span>, que recorre el retículo de generalizaciones posibles con una propiedad de monotonía que le permite podar.</p>
+<p>La <strong>generalización local</strong> permite que dos filas con el mismo valor original acaben con generalizaciones distintas. Conserva más información y produce tablas heterogéneas, más difíciles de explicar y de analizar.</p>
+<p>La <strong>multidimensional</strong> —Mondrian <span class="citation" data-cites="lefevre2006mondrian">(<a href="#ref-lefevre2006mondrian" role="doc-biblioref">LeFevre et&nbsp;al. 2006</a>)</span>— es el punto intermedio que se impuso en la práctica: particiona el espacio de cuasi-identificadores en regiones rectangulares con al menos <span class="math inline">\(k\)</span> filas cada una, y generaliza dentro de cada región. Donde hay densidad conserva resolución; donde hay pocos datos, agranda.</p>
+<figure id="fig:cap04-familias" data-latex-placement="htbp" class="figure">
+<img src="figs/cap04/fig_01.svg" style="width:92.0%" class="figure-img">
+<figcaption>
+Las tres familias de generalización sobre el mismo espacio de cuasi-identificadores.
+</figcaption>
+</figure>
+<p>El algoritmo de Mondrian cabe en cuatro líneas y es fácil de razonar: mientras la región tenga al menos <span class="math inline">\(2k\)</span> filas, se elige la dimensión de mayor rango normalizado, se corta por su mediana y se recurre; si alguno de los dos lados quedaría por debajo de <span class="math inline">\(k\)</span>, la región no se parte y se publica tal cual. Nótese que, por construcción, <strong>Mondrian no suprime ninguna fila</strong>: toda región cumple el umbral. Es su ventaja más citada.</p>
+</section>
+<section id="sec:cap04-medido" class="level3">
+<h3 class="anchored" data-anchor-id="sec:cap04-medido">Medido: Mondrian frente a la generalización global</h3>
+<p>El script <code>src/cap04/mondrian.py</code> lo implementa y lo ejecuta sobre nuestros veinte mil registros, con el código postal, la edad y el sexo como cuasi-identificadores:</p>
+<pre><code>tabla original: 20000 filas · utilidad 14,24 bits
+
+k= 2 -&gt; 3291 regiones · utilidad 7,16 bits · sin suprimir nada
+k= 5 -&gt; 1338 regiones · utilidad 6,57 bits · sin suprimir nada
+k=10 -&gt;  669 regiones · utilidad 6,09 bits · sin suprimir nada
+k=50 -&gt;  129 regiones · utilidad 4,94 bits · sin suprimir nada</code></pre>
+<p>Hasta aquí, lo esperado. Pero el capítulo&nbsp;3 nos enseñó a desconfiar de las métricas genéricas de utilidad y a medir contra la consulta que motiva la publicación. Al hacerlo, el resultado es incómodo:</p>
+<pre><code>COMPARACIÓN a k=5, midiendo el error de la consulta de prevalencia:
+  global (cap. 3, «provincia»): 2,41 puntos, suprimiendo el 8,8%
+  Mondrian:                     8,84 puntos, sin suprimir ninguna
+                                (79,5% de filas no atribuibles)</code></pre>
+<p>Mondrian, que no suprime a nadie y que la literatura presenta como superior, sale <strong>casi cuatro veces peor</strong> en la consulta que importa. La razón, cuando se mira la tabla publicada, es evidente y muy instructiva: Mondrian trata el código postal como un número y corta por la mediana, de modo que sus regiones producen intervalos como <code>[1000-28015]</code> que <em>atraviesan fronteras provinciales</em>. Esas filas siguen publicadas —no se ha suprimido ninguna— pero han dejado de poder atribuirse a una provincia: el 79,5 % del conjunto es inservible para la única pregunta que la publicación quería responder.</p>
+</section>
+<section id="sec:cap04-particion" class="level3">
+<h3 class="anchored" data-anchor-id="sec:cap04-particion">La corrección, y la lección</h3>
+<p>El arreglo no consiste en cambiar de algoritmo sino en decirle qué hay que preservar. Probamos dos variantes:</p>
+<pre><code>(a) provincia como una dimensión más de Mondrian:
+    error 9,87 puntos · 89,4% no atribuibles  (peor todavía)
+
+(b) provincia como CLAVE DE PARTICIÓN, nunca generalizada:
+    error 0,00 puntos · 0 filas suprimidas · utilidad 9,19 bits</code></pre>
+<p>La variante (a) falla porque Mondrian sigue cortando esa dimensión en rangos —<code>[1-28]</code>— que vuelven a atravesar provincias. La variante (b) resuelve el problema por completo: se particiona primero por provincia y se ejecuta Mondrian <em>dentro</em> de cada una sobre edad y sexo. El resultado es un error de cero puntos, sin suprimir una sola fila, con <span class="math inline">\(k=5\)</span> garantizado y una utilidad de 9,19 bits, comparable a la de la generalización global que sí suprimía el 8,8 %.</p>
+<figure id="fig:cap04-comparacion" data-latex-placement="htbp" class="figure">
+<img src="figs/cap04/fig_02.svg" style="width:94.0%" class="figure-img">
+<figcaption>
+El mismo algoritmo, tres configuraciones: lo que decide el resultado no es la técnica sino qué se declara que hay que preservar.
+</figcaption>
+</figure>
+<p>De aquí sale la lección de ingeniería más importante del capítulo, y conviene enunciarla sin rodeos: <strong>lo que la consulta necesita exacto no puede ser una dimensión a generalizar, tiene que ser una clave de partición</strong>. Dicho de otro modo, la declaración de jerarquías —esa tarea aburrida que las herramientas piden al principio y que casi siempre se despacha con valores por defecto— no es configuración: es el momento en que se decide qué análisis sobrevivirán. Es exactamente donde hay que sentar al epidemiólogo, no al administrador de sistemas.</p>
+</section>
+</section>
+<section id="sec:cap04-familias2" class="level2">
+<h2 class="anchored" data-anchor-id="sec:cap04-familias2">Otras familias del control de divulgación</h2>
+<p>La generalización y la supresión son las técnicas que la literatura de <span class="math inline">\(k\)</span>-anonimato hizo famosas, pero el control de divulgación estadístico —la disciplina de los institutos oficiales, muy anterior— tiene un repertorio más amplio que conviene conocer.</p>
+<section id="sec:cap04-microagregacion" class="level3">
+<h3 class="anchored" data-anchor-id="sec:cap04-microagregacion">Microagregación</h3>
+<p>La idea: en lugar de generalizar a intervalos, se agrupan los registros en conjuntos de al menos <span class="math inline">\(k\)</span> y se sustituye cada valor por el <em>centroide</em> de su grupo. La tabla resultante conserva el tipo de dato original —sigue habiendo edades, no intervalos— lo que facilita enormemente el análisis posterior <span class="citation" data-cites="domingoferrer2002microagregacion">(<a href="#ref-domingoferrer2002microagregacion" role="doc-biblioref">Domingo-Ferrer y Mateo-Sanz 2002</a>)</span>. Aplicada sobre el cuasi-identificador completo, garantiza <span class="math inline">\(k\)</span>-anonimato <span class="citation" data-cites="domingoferrer2005ordinal">(<a href="#ref-domingoferrer2005ordinal" role="doc-biblioref">Domingo-Ferrer y Torra 2005</a>)</span>.</p>
+<p>Sus defensores sostienen que preserva más utilidad que generalizar y suprimir, y hay evidencia experimental en esa dirección <span class="citation" data-cites="soriacomas2015tcloseness">(<a href="#ref-soriacomas2015tcloseness" role="doc-biblioref">Soria-Comas et&nbsp;al. 2015</a>)</span>. Conviene ser preciso sobre el estatus de esa afirmación: es un resultado <em>argumentado y medido</em>, no un teorema; depende del conjunto, de la métrica de utilidad y de la implementación concreta.</p>
+<p>Un matiz de complejidad que circula mal: la microagregación óptima <em>multivariante</em> es NP-difícil, pero la <em>univariante</em> se resuelve en tiempo polinómico <span class="citation" data-cites="oganian2001complejidad">(<a href="#ref-oganian2001complejidad" role="doc-biblioref">Oganian y Domingo-Ferrer 2001</a>)</span>. Decir «la microagregación es NP-dura» sin el apellido es incorrecto, y es de esas frases que se repiten en tesis y en pliegos.</p>
+</section>
+<section id="sec:cap04-swapping" class="level3">
+<h3 class="anchored" data-anchor-id="sec:cap04-swapping">Intercambio, ruido y recodificación aleatoria</h3>
+<p>Tres familias más, que aparecen sobre todo en publicaciones estadísticas oficiales:</p>
+<p><strong>Intercambio (<em>swapping</em>).</strong> Se eligen pares de registros parecidos y se les permutan algunos valores —típicamente el territorio—. Los totales agregados se conservan casi exactos mientras la asociación individual se rompe. Es la técnica que las oficinas censales usaron durante décadas, y su punto débil es que la protección que ofrece no se puede acotar: depende de cuántos intercambios y de cuáles, parámetros que además suelen mantenerse en secreto, lo que impide al analista corregir el sesgo.</p>
+<p><strong>Adición de ruido.</strong> Sumar una perturbación aleatoria a los valores numéricos. Es el antecedente directo de la privacidad diferencial —y la diferencia, que veremos en el capítulo&nbsp;5, no está en añadir ruido sino en <em>calibrarlo con una garantía</em>—.</p>
+<p><strong>Recodificación aleatoria (PRAM).</strong> Cambiar el valor de una variable categórica con cierta probabilidad, según una matriz de transición conocida. Como la matriz se publica, el analista puede corregir los sesgos en sus estimaciones, lo que la hace muy superior al intercambio en términos de honestidad estadística. Es, de hecho, la misma idea que reaparecerá en el capítulo&nbsp;7 con el nombre de respuesta aleatorizada.</p>
+<figure id="fig:cap04-repertorio" data-latex-placement="htbp" class="figure">
+<img src="figs/cap04/fig_03.svg" style="width:96.0%" class="figure-img">
+<figcaption>
+El repertorio clásico: qué le hace cada familia al dato y qué conserva.
+</figcaption>
+</figure>
+</section>
+</section>
+<section id="sec:cap04-criterios" class="level2">
+<h2 class="anchored" data-anchor-id="sec:cap04-criterios">Las técnicas contra los tres criterios europeos</h2>
+<p>El capítulo&nbsp;3 presentó las tres pruebas que el marco europeo exige superar para declarar anónimo un resultado: que no se pueda <em>singularizar</em> a un individuo, que no se puedan <em>vincular</em> registros suyos y que no se pueda <em>inferir</em> información sobre él <span class="citation" data-cites="wp29opinion052014">(<a href="#ref-wp29opinion052014" role="doc-biblioref">Article 29 Data Protection Working Party 2014</a>)</span>. Es un ejercicio muy revelador pasar por esas tres pruebas las familias de este capítulo, porque explica de un golpe por qué ninguna basta sola.</p>
+<div id="tab:cap04-criterios">
+<table class="caption-top table">
+<caption>Riesgo que queda ABIERTO tras cada técnica frente a los tres criterios: «sí» significa que el riesgo persiste.</caption>
+<colgroup>
+<col style="width: 26%">
+<col style="width: 26%">
+<col style="width: 20%">
+<col style="width: 20%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;"><strong>Técnica</strong></th>
+<th style="text-align: center;"><strong>singularizar</strong></th>
+<th style="text-align: center;"><strong>vincular</strong></th>
+<th style="text-align: center;"><strong>inferir</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">seudonimización (HMAC)</td>
+<td style="text-align: center;">sí</td>
+<td style="text-align: center;">sí</td>
+<td style="text-align: center;">sí</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">generalización a <span class="math inline">\(k\)</span></td>
+<td style="text-align: center;">no</td>
+<td style="text-align: center;">sí</td>
+<td style="text-align: center;">sí</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><span class="math inline">\(+\)</span> <span class="math inline">\(l\)</span>-diversidad</td>
+<td style="text-align: center;">no</td>
+<td style="text-align: center;">sí</td>
+<td style="text-align: center;">parcial</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><span class="math inline">\(+\)</span> <span class="math inline">\(t\)</span>-cercanía</td>
+<td style="text-align: center;">no</td>
+<td style="text-align: center;">sí</td>
+<td style="text-align: center;">parcial</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">microagregación</td>
+<td style="text-align: center;">no</td>
+<td style="text-align: center;">sí</td>
+<td style="text-align: center;">sí</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">intercambio</td>
+<td style="text-align: center;">parcial</td>
+<td style="text-align: center;">parcial</td>
+<td style="text-align: center;">parcial</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">ruido no calibrado</td>
+<td style="text-align: center;">parcial</td>
+<td style="text-align: center;">parcial</td>
+<td style="text-align: center;">parcial</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>La columna que conviene mirar despacio es la del medio. La <strong>vinculabilidad</strong> sobrevive a casi todo: mientras cada persona siga teniendo una fila propia —aunque sus valores estén generalizados o promediados—, dos publicaciones sobre la misma población pueden cruzarse. Es la razón técnica del fallo de composición que veremos a continuación, y explica por qué el <span class="math inline">\(k\)</span>-anonimato, que ataca bien la singularización, no cierra el problema.</p>
+<p>La columna de la derecha, la <strong>inferencia</strong>, es la que ninguna técnica sintáctica cierra del todo: <span class="math inline">\(l\)</span>-diversidad y <span class="math inline">\(t\)</span>-cercanía la acotan dentro de una clase, pero no frente a un adversario con conocimiento externo. Y la de la izquierda es la única donde estas técnicas realmente triunfan.</p>
+<p>De aquí se sigue una lectura del capítulo entero: las técnicas clásicas son <strong>muy buenas contra la singularización, mediocres contra la vinculación y débiles contra la inferencia</strong>. Los ataques del capítulo&nbsp;2 explotaban precisamente las dos últimas. Y la privacidad diferencial, que llega en el capítulo siguiente, ataca las tres a la vez porque no razona sobre la forma del resultado sino sobre lo que cambia cuando una persona entra o sale —que es, exactamente, la formulación de las tres pruebas en una sola—.</p>
+</section>
+<section id="sec:cap04-composicion" class="level2">
+<h2 class="anchored" data-anchor-id="sec:cap04-composicion">Dos publicaciones no componen</h2>
+<p>Hay un fallo de las técnicas de este capítulo que no se arregla afinando parámetros y que conviene ver con un ejemplo, porque es el que más daño hace en organizaciones que publican de forma periódica.</p>
+<p>Supongamos que un hospital publica en enero una tabla <span class="math inline">\(k\)</span>-anonimizada con <span class="math inline">\(\{\)</span>edad, sexo, provincia<span class="math inline">\(\}\)</span> y en junio otra, con los mismos pacientes, <span class="math inline">\(k\)</span>-anonimizada con <span class="math inline">\(\{\)</span>edad, sexo, servicio<span class="math inline">\(\}\)</span>. Cada una cumple <span class="math inline">\(k=5\)</span> por separado. Pero un adversario que tenga las dos puede intersecar: quien esté en una clase de cinco personas de la primera y en una clase de cinco de la segunda queda, con frecuencia, en una intersección de una o dos. Ninguna de las dos publicaciones incumple nada; la unión sí.</p>
+<div class="proposicion">
+<p><span id="prop:composicion" data-label="prop:composicion"></span> Sean <span class="math inline">\(T_1\)</span> y <span class="math inline">\(T_2\)</span> dos publicaciones de la misma población, cada una <span class="math inline">\(k\)</span>-anónima respecto de sus respectivos cuasi-identificadores <span class="math inline">\(Q_1\)</span> y <span class="math inline">\(Q_2\)</span>. En general, la tabla que resulta de cruzarlas por los individuos comunes no es <span class="math inline">\(k\)</span>-anónima respecto de <span class="math inline">\(Q_1 \cup Q_2\)</span>; su <span class="math inline">\(k\)</span> efectiva puede llegar a 1.</p>
+</div>
+<p>Es el <em>ataque de composición</em> que formalizan <span class="citation" data-cites="ganta2008composition">Ganta et&nbsp;al. (<a href="#ref-ganta2008composition" role="doc-biblioref">2008</a>)</span>, y no es una curiosidad teórica: es la situación normal de cualquier registro que publique series periódicas, o de dos organismos que publiquen sobre la misma población. Su gravedad práctica: no existe forma de que quien publica la segunda tabla garantice el resultado sin conocer y controlar <em>todas</em> las publicaciones anteriores, propias y ajenas.</p>
+<p>Compárese con lo que ofrecerá el capítulo&nbsp;5. La privacidad diferencial tiene un teorema de composición —la garantía se degrada de forma conocida y acotable al acumular publicaciones—, y eso permite gobernar un programa continuo con un presupuesto. Aquí no hay presupuesto que llevar: hay que rehacer el análisis entero cada vez, y sobre la unión.</p>
+<section id="sec:cap04-composicion-numeros" class="level3">
+<h3 class="anchored" data-anchor-id="sec:cap04-composicion-numeros">La cuenta, con números</h3>
+<p>Merece la pena ver la aritmética, porque la magnitud sorprende. Sea una población de <span class="math inline">\(N\)</span> personas y dos publicaciones <span class="math inline">\(k\)</span>-anónimas independientes con clases de tamaño <span class="math inline">\(k_1\)</span> y <span class="math inline">\(k_2\)</span>. Si los dos cuasi-identificadores son aproximadamente independientes entre sí, la probabilidad de que una persona concreta comparta clase con otra en <em>ambas</em> publicaciones es del orden de <span class="math display">\[\frac{k_1}{N} \cdot \frac{k_2}{N} \cdot N
+  \;=\; \frac{k_1 k_2}{N},\]</span> de modo que el tamaño esperado de la intersección es <span class="math inline">\(k_1 k_2 / N\)</span>. Con <span class="math inline">\(k_1 = k_2 = 5\)</span> y una población de veinte mil personas, la intersección esperada es <span class="math inline">\(25/20\,000 \approx 0{,}00125\)</span>: es decir, prácticamente <strong>nadie más</strong> acompaña a la víctima. Dos publicaciones impecables por separado producen, juntas, un conjunto de anonimato de tamaño uno.</p>
+<p>La fórmula da además la regla práctica: para que la intersección conserve un tamaño <span class="math inline">\(k\)</span> hacen falta clases de tamaño <span class="math inline">\(\sqrt{k \cdot N}\)</span> en cada publicación —con nuestros números, clases de <em>trescientas</em> personas para conservar <span class="math inline">\(k=5\)</span>—, lo que destruye la utilidad mucho antes de proteger. No es que componer sea difícil: es que componer con estas técnicas es inviable.</p>
+</section>
+</section>
+<section id="sec:cap04-aepd" class="level2">
+<h2 class="anchored" data-anchor-id="sec:cap04-aepd">Qué exige la doctrina española</h2>
+<p>Cerrando la parte normativa, conviene saber qué pide exactamente la autoridad española, y con qué estatus.</p>
+<p>La AEPD publicó unas orientaciones sobre procedimientos de anonimización <span class="citation" data-cites="aepd2022orientaciones">(<a href="#ref-aepd2022orientaciones" role="doc-biblioref">Agencia Española de Protección de Datos 2022</a>)</span> que siguen siendo la referencia habitual en España, con dos advertencias que hay que dar juntas: son de <strong>2016</strong>, es decir anteriores a la aplicación del RGPD, y la propia Agencia las mantiene marcadas <strong>«en revisión»</strong> en su portal. Citarlas sin decirlo induce a error sobre su vigencia.</p>
+<p>Su núcleo doctrinal, sin embargo, sigue siendo sólido y encaja con todo lo visto: ninguna técnica de anonimización garantiza en términos absolutos la imposibilidad de reidentificación, de modo que el responsable debe evaluar el riesgo residual, documentarlo y reevaluarlo con el tiempo. Es, palabra por palabra, el ciclo de auditoría del capítulo&nbsp;2 y el informe reproducible del capítulo&nbsp;3.</p>
+<p>Dos documentos conjuntos de la AEPD con el Supervisor Europeo completan el cuadro y conviene conocerlos: la nota técnica sobre la función hash <span class="citation" data-cites="aepd2019hash">(<a href="#ref-aepd2019hash" role="doc-biblioref">Agencia Española de Protección de Datos y European Data Protection Supervisor 2019</a>)</span>, que es la fuente en español del ataque que hemos medido, y una recopilación de malentendidos frecuentes sobre anonimización <span class="citation" data-cites="aepd2021malentendidos">(<a href="#ref-aepd2021malentendidos" role="doc-biblioref">Agencia Española de Protección de Datos y European Data Protection Supervisor 2021</a>)</span> que matiza expresamente la insistencia de la guía de 2016 en la irreversibilidad absoluta. Nótese que ambos son de la AEPD y el <strong>EDPS</strong> —el Supervisor Europeo, que vigila a las instituciones de la UE—, no del EDPB: es un error de atribución muy común.</p>
+<p>Por último, el EDPB tiene en consulta pública unas directrices sobre anonimización <span class="citation" data-cites="edpb2026anonimizacion">(<a href="#ref-edpb2026anonimizacion" role="doc-biblioref">European Data Protection Board 2026</a>)</span> que actualizarán el dictamen de 2014 y sus tres criterios. A la fecha de este capítulo son borrador, con la consulta abierta: quien deba decidir sobre un caso real tiene que comprobar su estado.</p>
+</section>
+<section id="sec:cap04-limites" class="level2">
+<h2 class="anchored" data-anchor-id="sec:cap04-limites">Los límites, demostrados</h2>
+<p>Queda la pregunta que este capítulo debe contestar antes de dar paso a la Parte&nbsp;II: ¿por qué no basta con esto?</p>
+<section id="sec:cap04-dimensionalidad" class="level3">
+<h3 class="anchored" data-anchor-id="sec:cap04-dimensionalidad">La maldición de la dimensionalidad</h3>
+<p>El resultado más citado es el de <span class="citation" data-cites="aggarwal2005curse">Aggarwal (<a href="#ref-aggarwal2005curse" role="doc-biblioref">2005</a>)</span>, que demuestra que al crecer el número de atributos del cuasi-identificador, la pérdida de información necesaria para alcanzar <span class="math inline">\(k\)</span>-anonimato crece hasta hacer inútil el resultado. La intuición es la del capítulo&nbsp;2: en dimensión alta los puntos están tan separados que agrupar <span class="math inline">\(k\)</span> de ellos exige regiones enormes.</p>
+<p>Un matiz que casi nunca se menciona al citarlo, y que conviene dar porque cambia el alcance: la demostración supone que los atributos son <strong>independientes</strong>. En datos reales hay correlación —el código postal predice en parte la renta y la profesión—, y esa correlación reduce la dimensión efectiva. El resultado sigue siendo válido como tendencia y como advertencia; no como cota exacta para un conjunto concreto.</p>
+</section>
+<section id="sec:cap04-brickell" class="level3">
+<h3 class="anchored" data-anchor-id="sec:cap04-brickell">«El coste de la privacidad», y su réplica</h3>
+<p><span class="citation" data-cites="brickell2008cost">Brickell y Shmatikov (<a href="#ref-brickell2008cost" role="doc-biblioref">2008</a>)</span> fueron más lejos: sostuvieron que, en la publicación anonimizada de microdatos, la utilidad que se destruye supera el beneficio de privacidad que se obtiene, hasta el punto de que la «sanitización trivial» —publicar solo los atributos sensibles, sin los cuasi-identificadores— ofrecía comparable utilidad de minería con menos riesgo.</p>
+<p>La conclusión hizo mucho ruido y recibió una réplica directa: <span class="citation" data-cites="li2009tradeoff">Li y Li (<a href="#ref-li2009tradeoff" role="doc-biblioref">2009</a>)</span> sostienen que la metodología de comparación empleada es inapropiada y que sus conclusiones no se sostienen tal como están formuladas. Su posición es más interesante que un simple «tenían razón» o «se equivocaban»: argumentan que Brickell y Shmatikov <em>exageran</em> el pesimismo sobre la utilidad y a la vez <em>subestiman</em> el daño de privacidad, por medir este último en promedio en lugar de acotar el peor caso —exactamente la crítica que el capítulo&nbsp;3 hacía a las medias—.</p>
+<p>Para el ingeniero, la discusión deja una enseñanza que no depende de quién ganara: <strong>las conclusiones sobre utilidad dependen por completo de qué tarea se mida</strong>, y por eso cualquier afirmación general del tipo «anonimizar destruye la utilidad» o «anonimizar la conserva» es, sin la tarea concreta delante, un enunciado vacío. Es la misma conclusión a la que nos llevó la medición de Mondrian.</p>
+</section>
+<section id="sec:cap04-donde" class="level3">
+<h3 class="anchored" data-anchor-id="sec:cap04-donde">Dónde funciona, entonces</h3>
+<p>Cerrando el balance, y siendo justos con unas técnicas que se critican mucho y se usan más:</p>
+<p><strong>Funcionan bien</strong> sobre microdatos tabulares de dimensión moderada —cinco o seis cuasi-identificadores demográficos—, cuando existe una jerarquía de generalización natural y declarada, cuando la finalidad analítica se conoce de antemano y cuando la publicación es única o poco frecuente. Es decir: encuestas, registros administrativos, altas hospitalarias. Una parte enorme de lo que publican las administraciones cae exactamente ahí, y para ese caso son la herramienta adecuada, bien entendidas y bien medidas.</p>
+<p><strong>Se degradan</strong> en cuanto la dimensión crece, cuando el dato es disperso (transacciones, trazas, texto), cuando hay publicaciones sucesivas que componen, o cuando el conocimiento auxiliar del adversario es rico. Y su límite de fondo, el que no se arregla con más ingenio, es el del capítulo&nbsp;2: la ley fundamental de la recuperación de información (teorema&nbsp;<a href="#teo:dinur" data-reference-type="ref" data-reference="teo:dinur">[teo:dinur]</a>) dice que sin incertidumbre calibrada no hay garantía frente a una sucesión de publicaciones.</p>
+</section>
+</section>
+<section id="sec:cap04-fuera" class="level2">
+<h2 class="anchored" data-anchor-id="sec:cap04-fuera">Fuera de la tabla rectangular</h2>
+<p>El capítulo&nbsp;3 delimitó el terreno de las métricas; conviene hacer lo propio con las técnicas, porque cada tipo de dato tiene su repertorio y mezclarlos es una fuente inagotable de proyectos fallidos.</p>
+<p><strong>Datos de conjunto</strong> (transacciones, historiales de compra, diagnósticos múltiples por paciente). Aquí cada individuo tiene un <em>conjunto</em> de valores, no una fila con columnas fijas, y el número de columnas potenciales es el catálogo entero. La adaptación clásica consiste en acotar el conocimiento del adversario: se supone que conoce como mucho <span class="math inline">\(m\)</span> elementos del conjunto de su objetivo y se exige <span class="math inline">\(k\)</span>-anonimato frente a cualquier combinación de ese tamaño. Es una solución pragmática y honesta —dice explícitamente qué adversario cubre— y deja fuera al que sepa <span class="math inline">\(m+1\)</span>.</p>
+<p><strong>Trayectorias.</strong> Generalizar espacio y tiempo hasta que <span class="math inline">\(k\)</span> trayectorias coincidan destruye lo que hacía útil la trayectoria. Es el caso donde la anonimización clásica falla de forma más clara, y donde antes hubo que recurrir a garantías formales.</p>
+<p><strong>Texto libre.</strong> La técnica es el reconocimiento y sustitución de entidades —nombres, fechas, lugares, identificadores—, y su evaluación es empírica: no hay <span class="math inline">\(k\)</span> que calcular. El problema abierto no es detectar el nombre, que se hace razonablemente bien, sino el dato que identifica sin ser una entidad: «el paciente trasplantado en el hospital comarcal en Nochebuena».</p>
+<p><strong>Imagen.</strong> Difuminar caras o retirar metadatos DICOM es necesario y no es suficiente: de una resonancia craneal se reconstruye el rostro. El capítulo&nbsp;12 lo trata con sus propias herramientas.</p>
+<p><strong>Grafos.</strong> En una red —social, de llamadas, de transacciones— la estructura identifica por sí sola: el patrón de conexiones de una persona es tan distintivo como su huella. Sustituir los identificadores de los nodos por números no protege, porque el adversario que conozca el vecindario de su objetivo —con quién habla y cuántos son— lo localiza por topología. Las adaptaciones existen —exigir que cada nodo comparta grado con otros <span class="math inline">\(k-1\)</span>, o que su vecindario sea isomorfo al de otros <span class="math inline">\(k-1\)</span>— pero cada refuerzo obliga a añadir o quitar aristas, y una arista falsa en un grafo de contactos es un contacto que nunca existió: el daño analítico es mucho menos tolerable que redondear una edad.</p>
+<p><strong>La técnica que casi nunca se considera.</strong> Antes de anonimizar conviene preguntarse si el dato tiene que existir. La minimización del artículo&nbsp;5.1.c) y una política de retención agresiva son, medidas en riesgo evitado por euro invertido, más eficaces que cualquier algoritmo de este capítulo: el dato que no se recogió no se puede reidentificar, y el que se borró tampoco. Es la primera opción de la escalera y la que menos se explora, porque no da trabajo interesante a nadie.</p>
+<p>Una alternativa que merece mención porque nace precisamente de aceptar el diagnóstico de la dimensionalidad: en lugar de generalizar, se puede <em>partir</em> la tabla en columnas y publicar cada bloque con las filas permutadas dentro de cada grupo, conservando las correlaciones dentro del bloque y rompiéndolas entre bloques. Es una respuesta distinta al mismo problema: no reduce la resolución, reduce la <em>unión</em> entre atributos.</p>
+</section>
+<section id="sec:cap04-sesgo" class="level2">
+<h2 class="anchored" data-anchor-id="sec:cap04-sesgo">El coste oculto: qué le pasa al análisis</h2>
+<p>Hemos medido el coste de anonimizar en bits y en error de una consulta. Falta el coste que nadie mide y que más disgustos da: el <strong>sesgo</strong> que estas técnicas introducen en los análisis posteriores. No es pérdida de precisión —que sería honesta—, sino error sistemático en una dirección.</p>
+<p><strong>La supresión no es aleatoria.</strong> Ya lo vimos en el capítulo&nbsp;3: se suprimen las filas de clases pequeñas, es decir, las personas raras. Si la rareza correlaciona con lo que se estudia —y casi siempre correlaciona: enfermedades minoritarias, orígenes poco frecuentes, territorios despoblados—, el conjunto publicado <em>subestima</em> sistemáticamente lo que ocurre en esos grupos. Un analista que no sepa que hubo supresión concluirá que la enfermedad rara es aún más rara de lo que es.</p>
+<p><strong>La generalización atenúa las asociaciones.</strong> Sustituir una edad por un intervalo introduce error en esa variable, y el efecto conocido de medir mal una variable explicativa es que su coeficiente estimado se acerca a cero. Traducido: un estudio sobre datos generalizados tenderá a concluir que la edad influye <em>menos</em> de lo que influye. No es ruido simétrico; es un sesgo con dirección conocida.</p>
+<p><strong>Agregar invita a la falacia ecológica.</strong> Cuando se publica por provincia en lugar de por individuo, las correlaciones entre agregados no son las correlaciones entre personas, y confundirlas es un error clásico —que la anonimización empuja a cometer, porque el dato individual ya no está—.</p>
+<p>De aquí sale una obligación que este libro añade al informe del capítulo&nbsp;3: <strong>documentar las transformaciones en términos que un analista pueda corregir</strong>. Cuántas filas se suprimieron y con qué criterio; qué variables se generalizaron y a qué granularidad; si hubo intercambio o ruido, con qué parámetros. Un conjunto anonimizado sin esa hoja de ruta no solo es menos útil: induce conclusiones falsas con apariencia de rigor. Nótese que la recodificación aleatoria (sección&nbsp;<a href="#sec:cap04-swapping" data-reference-type="ref" data-reference="sec:cap04-swapping">1.4.2</a>) es la única de las familias clásicas que resuelve esto de raíz, porque publica su matriz de transición y permite al analista corregir.</p>
+</section>
+<section id="sec:cap04-modelos" class="level2">
+<h2 class="anchored" data-anchor-id="sec:cap04-modelos">Cuando el dato anonimizado entrena un modelo</h2>
+<p>Una pregunta que aparece en todos los proyectos y que este capítulo puede ya contestar con precisión: si entreno un modelo con datos <span class="math inline">\(k\)</span>-anonimizados, ¿el modelo es seguro?</p>
+<p>La respuesta corta es que <strong><span class="math inline">\(k\)</span>-anonimato acota la reidentificación en la tabla publicada, no la memorización del modelo</strong>. Son dos garantías distintas sobre objetos distintos. El capítulo&nbsp;2 lo midió: un modelo memoriza combinaciones raras, y las combinaciones raras siguen existiendo dentro de una clase de equivalencia de cinco personas —la clase protege frente a decir <em>cuál</em> de las cinco, no frente a que el modelo delate que esa clase, con ese diagnóstico, estuvo en el entrenamiento—.</p>
+<p>Hay además un efecto que sorprende y conviene anticipar: anonimizar antes de entrenar puede <em>empeorar</em> el modelo justo donde más falta hace. La generalización borra la resolución en las zonas ralas y la supresión elimina directamente a las minorías, de modo que el modelo entrenado con datos anonimizados sirve peor a quienes ya estaban peor servidos. Se paga privacidad con equidad, y sin decirlo.</p>
+<p>La conclusión, que es la del libro entero, es que las garantías hay que ponerlas <strong>donde está el riesgo</strong>: si el producto es una tabla, en la tabla; si el producto es un modelo, en el entrenamiento —y eso es DP-SGD, capítulo&nbsp;6—. Anonimizar la entrada y esperar que la garantía se propague al modelo es una confusión de niveles.</p>
+</section>
+<section id="sec:cap04-elegir" class="level2">
+<h2 class="anchored" data-anchor-id="sec:cap04-elegir">Cómo elegir, en la práctica</h2>
+<p>Reuniendo todo el capítulo, la decisión no se toma por familia de técnica sino contestando cinco preguntas en este orden. Las tres primeras suelen bastar.</p>
+<ol type="1">
+<li><p><strong>¿Hay que poder volver atrás?</strong> Si el proceso necesita reidentificar —para devolver un resultado clínico, para auditar, para ejercer derechos—, entonces la respuesta es seudonimización con clave custodiada, y el tratamiento sigue bajo el RGPD. No hay discusión posible: quien exige reversibilidad ha elegido ya.</p></li>
+<li><p><strong>¿Qué consulta debe sobrevivir?</strong> La respuesta determina qué se declara clave de partición y qué se puede generalizar, que es —lo hemos medido— lo que más influye en el resultado.</p></li>
+<li><p><strong>¿Se publicará más de una vez?</strong> Si sí, la proposición&nbsp;<a href="#prop:composicion" data-reference-type="ref" data-reference="prop:composicion">[prop:composicion]</a> obliga a analizar la unión, y a partir de la segunda o tercera publicación el enfoque clásico deja de ser gobernable. Ahí empieza a compensar el presupuesto de la Parte&nbsp;II.</p></li>
+<li><p><strong>¿El dato es tabular y de dimensión moderada?</strong> Si no —trazas, texto, transacciones—, las técnicas de este capítulo no son la herramienta.</p></li>
+<li><p><strong>¿Quién recibe la publicación?</strong> Abierta, bajo acuerdo o interna: el modelo de adversario cambia, y con él el umbral.</p></li>
+</ol>
+<figure id="fig:cap04-arbol" data-latex-placement="htbp" class="figure">
+<img src="figs/cap04/fig_05.svg" style="width:92.0%" class="figure-img">
+<figcaption>
+Las cinco preguntas, en orden: la técnica es consecuencia, no punto de partida.
+</figcaption>
+</figure>
+</section>
+<section id="sec:cap04-caso" class="level2">
+<h2 class="anchored" data-anchor-id="sec:cap04-caso">Un caso de principio a fin</h2>
+<p>Retomemos el encargo del capítulo&nbsp;3 —publicar las altas hospitalarias por territorio— y llevémoslo hasta el final con las técnicas de este capítulo, que es donde se ven las decisiones que ningún manual enumera.</p>
+<p><strong>Paso 1: los identificadores directos.</strong> El número de historia no se hashea: se sustituye por un seudónimo derivado con HMAC y clave custodiada por el servicio de admisión, distinto del que usa facturación. Motivo: el hospital necesita poder volver atrás si un resultado agregado obliga a avisar a un paciente, y necesita que la publicación no sea unible con la base de facturación.</p>
+<p><strong>Paso 2: qué consulta sobrevive.</strong> Prevalencia por provincia. Se declara la provincia como clave de partición —nunca se generaliza— y se dejan como dimensiones generalizables la edad y el sexo. Es la decisión que en nuestra medición llevó el error de 8,84 puntos a cero.</p>
+<p><strong>Paso 3: la anonimización.</strong> Mondrian dentro de cada provincia, con <span class="math inline">\(k=5\)</span>. Resultado medido: cero filas suprimidas, error cero en la consulta, 9,19 bits de utilidad conservada.</p>
+<p><strong>Paso 4: el atributo sensible.</strong> <span class="math inline">\(k\)</span>-anonimato no protege el diagnóstico (capítulo&nbsp;3). Hay que comprobar la diversidad dentro de cada región y, donde una región resulte unánime en un diagnóstico estigmatizante, generalizar el propio diagnóstico —de un código CIE-10 al capítulo de la clasificación— antes que suprimir a las personas.</p>
+<p><strong>Paso 5: lo que se escribe en el informe.</strong> Que la publicación es única y que <em>cualquier</em> publicación posterior sobre la misma población obliga a rehacer el análisis sobre la unión. Que el seudónimo es reversible por el servicio de admisión, con registro. Y que el riesgo se ha medido frente a los cuasi-identificadores declarados, no frente a los que aparezcan mañana.</p>
+<p><strong>Lo que este proceso no puede prometer.</strong> Que un adversario con una fuente auxiliar rica —una filtración de la mutua, por ejemplo— no reidentifique a alguien. Ninguna técnica de este capítulo lo promete, y decirlo en el informe no es debilidad: es la única forma de que la decisión de publicar sea informada.</p>
+</section>
+<section id="sec:cap04-herramientas" class="level2">
+<h2 class="anchored" data-anchor-id="sec:cap04-herramientas">Herramientas y flujo reproducible</h2>
+<p>Termino con lo operativo, que en este capítulo importa más que en ningún otro porque estas técnicas se aplican casi siempre con herramienta y casi nunca a mano.</p>
+<p>Las tres de referencia ya aparecieron en el capítulo&nbsp;3: ARX <span class="citation" data-cites="prasser2020arx">(<a href="#ref-prasser2020arx" role="doc-biblioref">Prasser et&nbsp;al. 2020</a>)</span>, que cubre las métricas, los modelos de riesgo y los algoritmos de generalización con interfaz gráfica; sdcMicro <span class="citation" data-cites="templ2015sdcmicro">(<a href="#ref-templ2015sdcmicro" role="doc-biblioref">Templ et&nbsp;al. 2015</a>)</span> para quien trabaje en R, con el repertorio completo del control de divulgación estadístico —intercambio, PRAM, microagregación, ruido—; y <span class="math inline">\(\mu\)</span>-ARGUS, la herramienta histórica de los institutos estadísticos europeos.</p>
+<p>Tres advertencias sobre su uso, aprendidas de este capítulo:</p>
+<p><strong>Los valores por defecto deciden por usted.</strong> La jerarquía de generalización que la herramienta propone —o la que deduce del tipo de dato— es la que determinará qué análisis sobreviven, como acabamos de medir con la provincia. Declararla es trabajo del equipo, no de la herramienta.</p>
+<p><strong>La herramienta no elige el modelo de adversario.</strong> Ofrece los tres del capítulo&nbsp;3 y el resultado varía en órdenes de magnitud según cuál se marque. Esa casilla se decide antes de abrir el programa.</p>
+<p><strong>El resultado hay que poder reproducirlo.</strong> La anonimización debe ser un script versionado con su semilla, no una sesión interactiva cuyos pasos nadie recuerda. Es la misma exigencia que el informe de riesgo del capítulo&nbsp;3, y por la misma razón: lo que no se puede reproducir no se puede auditar —ni corregir cuando aparezca un fallo—.</p>
+<p>El flujo completo que este libro recomienda, y que los scripts de <code>src/cap04/</code> ejemplifican, tiene cinco pasos versionados: partir del dato en crudo con su esquema anotado (capítulo&nbsp;1); aplicar la seudonimización de identificadores con clave custodiada; declarar jerarquías y claves de partición según la consulta que debe sobrevivir; ejecutar la anonimización con parámetros explícitos; y generar el informe de riesgo y el de transformaciones. Cinco ficheros en el repositorio, no cinco capturas de pantalla en un correo.</p>
+</section>
+<section id="síntesis-y-puente" class="level2 unnumbered">
+<h2 class="unnumbered anchored" data-anchor-id="síntesis-y-puente">Síntesis y puente</h2>
+<p>Seudonimizar y anonimizar son categorías disjuntas, no grados: la primera deja el dato dentro del RGPD porque presupone información adicional que revierte la operación; la segunda pretende que esa información no exista. Y la doctrina sobre dónde cae exactamente la frontera está en movimiento: las directrices del EDPB de 2025 siguen sin ser definitivas y el Tribunal de Justicia matizó su tesis central en 2025, de modo que lo defendible hoy es analizar y documentar los medios reales del receptor, no invocar una regla general.</p>
+<p>En lo técnico, el capítulo ha medido tres cosas. Que el hash de un identificador no anonimiza, porque el espacio de entrada es enumerable: el de los móviles españoles se barre entero en dos minutos con Python y en centésimas de segundo con una tarjeta gráfica; lo que sí funciona es la clave secreta, y aun así el resultado es seudónimo, no anónimo. Que Mondrian no suprime filas pero puede destruir la consulta si sus cortes ignoran la estructura del dato: en nuestro caso pasó de 8,84 puntos de error a 0,00 solo por declarar la provincia como clave de partición en vez de como dimensión. Y que las familias clásicas —microagregación, intercambio, ruido, PRAM— resuelven casos reales sin ofrecer ninguna garantía acotable.</p>
+<p>Ese es justamente el hilo del que tira la Parte&nbsp;II. Todo lo visto hasta aquí protege <em>describiendo la forma</em> del dato publicado, y por eso su protección se evapora cuando cambia el contexto: otra publicación, otra fuente auxiliar, otra consulta. La alternativa, que empieza en el capítulo siguiente, consiste en garantizar una propiedad del <em>mecanismo</em> que produce la publicación, con independencia de los datos y del conocimiento del adversario. Se paga en utilidad y se gana en algo que ninguna técnica de este capítulo puede dar: una promesa que sigue valiendo mañana.</p>
+</section>
+<section id="errores-comunes" class="level2 unnumbered">
+<h2 class="unnumbered anchored" data-anchor-id="errores-comunes">Errores comunes</h2>
+<ul>
+<li><p>Llamar anonimización a la seudonimización: son categorías jurídicamente disjuntas, y la segunda deja el dato dentro del RGPD (definición&nbsp;<a href="#def:seudonimizacion" data-reference-type="ref" data-reference="def:seudonimizacion">[def:seudonimizacion]</a>).</p></li>
+<li><p>Escribir en un pliego que «el RGPD obliga a seudonimizar»: no lo hace; los artículos 25 y 32 la citan como ejemplo dentro de listas ejemplificativas.</p></li>
+<li><p>Publicar identificadores hasheados: el espacio de entrada es enumerable y el barrido cuesta segundos.</p></li>
+<li><p>Culpar a MD5 del caso de los taxis: con SHA-256 habría ocurrido lo mismo.</p></li>
+<li><p>Creer que una sal pública protege: impide reutilizar tablas entre publicaciones, no impide el barrido.</p></li>
+<li><p>Pensar que un HMAC bien hecho anonimiza: existe la clave, luego existe información adicional.</p></li>
+<li><p>Elegir el algoritmo de anonimización antes de saber qué consulta debe sobrevivir: es la decisión que más determina el resultado, como muestra la figura&nbsp;<a href="#fig:cap04-comparacion" data-reference-type="ref" data-reference="fig:cap04-comparacion">1.3</a>.</p></li>
+<li><p>Dejar la declaración de jerarquías en los valores por defecto de la herramienta.</p></li>
+<li><p>Citar «la microagregación es NP-dura» sin distinguir univariante de multivariante.</p></li>
+<li><p>Citar la maldición de la dimensionalidad sin mencionar que su demostración supone atributos independientes.</p></li>
+</ul>
+<blockquote class="blockquote">
+<p><em>Práctica medida y ejercicios — disponibles en la obra completa (papel, PDF y EPUB).</em></p>
+</blockquote>
+<blockquote class="blockquote">
+<p><em>Marcos frente a frente: España/UE vs EE. UU. — sección disponible en la obra completa.</em></p>
+</blockquote>
+
+
+
+</section>
+
+<div id="quarto-appendix" class="default"><section class="quarto-appendix-contents" role="doc-bibliography" id="quarto-bibliography"><h2 class="anchored quarto-appendix-heading">Referencias</h2><div id="refs" class="references csl-bib-body hanging-indent" role="list">
+<div id="ref-aepd2022orientaciones" class="csl-entry" role="listitem">
+Agencia Española de Protección de Datos. 2022. <em>Orientaciones y garantías en los procedimientos de anonimización de datos personales</em>. AEPD.
+</div>
+<div id="ref-aepd2019hash" class="csl-entry" role="listitem">
+Agencia Española de Protección de Datos, y European Data Protection Supervisor. 2019. <em>Introducción a la función hash como técnica de seudonimización de datos personales</em>. AEPD y EDPS.
+</div>
+<div id="ref-aepd2021malentendidos" class="csl-entry" role="listitem">
+Agencia Española de Protección de Datos, y European Data Protection Supervisor. 2021. <em>10 malentendidos relacionados con la anonimización</em>. AEPD y EDPS.
+</div>
+<div id="ref-aggarwal2005curse" class="csl-entry" role="listitem">
+Aggarwal, Charu C. 2005. <span>«On k-Anonymity and the Curse of Dimensionality»</span>. <em>Proceedings of the 31st International Conference on Very Large Data Bases (VLDB)</em>, 901-9.
+</div>
+<div id="ref-wp29opinion052014" class="csl-entry" role="listitem">
+Article 29 Data Protection Working Party. 2014. <em>Opinion 05/2014 on Anonymisation Techniques (WP216)</em>. Grupo del Artículo 29.
+</div>
+<div id="ref-brickell2008cost" class="csl-entry" role="listitem">
+Brickell, Justin, y Vitaly Shmatikov. 2008. <span>«The Cost of Privacy: Destruction of Data-Mining Utility in Anonymized Data Publishing»</span>. <em>ACM SIGKDD</em>.
+</div>
+<div id="ref-domingoferrer2002microagregacion" class="csl-entry" role="listitem">
+Domingo-Ferrer, Josep, y Josep Maria Mateo-Sanz. 2002. <span>«Practical Data-Oriented Microaggregation for Statistical Disclosure Control»</span>. <em>IEEE Transactions on Knowledge and Data Engineering</em> 14 (1): 189-201.
+</div>
+<div id="ref-domingoferrer2005ordinal" class="csl-entry" role="listitem">
+Domingo-Ferrer, Josep, y Vicenç Torra. 2005. <span>«Ordinal, Continuous and Heterogeneous k-Anonymity Through Microaggregation»</span>. <em>Data Mining and Knowledge Discovery</em> 11 (2): 195-212.
+</div>
+<div id="ref-edpb2025seudonimizacion" class="csl-entry" role="listitem">
+European Data Protection Board. 2025. <em>Guidelines 01/2025 on Pseudonymisation</em>. EDPB.
+</div>
+<div id="ref-edpb2026anonimizacion" class="csl-entry" role="listitem">
+European Data Protection Board. 2026. <em>Guidelines 02/2026 on Anonymisation</em>. EDPB.
+</div>
+<div id="ref-ganta2008composition" class="csl-entry" role="listitem">
+Ganta, Srivatsava Ranjit, Shiva Prasad Kasiviswanathan, y Adam Smith. 2008. <span>«Composition Attacks and Auxiliary Information in Data Privacy»</span>. <em>ACM SIGKDD</em>.
+</div>
+<div id="ref-nist2023sp800188" class="csl-entry" role="listitem">
+Garfinkel, Simson, Barbara Guttman, Joseph Near, Aref N. Dajani, y Phyllis Singer. 2023. <em>De-Identifying Government Datasets: Techniques and Governance</em>. NIST Special Publication Nos. 800-188. National Institute of Standards; Technology. <a href="https://doi.org/10.6028/NIST.SP.800-188">https://doi.org/10.6028/NIST.SP.800-188</a>.
+</div>
+<div id="ref-lefevre2005incognito" class="csl-entry" role="listitem">
+LeFevre, Kristen, David J. DeWitt, y Raghu Ramakrishnan. 2005. <span>«Incognito: Efficient Full-Domain k-Anonymity»</span>. <em>ACM SIGMOD</em>.
+</div>
+<div id="ref-lefevre2006mondrian" class="csl-entry" role="listitem">
+LeFevre, Kristen, David J. DeWitt, y Raghu Ramakrishnan. 2006. <span>«Mondrian Multidimensional k-Anonymity»</span>. <em>IEEE 22nd International Conference on Data Engineering (ICDE)</em>.
+</div>
+<div id="ref-li2009tradeoff" class="csl-entry" role="listitem">
+Li, Tiancheng, y Ninghui Li. 2009. <span>«On the Tradeoff Between Privacy and Utility in Data Publishing»</span>. <em>ACM SIGKDD</em>.
+</div>
+<div id="ref-oganian2001complejidad" class="csl-entry" role="listitem">
+Oganian, Anna, y Josep Domingo-Ferrer. 2001. <span>«On the Complexity of Optimal Microaggregation for Statistical Disclosure Control»</span>. <em>Statistical Journal of the United Nations Economic Commission for Europe</em> 18 (4): 345-53.
+</div>
+<div id="ref-pandurangan2014taxis" class="csl-entry" role="listitem">
+Pandurangan, Vijay. 2014. <em>On Taxis and Rainbows: Lessons from NYC’s Improperly Anonymized Taxi Logs</em>.
+</div>
+<div id="ref-prasser2020arx" class="csl-entry" role="listitem">
+Prasser, Fabian, Johanna Eicher, Helmut Spengler, Raffael Bild, y Klaus A. Kuhn. 2020. <span>«Flexible Data Anonymization Using ARX—Current Status and Challenges Ahead»</span>. <em>Software: Practice and Experience</em> 50 (7): 1277-304.
+</div>
+<div id="ref-ue2016rgpd" class="csl-entry" role="listitem">
+Reglamento (UE) 2016/679, General de Protección de Datos (RGPD) (2016).
+</div>
+<div id="ref-tjue2025srb" class="csl-entry" role="listitem">
+Sentencia del Tribunal de Justicia de la Unión Europea, asunto C-413/23 P, EDPS contra Junta Única de Resolución (4 de septiembre de 2025).
+</div>
+<div id="ref-soriacomas2015tcloseness" class="csl-entry" role="listitem">
+Soria-Comas, Jordi, Josep Domingo-Ferrer, David Sánchez, y Sergio Martínez. 2015. <span>«t-Closeness through Microaggregation: Strict Privacy with Enhanced Utility Preservation»</span>. <em>IEEE Transactions on Knowledge and Data Engineering</em> 27 (11): 3098-110.
+</div>
+<div id="ref-sweeney1997datafly" class="csl-entry" role="listitem">
+Sweeney, Latanya. 1997. <span>«Guaranteeing Anonymity when Sharing Medical Data: The Datafly System»</span>. <em>Proceedings of the AMIA Annual Fall Symposium</em>.
+</div>
+<div id="ref-templ2015sdcmicro" class="csl-entry" role="listitem">
+Templ, Matthias, Alexander Kowarik, y Bernhard Meindl. 2015. <span>«Statistical Disclosure Control for Micro-Data Using the R Package sdcMicro»</span>. <em>Journal of Statistical Software</em> 67 (4).
+</div>
+<div id="ref-tockar2014riding" class="csl-entry" role="listitem">
+Tockar, Anthony. 2014. <em>Riding with the Stars: Passenger Privacy in the NYC Taxicab Dataset</em>.
+</div>
+</div></section></div></main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copiado");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copiado");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="./cap03.html" class="pagination-link" aria-label="Capítulo 3. Cuantificar el riesgo">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text">Capítulo 3. Cuantificar el riesgo</span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+  </div>
+</nav>
+</div> <!-- /content -->
+<footer class="footer">
+  <div class="nav-footer">
+    <div class="nav-footer-left">
+      &nbsp;
+    </div>   
+    <div class="nav-footer-center">
+<p>© 2026 Manuel Muñoz Plá · Edición web bajo licencia <a href="https://creativecommons.org/licenses/by-nc-nd/4.0/deed.es">CC BY-NC-ND 4.0</a> (uso académico con atribución; sin uso comercial ni obras derivadas) · El código va aparte bajo licencia MIT · <a href="https://manpla.net/libros/privacidad-ciencia-datos/">Ficha del libro en manpla.net</a></p>
+</div>
+    <div class="nav-footer-right">
+      &nbsp;
+    </div>
+  </div>
+</footer>
+
+
+
+
+</body></html>

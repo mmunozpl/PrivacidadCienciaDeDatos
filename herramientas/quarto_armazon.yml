@@ -26,7 +26,7 @@ website:
       - cap01.qmd
       - cap02.qmd
       - cap03.qmd
-      - text: "4. Seudonimización y anonimización clásica (en preparación)"
+      - cap04.qmd
       - text: "5. Privacidad diferencial (en preparación)"
       - text: "6. DP en el entrenamiento (en preparación)"
       - text: "7. Privacidad diferencial local (en preparación)"
