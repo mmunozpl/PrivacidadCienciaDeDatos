@@ -320,7 +320,13 @@ window.Quarto = {
 <p><span id="def:seudonimizacion" data-label="def:seudonimizacion"></span> El «tratamiento de datos personales de manera tal que ya no puedan atribuirse a un interesado sin utilizar información adicional, siempre que dicha información adicional figure por separado y esté sujeta a medidas técnicas y organizativas destinadas a garantizar que los datos personales no se atribuyan a una persona física identificada o identificable» <span class="citation" data-cites="ue2016rgpd">(<a href="#ref-ue2016rgpd" role="doc-biblioref">Reglamento (UE) 2016/679, General de Protección de Datos (RGPD) 2016</a>)</span>.</p>
 </div>
 <p>Léase con atención la estructura de la definición, porque contiene la respuesta: la seudonimización presupone que <em>existe</em> información adicional que permite volver atrás. No la destruye: la separa y la protege. Y de ahí se sigue lo que el considerando&nbsp;26 dice sin ambigüedad: los datos seudonimizados <strong>siguen siendo datos personales</strong> y siguen dentro del ámbito del reglamento. La anonimización, en cambio, aspira a que esa información adicional no exista para nadie, y solo entonces el resultado queda fuera.</p>
-<p>No son grados de lo mismo, sino <strong>categorías jurídicamente disjuntas</strong>: un dato está dentro o fuera. La confusión es tan frecuente que conviene fijar las consecuencias prácticas, que son enormes: sobre datos seudonimizados siguen aplicando la base jurídica, los derechos del interesado, la obligación de notificar brechas y las restricciones de transferencia internacional; sobre datos realmente anónimos, ninguna.</p>
+<p>No son grados de lo mismo, sino <strong>categorías jurídicamente disjuntas</strong>: un dato está dentro o fuera. La confusión es tan frecuente que conviene fijar las consecuencias prácticas, que son enormes: sobre datos seudonimizados siguen aplicando la base jurídica, los derechos del interesado, la obligación de notificar brechas y las restricciones de transferencia internacional; sobre datos realmente anónimos, ninguna. La figura&nbsp;<a href="#fig:cap04-frontera" data-reference-type="ref" data-reference="fig:cap04-frontera">1.1</a> lo resume.</p>
+<figure id="fig:cap04-frontera" data-latex-placement="htbp" class="figure">
+<img src="figs/cap04/fig_06.svg" class="figure-img">
+<figcaption>
+Seudonimización y anonimización no son grados de lo mismo: la frontera decide si el RGPD aplica.
+</figcaption>
+</figure>
 <section id="sec:cap04-articulado" class="level3">
 <h3 class="anchored" data-anchor-id="sec:cap04-articulado">Dónde aparece en el reglamento, y dónde no</h3>
 <p>Un mapa útil, porque la seudonimización aparece en más sitios de los que suele citarse —seis artículos y siete considerandos— y con papeles distintos:</p>
@@ -346,7 +352,7 @@ window.Quarto = {
 <p>Pasemos a la técnica, empezando por el error más repetido de todo el sector: sustituir un identificador por su hash y llamar a eso anonimizar.</p>
 <section id="sec:cap04-diccionario" class="level3">
 <h3 class="anchored" data-anchor-id="sec:cap04-diccionario">El argumento, y el ataque</h3>
-<p>El razonamiento equivocado es tentador: una función hash criptográfica es de un solo sentido —dado el resumen, no se puede recuperar la entrada—, luego publicar el hash del DNI es seguro. El error está en confundir «irreversible» con «no invertible por enumeración». Una función hash es irreversible <em>en general</em>, para entradas arbitrariamente largas; pero si el adversario sabe que la entrada es un DNI, no necesita invertir nada: le basta con <strong>recorrer todos los DNI posibles</strong>, hashear cada uno y comparar.</p>
+<p>El razonamiento equivocado es tentador: una función hash criptográfica es de un solo sentido —dado el resumen, no se puede recuperar la entrada—, luego publicar el hash del DNI es seguro. El error está en confundir «irreversible» con «no invertible por enumeración». Una función hash es irreversible <em>en general</em>, para entradas arbitrariamente largas; pero si el adversario sabe que la entrada es un DNI, no necesita invertir nada: le basta con <strong>recorrer todos los DNI posibles</strong>, hashear cada uno y comparar, como esquematiza la figura&nbsp;<a href="#fig:cap04-diccionario-fig" data-reference-type="ref" data-reference="fig:cap04-diccionario-fig">1.2</a>.</p>
 <p>El coste de ese ataque es exactamente el tamaño del espacio de entrada, y los espacios de los identificadores reales son ridículamente pequeños. El script <code>src/cap04/hash_no_anonimiza.py</code> lo mide en la máquina en que se escribió este libro:</p>
 <pre><code>velocidad medida: 1.630.949 hashes/segundo (Python puro, un núcleo)
 
@@ -355,6 +361,12 @@ window.Quarto = {
   matrícula española           64.000.000 candidatos ·   39,2 s
   número de historia (6 díg.)   1.000.000 candidatos ·    0,6 s</code></pre>
 <p>Dos minutos para el espacio completo de móviles españoles, con Python puro y un solo núcleo. Con una tarjeta gráfica de gama media, que hace del orden de diez mil millones de SHA-256 por segundo, el mismo barrido baja a dos centésimas de segundo. No hay ninguna función hash que arregle esto: el problema no es la función, es que el espacio de entrada es enumerable. La AEPD y el Supervisor Europeo publicaron en 2019 una nota técnica con este mismo ejemplo sobre móviles españoles <span class="citation" data-cites="aepd2019hash">(<a href="#ref-aepd2019hash" role="doc-biblioref">Agencia Española de Protección de Datos y European Data Protection Supervisor 2019</a>)</span>, y su cifra de referencia —un millón de hashes por segundo— era ya entonces conservadora.</p>
+<figure id="fig:cap04-diccionario-fig" data-latex-placement="htbp" class="figure">
+<img src="figs/cap04/fig_07.svg" class="figure-img">
+<figcaption>
+El ataque de diccionario: la función hash cumple lo que promete; el error es aplicarla a un espacio enumerable.
+</figcaption>
+</figure>
 </section>
 <section id="sec:cap04-taxis" class="level3">
 <h3 class="anchored" data-anchor-id="sec:cap04-taxis">El caso de los taxis de Nueva York</h3>
@@ -432,7 +444,7 @@ k=50 -&gt;  129 regiones · utilidad 4,94 bits · sin suprimir nada</code></pre>
     error 0,00 puntos · 0 filas suprimidas · utilidad 9,19 bits</code></pre>
 <p>La variante (a) falla porque Mondrian sigue cortando esa dimensión en rangos —<code>[1-28]</code>— que vuelven a atravesar provincias. La variante (b) resuelve el problema por completo: se particiona primero por provincia y se ejecuta Mondrian <em>dentro</em> de cada una sobre edad y sexo. El resultado es un error de cero puntos, sin suprimir una sola fila, con <span class="math inline">\(k=5\)</span> garantizado y una utilidad de 9,19 bits, comparable a la de la generalización global que sí suprimía el 8,8 %.</p>
 <figure id="fig:cap04-comparacion" data-latex-placement="htbp" class="figure">
-<img src="figs/cap04/fig_02.svg" style="width:94.0%" class="figure-img">
+<img src="figs/cap04/fig_02.svg" class="figure-img">
 <figcaption>
 El mismo algoritmo, tres configuraciones: lo que decide el resultado no es la técnica sino qué se declara que hay que preservar.
 </figcaption>
@@ -536,12 +548,18 @@ El repertorio clásico: qué le hace cada familia al dato y qué conserva.
 <section id="sec:cap04-composicion" class="level2">
 <h2 class="anchored" data-anchor-id="sec:cap04-composicion">Dos publicaciones no componen</h2>
 <p>Hay un fallo de las técnicas de este capítulo que no se arregla afinando parámetros y que conviene ver con un ejemplo, porque es el que más daño hace en organizaciones que publican de forma periódica.</p>
-<p>Supongamos que un hospital publica en enero una tabla <span class="math inline">\(k\)</span>-anonimizada con <span class="math inline">\(\{\)</span>edad, sexo, provincia<span class="math inline">\(\}\)</span> y en junio otra, con los mismos pacientes, <span class="math inline">\(k\)</span>-anonimizada con <span class="math inline">\(\{\)</span>edad, sexo, servicio<span class="math inline">\(\}\)</span>. Cada una cumple <span class="math inline">\(k=5\)</span> por separado. Pero un adversario que tenga las dos puede intersecar: quien esté en una clase de cinco personas de la primera y en una clase de cinco de la segunda queda, con frecuencia, en una intersección de una o dos. Ninguna de las dos publicaciones incumple nada; la unión sí.</p>
+<p>Supongamos que un hospital publica en enero una tabla <span class="math inline">\(k\)</span>-anonimizada con <span class="math inline">\(\{\)</span>edad, sexo, provincia<span class="math inline">\(\}\)</span> y en junio otra, con los mismos pacientes, <span class="math inline">\(k\)</span>-anonimizada con <span class="math inline">\(\{\)</span>edad, sexo, servicio<span class="math inline">\(\}\)</span>. Cada una cumple <span class="math inline">\(k=5\)</span> por separado. Pero un adversario que tenga las dos puede intersecar: quien esté en una clase de cinco personas de la primera y en una clase de cinco de la segunda queda, con frecuencia, en una intersección de una o dos. Ninguna de las dos publicaciones incumple nada; la unión sí (figura&nbsp;<a href="#fig:cap04-composicion-fig" data-reference-type="ref" data-reference="fig:cap04-composicion-fig">1.7</a>).</p>
 <div class="proposicion">
 <p><span id="prop:composicion" data-label="prop:composicion"></span> Sean <span class="math inline">\(T_1\)</span> y <span class="math inline">\(T_2\)</span> dos publicaciones de la misma población, cada una <span class="math inline">\(k\)</span>-anónima respecto de sus respectivos cuasi-identificadores <span class="math inline">\(Q_1\)</span> y <span class="math inline">\(Q_2\)</span>. En general, la tabla que resulta de cruzarlas por los individuos comunes no es <span class="math inline">\(k\)</span>-anónima respecto de <span class="math inline">\(Q_1 \cup Q_2\)</span>; su <span class="math inline">\(k\)</span> efectiva puede llegar a 1.</p>
 </div>
 <p>Es el <em>ataque de composición</em> que formalizan <span class="citation" data-cites="ganta2008composition">Ganta et&nbsp;al. (<a href="#ref-ganta2008composition" role="doc-biblioref">2008</a>)</span>, y no es una curiosidad teórica: es la situación normal de cualquier registro que publique series periódicas, o de dos organismos que publiquen sobre la misma población. Su gravedad práctica: no existe forma de que quien publica la segunda tabla garantice el resultado sin conocer y controlar <em>todas</em> las publicaciones anteriores, propias y ajenas.</p>
 <p>Compárese con lo que ofrecerá el capítulo&nbsp;5. La privacidad diferencial tiene un teorema de composición —la garantía se degrada de forma conocida y acotable al acumular publicaciones—, y eso permite gobernar un programa continuo con un presupuesto. Aquí no hay presupuesto que llevar: hay que rehacer el análisis entero cada vez, y sobre la unión.</p>
+<figure id="fig:cap04-composicion-fig" data-latex-placement="htbp" class="figure">
+<img src="figs/cap04/fig_08.svg" style="width:96.0%" class="figure-img">
+<figcaption>
+Dos publicaciones impecables por separado: la intersección deja sola a la víctima.
+</figcaption>
+</figure>
 <section id="sec:cap04-composicion-numeros" class="level3">
 <h3 class="anchored" data-anchor-id="sec:cap04-composicion-numeros">La cuenta, con números</h3>
 <p>Merece la pena ver la aritmética, porque la magnitud sorprende. Sea una población de <span class="math inline">\(N\)</span> personas y dos publicaciones <span class="math inline">\(k\)</span>-anónimas independientes con clases de tamaño <span class="math inline">\(k_1\)</span> y <span class="math inline">\(k_2\)</span>. Si los dos cuasi-identificadores son aproximadamente independientes entre sí, la probabilidad de que una persona concreta comparta clase con otra en <em>ambas</em> publicaciones es del orden de <span class="math display">\[\frac{k_1}{N} \cdot \frac{k_2}{N} \cdot N
@@ -656,7 +674,7 @@ Las cinco preguntas, en orden: la técnica es consecuencia, no punto de partida.
 <li><p>Culpar a MD5 del caso de los taxis: con SHA-256 habría ocurrido lo mismo.</p></li>
 <li><p>Creer que una sal pública protege: impide reutilizar tablas entre publicaciones, no impide el barrido.</p></li>
 <li><p>Pensar que un HMAC bien hecho anonimiza: existe la clave, luego existe información adicional.</p></li>
-<li><p>Elegir el algoritmo de anonimización antes de saber qué consulta debe sobrevivir: es la decisión que más determina el resultado, como muestra la figura&nbsp;<a href="#fig:cap04-comparacion" data-reference-type="ref" data-reference="fig:cap04-comparacion">1.3</a>.</p></li>
+<li><p>Elegir el algoritmo de anonimización antes de saber qué consulta debe sobrevivir: es la decisión que más determina el resultado, como muestra la figura&nbsp;<a href="#fig:cap04-comparacion" data-reference-type="ref" data-reference="fig:cap04-comparacion">1.5</a>.</p></li>
 <li><p>Dejar la declaración de jerarquías en los valores por defecto de la herramienta.</p></li>
 <li><p>Citar «la microagregación es NP-dura» sin distinguir univariante de multivariante.</p></li>
 <li><p>Citar la maldición de la dimensionalidad sin mencionar que su demostración supone atributos independientes.</p></li>
