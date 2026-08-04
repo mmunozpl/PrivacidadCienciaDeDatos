@@ -1,0 +1,55 @@
+# armazón web del libro — PLANTILLA (única copia editable).
+# El Makefile la copia a qmd/_quarto.yml en cada `make qmd`: así el
+# proyecto Quarto vive en qmd/ y la salida queda PLANA en docs/
+# (docs/capXX.html), como fija la estructura del repo.
+# Al escribirse un capítulo: sustituir su entrada `text:` por el .qmd.
+
+project:
+  type: website
+  output-dir: ../docs
+  # resources:
+  #   - CNAME              # cuando haya dominio propio
+
+lang: es
+bibliography: ../latex/referencias.bib
+
+website:
+  title: "Privacidad para la ciencia de datos"
+  search: true
+  sidebar:
+    style: docked
+    contents:
+      - index.qmd
+      - section: "I. El dato y su riesgo"
+        contents:
+          - cap01.qmd
+          - text: "2. Ataques a la privacidad (en preparación)"
+          - text: "3. Cuantificar el riesgo (en preparación)"
+      - section: "II. PETs con código"
+        contents:
+          - text: "4. Seudonimización y anonimización clásica (en preparación)"
+          - text: "5. Privacidad diferencial (en preparación)"
+          - text: "6. DP en el entrenamiento (en preparación)"
+          - text: "7. Privacidad diferencial local (en preparación)"
+          - text: "8. Datos sintéticos (en preparación)"
+          - text: "9. Aprendizaje federado (en preparación)"
+          - text: "10. Computación cifrada (en preparación)"
+      - section: "III. Categorías especiales como hilo"
+        contents:
+          - text: "11. Biometría (en preparación)"
+          - text: "12. Dato de salud e imagen médica (en preparación)"
+          - text: "13. Procedencia y autenticidad (en preparación)"
+      - section: "IV. La norma como ingeniería"
+        contents:
+          - text: "14. RGPD operativo (en preparación)"
+          - text: "15. AI Act y gobernanza de modelos (en preparación)"
+          - text: "16. Privacy by design en arquitectura (en preparación)"
+          - text: "17. Caso integral (en preparación)"
+
+format:
+  html:
+    theme: cosmo
+    toc: true
+    code-copy: true
+    code-overflow: wrap
+    html-math-method: mathjax

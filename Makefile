@@ -49,9 +49,13 @@ qmd: figuras
 	    -o $(QMD_DIR)/$$c.qmd || exit 1; \
 	done
 	cp herramientas/index_base.qmd $(QMD_DIR)/index.qmd
+	cp herramientas/quarto_armazon.yml $(QMD_DIR)/_quarto.yml
 
+# docs/ se regenera DE CERO: es salida pura de quarto. Si algún día
+# lleva CNAME o .nojekyll, van como resources del armazón, no a mano.
 web: qmd
-	quarto render
+	rm -rf docs
+	quarto render $(QMD_DIR)
 
 # ── obra completa ────────────────────────────────────────────────────
 completa: $(FIG_PDF)
