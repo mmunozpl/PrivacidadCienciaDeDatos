@@ -35,7 +35,7 @@ NIST»— se publicará en **papel, PDF y EPUB**.
 ## Índice
 
 - [Capítulo 1. El dato personal como objeto de ingeniería](cap01.qmd)
-- Capítulo 2. Ataques a la privacidad *(en preparación)*
+- [Capítulo 2. Ataques a la privacidad](cap02.qmd)
 - Capítulo 3. Cuantificar el riesgo *(en preparación)*
 - Capítulo 4. Seudonimización y anonimización clásica *(en preparación)*
 - Capítulo 5. Privacidad diferencial *(en preparación)*

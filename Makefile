@@ -8,7 +8,7 @@
 #
 # qmd/ y docs/ son GENERADOS: nunca se editan a mano.
 
-CAPS := cap01
+CAPS := cap01 cap02
 
 LATEX_DIR := latex
 QMD_DIR   := qmd

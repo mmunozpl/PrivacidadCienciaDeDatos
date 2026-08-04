@@ -24,7 +24,7 @@ website:
       - text: "Inicio"
         href: index.qmd
       - cap01.qmd
-      - text: "2. Ataques a la privacidad (en preparación)"
+      - cap02.qmd
       - text: "3. Cuantificar el riesgo (en preparación)"
       - text: "4. Seudonimización y anonimización clásica (en preparación)"
       - text: "5. Privacidad diferencial (en preparación)"

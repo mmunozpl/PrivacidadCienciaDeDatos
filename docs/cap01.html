@@ -52,6 +52,7 @@ div.csl-indent {
 <script src="site_libs/quarto-search/fuse.min.js"></script>
 <script src="site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="./">
+<link href="./cap02.html" rel="next">
 <link href="./index.html" rel="prev">
 <script src="site_libs/quarto-html/quarto.js" type="module"></script>
 <script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
@@ -176,8 +177,11 @@ window.Quarto = {
   </div>
 </li>
         <li class="sidebar-item">
- <span class="menu-text">2. Ataques a la privacidad (en preparación)</span>
-  </li>
+  <div class="sidebar-item-container"> 
+  <a href="./cap02.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Capítulo 2. Ataques a la privacidad</span></a>
+  </div>
+</li>
         <li class="sidebar-item">
  <span class="menu-text">3. Cuantificar el riesgo (en preparación)</span>
   </li>
@@ -239,6 +243,7 @@ window.Quarto = {
   <li><a href="#sec:cap01-mutua" id="toc-sec:cap01-mutua" class="nav-link" data-scroll-target="#sec\:cap01-mutua">Cuando las columnas se hablan</a></li>
   <li><a href="#sec:cap01-muestra" id="toc-sec:cap01-muestra" class="nav-link" data-scroll-target="#sec\:cap01-muestra">Única en la muestra no es única en la población</a></li>
   <li><a href="#sec:cap01-gemelos" id="toc-sec:cap01-gemelos" class="nav-link" data-scroll-target="#sec\:cap01-gemelos">¿Cuántos gemelos estadísticos tiene usted?</a></li>
+  <li><a href="#sec:cap01-huella" id="toc-sec:cap01-huella" class="nav-link" data-scroll-target="#sec\:cap01-huella">La huella de comportamiento</a></li>
   </ul></li>
   <li><a href="#sec:cap01-art9" id="toc-sec:cap01-art9" class="nav-link" data-scroll-target="#sec\:cap01-art9">Las categorías especiales del artículo 9 RGPD, vistas desde el dato</a></li>
   <li><a href="#sec:cap01-ciclo" id="toc-sec:cap01-ciclo" class="nav-link" data-scroll-target="#sec\:cap01-ciclo">Ciclo de vida del dato en un proyecto de ciencia de datos</a></li>
@@ -372,8 +377,9 @@ window.Quarto = {
 </div>
 <p>Las filas 3, 7 y&nbsp;8 son únicas: cualquiera que sepa que su vecino de 62 años del 28010 está en la tabla acaba de conocer su diagnóstico. Las filas 4–6 forman una clase de tamaño tres, que parece refugio hasta que se mira la última columna: las tres comparten diagnóstico, de modo que el adversario no sabe <em>cuál</em> de las tres filas es su objetivo pero sí sabe que tiene asma —revelación de atributo sin reidentificación—. Solo la clase <span class="math inline">\(\{1,2\}\)</span> protege de verdad: dos filas, dos diagnósticos distintos. Con ocho filas acabamos de encontrarnos, sin nombrarlas, las tres métricas del capítulo&nbsp;3 (<span class="math inline">\(k\)</span>-anonimato, <span class="math inline">\(l\)</span>-diversidad y su refinamiento): las definiciones formales pueden esperar; las ideas ya están todas aquí.</p>
 <div class="ejemplo">
-<p><span id="ej:sweeney" data-label="ej:sweeney"></span> El resultado clásico de Sweeney: el 87 % de la población de EE. UU. queda determinada de forma única por la terna <span class="math inline">\(\{\)</span>código postal, fecha de nacimiento completa, sexo<span class="math inline">\(\}\)</span> <span class="citation" data-cites="sweeney2002kanonymity">(<a href="#ref-sweeney2002kanonymity" role="doc-biblioref">Sweeney 2002</a>)</span>. Con esa terna, Sweeney reidentificó el historial médico del gobernador de Massachusetts en un dataset hospitalario «anónimo» cruzándolo con el censo electoral, que costaba veinte dólares. Dos décadas después el resultado se generaliza: con 15 atributos demográficos, el 99,98 % de los estadounidenses es reidentificable incluso en muestras incompletas <span class="citation" data-cites="rocher2019estimating">(<a href="#ref-rocher2019estimating" role="doc-biblioref">Rocher et&nbsp;al. 2019</a>)</span>.</p>
+<p><span id="ej:sweeney" data-label="ej:sweeney"></span> El resultado clásico de Sweeney: el 87 % de la población de EE. UU. queda determinada de forma única por la terna <span class="math inline">\(\{\)</span>código postal, fecha de nacimiento completa, sexo<span class="math inline">\(\}\)</span> <span class="citation" data-cites="sweeney2000simple">(<a href="#ref-sweeney2000simple" role="doc-biblioref">Sweeney 2000</a>)</span>. Con esa terna, Sweeney reidentificó el historial médico del gobernador de Massachusetts en un conjunto hospitalario «anónimo» cruzándolo con el censo electoral del municipio, que le costó veinte dólares <span class="citation" data-cites="sweeney2015only">(<a href="#ref-sweeney2015only" role="doc-biblioref">Sweeney 2015</a>)</span>. Dos décadas después el resultado se generaliza: con 15 atributos demográficos, el 99,98 % de los estadounidenses es reidentificable incluso en muestras incompletas <span class="citation" data-cites="rocher2019estimating">(<a href="#ref-rocher2019estimating" role="doc-biblioref">Rocher et&nbsp;al. 2019</a>)</span>.</p>
 </div>
+<p>Ese 87 % conviene citarlo con cuidado, y el porqué enseña más que la cifra. Primero, la fuente: el número procede del informe de 2000 <span class="citation" data-cites="sweeney2000simple">(<a href="#ref-sweeney2000simple" role="doc-biblioref">Sweeney 2000</a>)</span>, no del artículo de <span class="math inline">\(k\)</span>-anonimato de 2002 <span class="citation" data-cites="sweeney2002kanonymity">(<a href="#ref-sweeney2002kanonymity" role="doc-biblioref">Sweeney 2002</a>)</span>, al que suele atribuirse por inercia; el de 2002 aporta el <em>modelo</em>, no la medición. Segundo, la vigencia: <span class="citation" data-cites="golle2006revisiting">Golle (<a href="#ref-golle2006revisiting" role="doc-biblioref">2006</a>)</span> rehízo la cuenta con el censo de 2000 y obtuvo un 63 %, no un 87 % —la población había crecido y la mezcla demográfica cambiado—, y con solo el <em>año</em> de nacimiento en lugar de la fecha completa la unicidad cae al orden del 4 %. Las tres lecciones son de método: una cifra de reidentificación <strong>depende del censo y del año</strong> con que se calculó, la resolución de las columnas la mueve un orden de magnitud, y toda afirmación de este libro se cita por su fuente primaria y con su fecha. Es exactamente lo que hicimos en la sección&nbsp;<a href="#sec:cap01-muestra" data-reference-type="ref" data-reference="sec:cap01-muestra">1.1.3</a> con nuestros propios datos: medir, fechar y decir con qué población.</p>
 <p>La consecuencia operativa se escribe en tres listas, y conviene mantenerlas explícitas en el código desde el primer día:</p>
 <pre><code># se separan las columnas por su papel frente a la reidentificacion
 IDENTIFICADORES = ["nif", "email", "num_historia"]
@@ -510,6 +516,19 @@ La información mutua es el solapamiento: el ejemplo calculado a mano, dibujado.
 </div>
 <p>El modelo se deja comprobar. El script <code>src/cap01/entropia_cuasi.py</code> estima <span class="math inline">\(p_q\)</span> fila a fila como producto de frecuencias marginales (la hipótesis de independencia de la sección&nbsp;<a href="#sec:cap01-bits" data-reference-type="ref" data-reference="sec:cap01-bits">1.1.1</a>) y calcula la unicidad esperada <span class="math inline">\(\overline{(1-p_q)^{N-1}}\)</span>. Sobre el dataset del libro predice un 99,4 % de filas únicas; la medida directa da 99,5 %. El acierto no es casualidad ni mérito: el dataset se generó con columnas independientes, así que la hipótesis del modelo es cierta por construcción. Sobre datos reales las correlaciones la rompen, y el error del modelo —que ya sabemos medir— se convierte él mismo en información: cuánta estructura tiene la población que un atacante podría explotar. Retomaremos esa idea con los modelos generativos del capítulo&nbsp;3.</p>
 </section>
+<section id="sec:cap01-huella" class="level3">
+<h3 class="anchored" data-anchor-id="sec:cap01-huella">La huella de comportamiento</h3>
+<p>Hasta aquí los cuasi-identificadores han sido demográficos: edad, sexo, código postal. Conviene cerrar la sección con el caso que más cuesta aceptar, porque no aparece en ningún formulario y sin embargo identifica mejor que todos los anteriores juntos: la <em>traza de comportamiento</em>. Cada vez que un teléfono se conecta a una antena o una tarjeta paga en un comercio queda un punto espacio-temporal —dónde y cuándo—, sin nombre, sin edad, sin dirección. La pregunta natural es cuántos de esos puntos hacen falta para señalar a una persona.</p>
+<p>La respuesta, medida sobre poblaciones reales, es brutalmente pequeña: <strong>cuatro</strong>. <span class="citation" data-cites="montjoye2013unique">Montjoye et&nbsp;al. (<a href="#ref-montjoye2013unique" role="doc-biblioref">2013</a>)</span> analizaron quince meses de movilidad de 1,5 millones de personas y encontraron que cuatro puntos espacio-temporales bastan para singularizar al 95 % de los individuos; dos años después, los mismos autores repitieron el experimento sobre tres meses de metadatos de tarjeta de crédito de 1,1 millones de personas y obtuvieron un 90 % <span class="citation" data-cites="montjoye2015shopping">(<a href="#ref-montjoye2015shopping" role="doc-biblioref">Montjoye et&nbsp;al. 2015</a>)</span>. La figura&nbsp;<a href="#fig:cap01-huella" data-reference-type="ref" data-reference="fig:cap01-huella">1.5</a> recoge ambas curvas.</p>
+<figure id="fig:cap01-huella" data-latex-placement="htbp" class="figure">
+<img src="figs/cap01/fig_10.svg" style="width:86.0%" class="figure-img">
+<figcaption>
+Unicidad de una traza de comportamiento según los puntos conocidos: cuatro bastan para el 95 % en movilidad y el 90 % en metadatos de tarjeta.
+</figcaption>
+</figure>
+<p>La aritmética de la sección&nbsp;<a href="#sec:cap01-bits" data-reference-type="ref" data-reference="sec:cap01-bits">1.1.1</a> explica por qué. Un punto espacio-temporal con resolución de antena y de hora aporta del orden de <span class="math inline">\(\log_2(\text{antenas}) + \log_2(\text{horas})\)</span> bits —en una ciudad grande, fácilmente 10 o 12—, de modo que cuatro puntos suman 40 o más: muy por encima de los 25,5 que exige España. Y a diferencia de la edad o el sexo, las trazas son <em>inagotables</em>: cada día se generan cientos, y basta con que un tercero conozca cuatro —un compañero de trabajo, un recibo, una foto geolocalizada, un tuit— para cerrar el cruce.</p>
+<p>De aquí salen tres consecuencias que el libro arrastrará hasta el final. La primera es que <strong>no existe el «dato de telemetría anónimo»</strong> por el hecho de no llevar identificador: los registros de movilidad, de navegación, de compras o de uso de una aplicación son cuasi-identificadores de altísima resolución, y así hay que anotarlos en el esquema. La segunda es que las técnicas que veremos para tablas —generalizar, suprimir— funcionan mal aquí: generalizar la hora a franjas o la antena al distrito destruye la utilidad mucho antes de alcanzar seguridad, y por eso las trazas son el terreno natural de la privacidad diferencial (capítulos&nbsp;5 y&nbsp;7). La tercera es de método: la resolución temporal es una columna más, y casi siempre la más cara en bits —quitar los segundos de una marca de tiempo suele restar más información identificante que suprimir una columna entera—.</p>
+</section>
 </section>
 <section id="sec:cap01-art9" class="level2">
 <h2 class="anchored" data-anchor-id="sec:cap01-art9">Las categorías especiales del artículo 9 RGPD, vistas desde el dato</h2>
@@ -567,7 +586,7 @@ La información mutua es el solapamiento: el ejemplo calculado a mano, dibujado.
 <p><strong>La salud se infiere de lo inocuo.</strong> El caso escolar es el de la cadena Target: un modelo de propensión entrenado sobre tickets de compra —loción sin perfume, suplementos de magnesio— asignaba a cada clienta una «puntuación de embarazo», y el envío de cupones de bebé destapó ante su familia el embarazo de una adolescente que no lo había contado <span class="citation" data-cites="duhigg2012secrets">(<a href="#ref-duhigg2012secrets" role="doc-biblioref">Duhigg 2012</a>)</span>. Nada en el esquema decía «salud»; la categoría especial la creó el modelo. La lección de ingeniería: la clasificación del artículo&nbsp;9 se aplica a lo que el sistema <em>sabe</em>, no a lo que las columnas <em>dicen</em>.</p>
 <p><strong>La genética identifica en familia.</strong> Un perfil genético no es un dato individual: se comparte a medias con cada familiar de primer grado, a cuartos con los de segundo, y así en progresión geométrica. <span class="citation" data-cites="erlich2018identity">Erlich et&nbsp;al. (<a href="#ref-erlich2018identity" role="doc-biblioref">2018</a>)</span> cuantificaron la consecuencia: con apenas un 2 % de una población en bases genealógicas abiertas, cerca del 60 % de las búsquedas encuentra un primo tercero o más cercano, suficiente para triangular la identidad —la técnica que resolvió el caso del <em>Golden State Killer</em> en 2018—. Usted puede no haber enviado nunca su ADN a ningún sitio: basta con que lo hicieran sus primos. Es el ejemplo extremo de una regla general: el perímetro de un dato personal no coincide con la persona que lo aportó.</p>
 <p><strong>La biometría no se puede revocar.</strong> Una contraseña filtrada se cambia; una plantilla facial filtrada, no: la cara es la misma para siempre. Por eso el artículo&nbsp;9 la marca solo cuando el fin es identificar «de manera unívoca», y por eso su protección técnica —plantillas canceladas, revocabilidad— es un problema propio, con capítulo entero (el&nbsp;11) y con ataques de reconstrucción recientes que obligan a matizar lo que «irreversible» significa.</p>
-<p><strong>Los proxies, o la columna que no está.</strong> La cuarta lección es la más incómoda porque no se arregla borrando nada. Decimos que una columna <span class="math inline">\(X\)</span> es <em>proxy</em> de una sensible <span class="math inline">\(S\)</span> cuando <span class="math inline">\(I(X;S) &gt; 0\)</span>: la información mutua de la sección&nbsp;<a href="#sec:cap01-mutua" data-reference-type="ref" data-reference="sec:cap01-mutua">1.1.2</a> reaparece aquí como medida de cuánto sabe de lo prohibido una columna aparentemente neutra. El código postal es el ejemplo canónico —la historia del <em>redlining</em> es exactamente eso: denegar créditos por barrio como proxy de origen—, y la consecuencia práctica es doble. Primero, eliminar la columna sensible no elimina la capacidad del sistema de discriminar por ella si sus proxies siguen dentro: un modelo al que se le oculta <span class="math inline">\(S\)</span> pero se le dan columnas con <span class="math inline">\(I(X;S)\)</span> alta la reconstruye solo. Segundo, la respuesta no puede ser borrar todo proxy —todo correlaciona con todo— sino <em>medir</em>: anotar en el esquema qué columnas llevan información de categorías especiales y cuánta, y decidir con el número delante. Es el mismo gesto de todo el capítulo, y volverá con las métricas de equidad del AI Act en el capítulo&nbsp;15. La figura&nbsp;<a href="#fig:cap01-proxy" data-reference-type="ref" data-reference="fig:cap01-proxy">1.5</a> resume el mecanismo completo en una línea de bloques.</p>
+<p><strong>Los proxies, o la columna que no está.</strong> La cuarta lección es la más incómoda porque no se arregla borrando nada. Decimos que una columna <span class="math inline">\(X\)</span> es <em>proxy</em> de una sensible <span class="math inline">\(S\)</span> cuando <span class="math inline">\(I(X;S) &gt; 0\)</span>: la información mutua de la sección&nbsp;<a href="#sec:cap01-mutua" data-reference-type="ref" data-reference="sec:cap01-mutua">1.1.2</a> reaparece aquí como medida de cuánto sabe de lo prohibido una columna aparentemente neutra. El código postal es el ejemplo canónico —la historia del <em>redlining</em> es exactamente eso: denegar créditos por barrio como proxy de origen—, y la consecuencia práctica es doble. Primero, eliminar la columna sensible no elimina la capacidad del sistema de discriminar por ella si sus proxies siguen dentro: un modelo al que se le oculta <span class="math inline">\(S\)</span> pero se le dan columnas con <span class="math inline">\(I(X;S)\)</span> alta la reconstruye solo. Segundo, la respuesta no puede ser borrar todo proxy —todo correlaciona con todo— sino <em>medir</em>: anotar en el esquema qué columnas llevan información de categorías especiales y cuánta, y decidir con el número delante. Es el mismo gesto de todo el capítulo, y volverá con las métricas de equidad del AI Act en el capítulo&nbsp;15. La figura&nbsp;<a href="#fig:cap01-proxy" data-reference-type="ref" data-reference="fig:cap01-proxy">1.6</a> resume el mecanismo completo en una línea de bloques.</p>
 <figure id="fig:cap01-proxy" data-latex-placement="htbp" class="figure">
 <img src="figs/cap01/fig_09.svg" style="width:95.0%" class="figure-img">
 <figcaption>
@@ -581,7 +600,7 @@ El mecanismo del <em>proxy</em>: la columna sensible se suprime, pero su informa
 <section id="sec:cap01-ciclo" class="level2">
 <h2 class="anchored" data-anchor-id="sec:cap01-ciclo">Ciclo de vida del dato en un proyecto de ciencia de datos</h2>
 <p>Una aclaración de alcance antes de arrancar: este ciclo de vida <strong>no es exclusivo de la ciencia de datos</strong>. Es el de cualquier <em>tratamiento</em> en el sentido amplísimo del artículo&nbsp;4.2 del RGPD —«cualquier operación realizada sobre datos personales»: también un ERP, una aplicación web, un fichero de nóminas o un archivo municipal—, y todo lo que se diga aquí sobre captura, copias, cruces y salidas vale, con los cambios obvios, para cualquiera de esos sistemas. Si el libro lo recorre en su encarnación de ciencia de datos es porque es donde las estaciones toman sus formas más traicioneras —los <em>joins</em> exploratorios, el entrenamiento que memoriza, la publicación de modelos— y donde menos costumbre hay de mirarlas como tratamiento. El lector que venga de sistemas transaccionales puede leer esta sección como un mapa general con los ejemplos cambiados.</p>
-<p>La figura&nbsp;<a href="#fig:cap01-ciclo" data-reference-type="ref" data-reference="fig:cap01-ciclo">1.6</a> recorre las cinco estaciones por las que pasa el dato en un proyecto típico. La observación central es que la privacidad no es una propiedad de una estación, sino del recorrido: un dato minimizado en la captura puede volver a ser identificante tras un <em>join</em> en la preparación, y un modelo puede memorizar en el entrenamiento lo que la publicación creía haber agregado.</p>
+<p>La figura&nbsp;<a href="#fig:cap01-ciclo" data-reference-type="ref" data-reference="fig:cap01-ciclo">1.7</a> recorre las cinco estaciones por las que pasa el dato en un proyecto típico. La observación central es que la privacidad no es una propiedad de una estación, sino del recorrido: un dato minimizado en la captura puede volver a ser identificante tras un <em>join</em> en la preparación, y un modelo puede memorizar en el entrenamiento lo que la publicación creía haber agregado.</p>
 <figure id="fig:cap01-ciclo" data-latex-placement="htbp" class="figure">
 <img src="figs/cap01/fig_01.svg" class="figure-img">
 <figcaption>
@@ -622,14 +641,14 @@ Ciclo de vida del dato y superficie de exposición en cada estación del <em>pip
 </tbody>
 </table>
 </div>
-<p>En el <strong>almacenamiento</strong> el dato se multiplica, y la figura&nbsp;<a href="#fig:cap01-copias" data-reference-type="ref" data-reference="fig:cap01-copias">1.7</a> muestra en qué se convierte esa multiplicación: un árbol de copias donde cada flecha reproduce los datos pero no los controles. La base de producción tiene control de acceso, cifrado y registro; el volcado de hace tres meses en el portátil de un analista no tiene nada de eso, y el cuaderno que imprimió veinte filas «para mirar» las llevará dentro mientras exista. La retención es la otra decisión silenciosa: el dato que ya no existe es el único que no puede fugarse, y «lo guardamos por si acaso» es una política de retención, solo que mala.</p>
+<p>En el <strong>almacenamiento</strong> el dato se multiplica, y la figura&nbsp;<a href="#fig:cap01-copias" data-reference-type="ref" data-reference="fig:cap01-copias">1.8</a> muestra en qué se convierte esa multiplicación: un árbol de copias donde cada flecha reproduce los datos pero no los controles. La base de producción tiene control de acceso, cifrado y registro; el volcado de hace tres meses en el portátil de un analista no tiene nada de eso, y el cuaderno que imprimió veinte filas «para mirar» las llevará dentro mientras exista. La retención es la otra decisión silenciosa: el dato que ya no existe es el único que no puede fugarse, y «lo guardamos por si acaso» es una política de retención, solo que mala.</p>
 <figure id="fig:cap01-copias" data-latex-placement="htbp" class="figure">
 <img src="figs/cap01/fig_03.svg" style="width:92.0%" class="figure-img">
 <figcaption>
 El árbol de copias del almacenamiento: el riesgo se hereda entero; la protección, no.
 </figcaption>
 </figure>
-<p>La <strong>preparación</strong> es la estación más traicionera, porque es donde el equipo se siente seguro: «ya está anonimizado». La figura&nbsp;<a href="#fig:cap01-join" data-reference-type="ref" data-reference="fig:cap01-join">1.8</a> muestra el mecanismo por el que deja de estarlo: un <em>join</em> con una fuente auxiliar por las columnas compartidas —los cuasi-identificadores— reidentifica todas las filas cuya combinación sea única en ambas tablas, que como vimos son casi todas. Y el <em>join</em> peligroso no requiere mala fe: llega solo, cuando alguien enriquece el dataset con «datos abiertos del ayuntamiento» y sube sin querer la entropía conjunta de la tabla. Por eso la revisión del esquema anotado tras cada cruce no es burocracia: es donde se decide si la tabla cambió de naturaleza.</p>
+<p>La <strong>preparación</strong> es la estación más traicionera, porque es donde el equipo se siente seguro: «ya está anonimizado». La figura&nbsp;<a href="#fig:cap01-join" data-reference-type="ref" data-reference="fig:cap01-join">1.9</a> muestra el mecanismo por el que deja de estarlo: un <em>join</em> con una fuente auxiliar por las columnas compartidas —los cuasi-identificadores— reidentifica todas las filas cuya combinación sea única en ambas tablas, que como vimos son casi todas. Y el <em>join</em> peligroso no requiere mala fe: llega solo, cuando alguien enriquece el dataset con «datos abiertos del ayuntamiento» y sube sin querer la entropía conjunta de la tabla. Por eso la revisión del esquema anotado tras cada cruce no es burocracia: es donde se decide si la tabla cambió de naturaleza.</p>
 <p>Mención aparte merece el cuaderno de análisis, que es un fichero con una propiedad traicionera: guarda las <em>salidas</em> junto al código. Cada <code>df.head()</code> ejecutado deja filas reales incrustadas en el JSON del cuaderno, que luego viaja por el control de versiones, las copias y los adjuntos de correo con esas filas dentro. La higiene es conocida y este libro la adopta: los cuadernos se versionan sin salidas, y toda cifra o muestra que merezca conservarse se produce por script con su artefacto de verificación —las quince observaciones de rigor— en un fichero declarado, no en una celda olvidada.</p>
 <figure id="fig:cap01-join" data-latex-placement="htbp" class="figure">
 <img src="figs/cap01/fig_02.svg" style="width:90.0%" class="figure-img">
@@ -652,7 +671,7 @@ El <em>join</em> que reidentifica: el mecanismo de Sweeney y de Netflix, disponi
 validar(df, ESQUEMA)          # aborta si hay columnas sin papel
 CUASI = columnas(ESQUEMA, "cuasi")</code></pre>
 <p>La función <code>validar</code> es deliberadamente intransigente: una columna sin papel declarado detiene el <em>pipeline</em>, porque una columna sin papel es un riesgo sin evaluar. Es la versión de datos del principio que en tipado estático se llama «hacer ilegales los estados inválidos»: que el camino fácil sea el seguro.</p>
-<p>Cerrando la sección, el resumen operativo del ciclo de vida cabe en tres preguntas que haremos, estación por estación, en cada proyecto del libro: <em>¿qué entra?</em> (en bits: tabla&nbsp;<a href="#tab:cap01-minimizacion" data-reference-type="ref" data-reference="tab:cap01-minimizacion">1.4</a>); <em>¿quién copia?</em> (el árbol: figura&nbsp;<a href="#fig:cap01-copias" data-reference-type="ref" data-reference="fig:cap01-copias">1.7</a>); <em>¿qué sale?</em> (los canales de la sección siguiente). Quien pueda responder las tres con números tiene hecha media evaluación de impacto; la otra media —probabilidad y severidad— llegará con las métricas del capítulo&nbsp;3 y el molde de la EIPD del capítulo&nbsp;14.</p>
+<p>Cerrando la sección, el resumen operativo del ciclo de vida cabe en tres preguntas que haremos, estación por estación, en cada proyecto del libro: <em>¿qué entra?</em> (en bits: tabla&nbsp;<a href="#tab:cap01-minimizacion" data-reference-type="ref" data-reference="tab:cap01-minimizacion">1.4</a>); <em>¿quién copia?</em> (el árbol: figura&nbsp;<a href="#fig:cap01-copias" data-reference-type="ref" data-reference="fig:cap01-copias">1.8</a>); <em>¿qué sale?</em> (los canales de la sección siguiente). Quien pueda responder las tres con números tiene hecha media evaluación de impacto; la otra media —probabilidad y severidad— llegará con las métricas del capítulo&nbsp;3 y el molde de la EIPD del capítulo&nbsp;14.</p>
 </section>
 <section id="sec:cap01-superficie" class="level2">
 <h2 class="anchored" data-anchor-id="sec:cap01-superficie">Superficie de exposición de un pipeline típico</h2>
@@ -754,7 +773,7 @@ CUASI = columnas(ESQUEMA, "cuasi")</code></pre>
 </tbody>
 </table>
 </div>
-<p>La economía del asunto es asimétrica y conviene decirlo pronto: los ataques históricos fueron <em>baratos</em>. El censo electoral de Sweeney costó veinte dólares (ejemplo&nbsp;<a href="#ej:sweeney" data-reference-type="ref" data-reference="ej:sweeney">[ej:sweeney]</a>); las búsquedas genealógicas de <span class="citation" data-cites="erlich2018identity">Erlich et&nbsp;al. (<a href="#ref-erlich2018identity" role="doc-biblioref">2018</a>)</span> usan bases gratuitas; y la extracción de datos de entrenamiento de un modelo comercial que cuantifican <span class="citation" data-cites="nasr2023extraction"><span class="nocase">Nasr et&nbsp;al.</span> (<a href="#ref-nasr2023extraction" role="doc-biblioref">2023</a>)</span> —gigabytes de texto memorizado, con un ataque de divergencia que multiplicaba por 150 la tasa de emisión de texto literal— costó del orden de doscientos dólares. Defender cuesta más que atacar; razón de más para defender con garantías medibles y no con esperanza.</p>
+<p>La economía del asunto es asimétrica y conviene decirlo pronto: los ataques históricos fueron <em>baratos</em>. El censo electoral de Sweeney costó veinte dólares (ejemplo&nbsp;<a href="#ej:sweeney" data-reference-type="ref" data-reference="ej:sweeney">[ej:sweeney]</a>) <span class="citation" data-cites="sweeney2015only">(<a href="#ref-sweeney2015only" role="doc-biblioref">Sweeney 2015</a>)</span>; las búsquedas genealógicas de <span class="citation" data-cites="erlich2018identity">Erlich et&nbsp;al. (<a href="#ref-erlich2018identity" role="doc-biblioref">2018</a>)</span> usan bases gratuitas; y la extracción de datos de entrenamiento de un modelo comercial que cuantifican <span class="citation" data-cites="nasr2023extraction"><span class="nocase">Nasr et&nbsp;al.</span> (<a href="#ref-nasr2023extraction" role="doc-biblioref">2023</a>)</span> —gigabytes de texto memorizado, con un ataque de divergencia que multiplicaba por 150 la tasa de emisión de texto literal— costó del orden de doscientos dólares. Defender cuesta más que atacar; razón de más para defender con garantías medibles y no con esperanza.</p>
 <p>Sobre esas coordenadas, este libro adopta tres supuestos de trabajo que valdrán salvo aviso explícito en contrario:</p>
 <ul>
 <li><p>El adversario conoce el esquema, el método y los parámetros públicos del sistema (el principio de Kerckhoffs: nada de seguridad por oscuridad).</p></li>
@@ -808,7 +827,7 @@ CUASI = columnas(ESQUEMA, "cuasi")</code></pre>
 </section>
 <section id="sec:cap01-frontera" class="level3">
 <h3 class="anchored" data-anchor-id="sec:cap01-frontera">La frontera que gobierna el libro</h3>
-<p>Cada mitigación de la tabla&nbsp;<a href="#tab:cap01-informe" data-reference-type="ref" data-reference="tab:cap01-informe">1.7</a> cuesta algo. Ese compromiso tiene forma, y conviene dibujarla una vez para reconocerla siempre: la figura&nbsp;<a href="#fig:cap01-frontera" data-reference-type="ref" data-reference="fig:cap01-frontera">1.9</a> representa el espacio utilidad–privacidad de cualquier decisión de publicación. Los dos extremos son triviales —publicar tal cual (utilidad máxima, garantía nula) y no publicar (lo contrario)— y todo el oficio de la Parte&nbsp;II consiste en poblar la curva entre ambos: generalizar compra garantía barata al principio; la privacidad diferencial permite elegir el punto con un parámetro continuo (<span class="math inline">\(\eps\)</span>, capítulo&nbsp;5); el federado con DP paga en complejidad lo que gana en garantía.</p>
+<p>Cada mitigación de la tabla&nbsp;<a href="#tab:cap01-informe" data-reference-type="ref" data-reference="tab:cap01-informe">1.7</a> cuesta algo. Ese compromiso tiene forma, y conviene dibujarla una vez para reconocerla siempre: la figura&nbsp;<a href="#fig:cap01-frontera" data-reference-type="ref" data-reference="fig:cap01-frontera">1.10</a> representa el espacio utilidad–privacidad de cualquier decisión de publicación. Los dos extremos son triviales —publicar tal cual (utilidad máxima, garantía nula) y no publicar (lo contrario)— y todo el oficio de la Parte&nbsp;II consiste en poblar la curva entre ambos: generalizar compra garantía barata al principio; la privacidad diferencial permite elegir el punto con un parámetro continuo (<span class="math inline">\(\eps\)</span>, capítulo&nbsp;5); el federado con DP paga en complejidad lo que gana en garantía.</p>
 <figure id="fig:cap01-frontera" data-latex-placement="htbp" class="figure">
 <img src="figs/cap01/fig_04.svg" style="width:86.0%" class="figure-img">
 <figcaption>
@@ -826,7 +845,7 @@ La frontera utilidad–privacidad: las técnicas de la Parte&nbsp;II son maneras
 <section id="errores-comunes" class="level2 unnumbered">
 <h2 class="unnumbered anchored" data-anchor-id="errores-comunes">Errores comunes</h2>
 <ul>
-<li><p>Creer que suprimir los identificadores directos anonimiza: deja intactos los cuasi-identificadores (definición&nbsp;<a href="#def:cuasi" data-reference-type="ref" data-reference="def:cuasi">[def:cuasi]</a> y figura&nbsp;<a href="#fig:cap01-join" data-reference-type="ref" data-reference="fig:cap01-join">1.8</a>).</p></li>
+<li><p>Creer que suprimir los identificadores directos anonimiza: deja intactos los cuasi-identificadores (definición&nbsp;<a href="#def:cuasi" data-reference-type="ref" data-reference="def:cuasi">[def:cuasi]</a> y figura&nbsp;<a href="#fig:cap01-join" data-reference-type="ref" data-reference="fig:cap01-join">1.9</a>).</p></li>
 <li><p>Confundir seudonimización (art. 4.5, medida de seguridad) con anonimización: el dato seudonimizado sigue siendo personal.</p></li>
 <li><p>Clasificar las columnas una vez y para siempre: el papel depende del contexto y del conocimiento auxiliar disponible (Netflix se reidentificó por las películas, no por la demografía).</p></li>
 <li><p>Medir la unicidad sobre la muestra y venderla como riesgo poblacional: lo sobreestima sistemáticamente (proposición&nbsp;<a href="#prop:muestra" data-reference-type="ref" data-reference="prop:muestra">[prop:muestra]</a>).</p></li>
@@ -834,7 +853,7 @@ La frontera utilidad–privacidad: las técnicas de la Parte&nbsp;II son maneras
 <li><p>Tratar el artículo 9 como una etiqueta documental: las inferencias de un modelo sobre categorías especiales son dato sensible aunque el esquema no las nombre (el caso Target).</p></li>
 <li><p>Olvidar que el dato genético identifica en familia: el perímetro del dato no coincide con quien lo aportó <span class="citation" data-cites="erlich2018identity">(<a href="#ref-erlich2018identity" role="doc-biblioref">Erlich et&nbsp;al. 2018</a>)</span>.</p></li>
 <li><p>Suponer que un modelo entrenado «ya no contiene» datos personales: la posición del EDPB exige demostrarlo caso por caso <span class="citation" data-cites="edpb2024opinion28">(<a href="#ref-edpb2024opinion28" role="doc-biblioref">European Data Protection Board 2024</a>)</span>.</p></li>
-<li><p>Borrar el dataset y dar el riesgo por cerrado mientras sobreviven sus copias (figura&nbsp;<a href="#fig:cap01-copias" data-reference-type="ref" data-reference="fig:cap01-copias">1.7</a>), sus cuadernos y los modelos entrenados con él.</p></li>
+<li><p>Borrar el dataset y dar el riesgo por cerrado mientras sobreviven sus copias (figura&nbsp;<a href="#fig:cap01-copias" data-reference-type="ref" data-reference="fig:cap01-copias">1.8</a>), sus cuadernos y los modelos entrenados con él.</p></li>
 </ul>
 <blockquote class="blockquote">
 <p><em>Práctica medida y ejercicios — disponibles en la obra completa (papel, PDF y EPUB).</em></p>
@@ -869,11 +888,20 @@ Erlich, Yaniv, Tal Shor, Itsik Pe’er, y Shai Carmi. 2018. <span>«Identity Inf
 <div id="ref-edpb2024opinion28" class="csl-entry" role="listitem">
 European Data Protection Board. 2024. <em>Opinion 28/2024 on Certain Data Protection Aspects Related to the Processing of Personal Data in the Context of AI Models</em>. EDPB.
 </div>
+<div id="ref-golle2006revisiting" class="csl-entry" role="listitem">
+Golle, Philippe. 2006. <span>«Revisiting the Uniqueness of Simple Demographics in the US Population»</span>. <em>ACM Workshop on Privacy in the Electronic Society (WPES)</em>.
+</div>
 <div id="ref-ine2025cifras" class="csl-entry" role="listitem">
 Instituto Nacional de Estadística. 2025. <em>Cifras de Población: población residente por sexo, edad y provincia, a 1 de enero de 2025</em>. INE, Estadística Continua de Población.
 </div>
 <div id="ref-iso27559" class="csl-entry" role="listitem">
 ISO/IEC 27559:2022 — Privacy Enhancing Data De-identification Framework (2022).
+</div>
+<div id="ref-montjoye2013unique" class="csl-entry" role="listitem">
+Montjoye, Yves-Alexandre de, César A. Hidalgo, Michel Verleysen, y Vincent D. Blondel. 2013. <span>«Unique in the Crowd: The Privacy Bounds of Human Mobility»</span>. <em>Scientific Reports</em> 3: 1376.
+</div>
+<div id="ref-montjoye2015shopping" class="csl-entry" role="listitem">
+Montjoye, Yves-Alexandre de, Laura Radaelli, Vivek Kumar Singh, y Alex Pentland. 2015. <span>«Unique in the Shopping Mall: On the Reidentifiability of Credit Card Metadata»</span>. <em>Science</em> 347 (6221): 536-39.
 </div>
 <div id="ref-narayanan2008robust" class="csl-entry" role="listitem">
 Narayanan, Arvind, y Vitaly Shmatikov. 2008. <span>«Robust De-anonymization of Large Sparse Datasets»</span>. <em>IEEE Symposium on Security and Privacy</em>.
@@ -887,8 +915,14 @@ Reglamento (UE) 2016/679, General de Protección de Datos (RGPD) (2016).
 <div id="ref-rocher2019estimating" class="csl-entry" role="listitem">
 Rocher, Luc, Julien M. Hendrickx, y Yves-Alexandre de Montjoye. 2019. <span>«Estimating the Success of Re-identifications in Incomplete Datasets Using Generative Models»</span>. <em>Nature Communications</em> 10: 3069.
 </div>
+<div id="ref-sweeney2000simple" class="csl-entry" role="listitem">
+Sweeney, Latanya. 2000. <em>Simple Demographics Often Identify People Uniquely</em>. Data Privacy Working Paper No. 3. Carnegie Mellon University.
+</div>
 <div id="ref-sweeney2002kanonymity" class="csl-entry" role="listitem">
 Sweeney, Latanya. 2002. <span>«k-Anonymity: A Model for Protecting Privacy»</span>. <em>International Journal of Uncertainty, Fuzziness and Knowledge-Based Systems</em> 10 (5): 557-70.
+</div>
+<div id="ref-sweeney2015only" class="csl-entry" role="listitem">
+Sweeney, Latanya. 2015. <span>«Only You, Your Doctor, and Many Others May Know»</span>. <em>Technology Science</em>.
 </div>
 </div></section></div></main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
@@ -1298,6 +1332,9 @@ Sweeney, Latanya. 2002. <span>«k-Anonymity: A Model for Protecting Privacy»</s
       </a>          
   </div>
   <div class="nav-page nav-page-next">
+      <a href="./cap02.html" class="pagination-link" aria-label="Capítulo 2. Ataques a la privacidad">
+        <span class="nav-page-text">Capítulo 2. Ataques a la privacidad</span> <i class="bi bi-arrow-right-short"></i>
+      </a>
   </div>
 </nav>
 </div> <!-- /content -->

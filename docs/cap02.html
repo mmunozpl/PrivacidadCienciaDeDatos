@@ -1,0 +1,1275 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="es" xml:lang="es"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.9.38">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>Capítulo 2. Ataques a la privacidad – Privacidad · Ciencia de datos</title>
+<style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for citations */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+}
+.hanging-indent div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<link href="./cap01.html" rel="prev">
+<script src="site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-15634bcf2e68342d4ad2dfa704d543f6.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap-c51ee271f6426d8ddbbd81f2fce6c0c5.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "language": {
+    "search-no-results-text": "No se han encontrado resultados",
+    "search-matching-documents-text": "documentos encontrados",
+    "search-copy-link-title": "Copiar el enlace en la búsqueda",
+    "search-hide-matches-text": "Ocultar resultados adicionales",
+    "search-more-match-text": "resultado adicional en este documento",
+    "search-more-matches-text": "resultados adicionales en este documento",
+    "search-clear-button-title": "Borrar",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancelar",
+    "search-submit-button-title": "Enviar",
+    "search-label": "Buscar"
+  }
+}</script>
+
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script defer="" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+</head>
+
+<body class="nav-sidebar docked quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Alternar barra lateral" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./cap02.html">Capítulo 2. Ataques a la privacidad</a></li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Alternar barra lateral" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+      <button type="button" class="btn quarto-search-button" aria-label="Buscar" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation docked overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header">
+    <div class="sidebar-title mb-0 py-0">
+      <a href="./">Privacidad · Ciencia de datos</a> 
+        <div class="sidebar-tools-main">
+  <a href="" class="quarto-reader-toggle quarto-navigation-tool px-1" onclick="window.quartoToggleReader(); return false;" title="Alternar modo lector">
+  <div class="quarto-reader-toggle-btn">
+  <i class="bi"></i>
+  </div>
+</a>
+</div>
+    </div>
+      </div>
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Buscar"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Inicio</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./cap01.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Capítulo 1. El dato personal como objeto de ingeniería</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./cap02.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text">Capítulo 2. Ataques a la privacidad</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+ <span class="menu-text">3. Cuantificar el riesgo (en preparación)</span>
+  </li>
+        <li class="sidebar-item">
+ <span class="menu-text">4. Seudonimización y anonimización clásica (en preparación)</span>
+  </li>
+        <li class="sidebar-item">
+ <span class="menu-text">5. Privacidad diferencial (en preparación)</span>
+  </li>
+        <li class="sidebar-item">
+ <span class="menu-text">6. DP en el entrenamiento (en preparación)</span>
+  </li>
+        <li class="sidebar-item">
+ <span class="menu-text">7. Privacidad diferencial local (en preparación)</span>
+  </li>
+        <li class="sidebar-item">
+ <span class="menu-text">8. Datos sintéticos (en preparación)</span>
+  </li>
+        <li class="sidebar-item">
+ <span class="menu-text">9. Aprendizaje federado (en preparación)</span>
+  </li>
+        <li class="sidebar-item">
+ <span class="menu-text">10. Computación cifrada (en preparación)</span>
+  </li>
+        <li class="sidebar-item">
+ <span class="menu-text">11. Biometría (en preparación)</span>
+  </li>
+        <li class="sidebar-item">
+ <span class="menu-text">12. Dato de salud e imagen médica (en preparación)</span>
+  </li>
+        <li class="sidebar-item">
+ <span class="menu-text">13. Procedencia y autenticidad (en preparación)</span>
+  </li>
+        <li class="sidebar-item">
+ <span class="menu-text">14. RGPD operativo (en preparación)</span>
+  </li>
+        <li class="sidebar-item">
+ <span class="menu-text">15. AI Act y gobernanza de modelos (en preparación)</span>
+  </li>
+        <li class="sidebar-item">
+ <span class="menu-text">16. Privacy by design en arquitectura (en preparación)</span>
+  </li>
+        <li class="sidebar-item">
+ <span class="menu-text">17. Caso integral (en preparación)</span>
+  </li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">En esta página</h2>
+   
+  <ul>
+  <li><a href="#sec:cap02-linkage" id="toc-sec:cap02-linkage" class="nav-link active" data-scroll-target="#sec\:cap02-linkage">Reidentificación y enlace</a>
+  <ul class="collapse">
+  <li><a href="#sec:cap02-mecanismo" id="toc-sec:cap02-mecanismo" class="nav-link" data-scroll-target="#sec\:cap02-mecanismo">El mecanismo, con precisión</a></li>
+  <li><a href="#sec:cap02-casos" id="toc-sec:cap02-casos" class="nav-link" data-scroll-target="#sec\:cap02-casos">Tres casos que definieron la disciplina</a></li>
+  <li><a href="#sec:cap02-dispersion" id="toc-sec:cap02-dispersion" class="nav-link" data-scroll-target="#sec\:cap02-dispersion">Por qué la dispersión mata la anonimización</a></li>
+  <li><a href="#sec:cap02-algoritmo" id="toc-sec:cap02-algoritmo" class="nav-link" data-scroll-target="#sec\:cap02-algoritmo">El algoritmo, no solo la idea</a></li>
+  <li><a href="#sec:cap02-auxiliares" id="toc-sec:cap02-auxiliares" class="nav-link" data-scroll-target="#sec\:cap02-auxiliares">Las fuentes auxiliares que existen de verdad</a></li>
+  <li><a href="#sec:cap02-espanol" id="toc-sec:cap02-espanol" class="nav-link" data-scroll-target="#sec\:cap02-espanol">La cuenta, en un caso español</a></li>
+  <li><a href="#sec:cap02-medido" id="toc-sec:cap02-medido" class="nav-link" data-scroll-target="#sec\:cap02-medido">El ataque, medido sobre el dataset del libro</a></li>
+  <li><a href="#sec:cap02-atributo" id="toc-sec:cap02-atributo" class="nav-link" data-scroll-target="#sec\:cap02-atributo">Revelar sin reidentificar</a></li>
+  </ul></li>
+  <li><a href="#sec:cap02-mia" id="toc-sec:cap02-mia" class="nav-link" data-scroll-target="#sec\:cap02-mia">Inferencia de pertenencia</a>
+  <ul class="collapse">
+  <li><a href="#sec:cap02-juego" id="toc-sec:cap02-juego" class="nav-link" data-scroll-target="#sec\:cap02-juego">El juego de la pertenencia</a></li>
+  <li><a href="#sec:cap02-porque" id="toc-sec:cap02-porque" class="nav-link" data-scroll-target="#sec\:cap02-porque">Por qué el modelo sabe</a></li>
+  <li><a href="#sec:cap02-sombra" id="toc-sec:cap02-sombra" class="nav-link" data-scroll-target="#sec\:cap02-sombra">Modelos sombra, paso a paso</a></li>
+  <li><a href="#sec:cap02-lira" id="toc-sec:cap02-lira" class="nav-link" data-scroll-target="#sec\:cap02-lira">El ataque medido, y una lección de método</a></li>
+  <li><a href="#sec:cap02-agregados" id="toc-sec:cap02-agregados" class="nav-link" data-scroll-target="#sec\:cap02-agregados">Pertenencia sin modelo: agregados y la ley fundamental</a></li>
+  <li><a href="#sec:cap02-censo" id="toc-sec:cap02-censo" class="nav-link" data-scroll-target="#sec\:cap02-censo">El caso que cambió una política de Estado</a></li>
+  <li><a href="#sec:cap02-esceptico" id="toc-sec:cap02-esceptico" class="nav-link" data-scroll-target="#sec\:cap02-esceptico">El escepticismo de 2024: cuando el ataque no funciona</a></li>
+  </ul></li>
+  <li><a href="#sec:cap02-inversion" id="toc-sec:cap02-inversion" class="nav-link" data-scroll-target="#sec\:cap02-inversion">Inversión del modelo y extracción de datos</a>
+  <ul class="collapse">
+  <li><a href="#sec:cap02-fredrikson" id="toc-sec:cap02-fredrikson" class="nav-link" data-scroll-target="#sec\:cap02-fredrikson">Inversión: reconstruir un atributo</a></li>
+  <li><a href="#sec:cap02-atributo-medido" id="toc-sec:cap02-atributo-medido" class="nav-link" data-scroll-target="#sec\:cap02-atributo-medido">La inferencia de atributo, medida: un resultado incómodo</a></li>
+  <li><a href="#sec:cap02-quien" id="toc-sec:cap02-quien" class="nav-link" data-scroll-target="#sec\:cap02-quien">¿Quién es vulnerable? La respuesta depende de la cola</a></li>
+  <li><a href="#sec:cap02-balle" id="toc-sec:cap02-balle" class="nav-link" data-scroll-target="#sec\:cap02-balle">Reconstrucción con adversario informado</a></li>
+  <li><a href="#sec:cap02-extraccion" id="toc-sec:cap02-extraccion" class="nav-link" data-scroll-target="#sec\:cap02-extraccion">Extracción literal en modelos de lenguaje</a></li>
+  <li><a href="#sec:cap02-gradientes" id="toc-sec:cap02-gradientes" class="nav-link" data-scroll-target="#sec\:cap02-gradientes">Fuga por gradientes: cuando ni siquiera se comparte el dato</a></li>
+  </ul></li>
+  <li><a href="#sec:cap02-memorizacion" id="toc-sec:cap02-memorizacion" class="nav-link" data-scroll-target="#sec\:cap02-memorizacion">Memorización: el mecanismo detrás de todo</a>
+  <ul class="collapse">
+  <li><a href="#sec:cap02-exposicion" id="toc-sec:cap02-exposicion" class="nav-link" data-scroll-target="#sec\:cap02-exposicion">Medir la memorización en bits</a></li>
+  <li><a href="#sec:cap02-canarios" id="toc-sec:cap02-canarios" class="nav-link" data-scroll-target="#sec\:cap02-canarios">El experimento, medido</a></li>
+  <li><a href="#sec:cap02-cebolla" id="toc-sec:cap02-cebolla" class="nav-link" data-scroll-target="#sec\:cap02-cebolla">El efecto cebolla: por qué no basta con quitar los raros</a></li>
+  <li><a href="#sec:cap02-colalarga" id="toc-sec:cap02-colalarga" class="nav-link" data-scroll-target="#sec\:cap02-colalarga">Por qué memorizan: la cola larga</a></li>
+  </ul></li>
+  <li><a href="#sec:cap02-auditoria" id="toc-sec:cap02-auditoria" class="nav-link" data-scroll-target="#sec\:cap02-auditoria">Auditar el propio sistema: una metodología</a>
+  <ul class="collapse">
+  <li><a href="#sec:cap02-pasos" id="toc-sec:cap02-pasos" class="nav-link" data-scroll-target="#sec\:cap02-pasos">Los cinco pasos</a></li>
+  <li><a href="#sec:cap02-informe" id="toc-sec:cap02-informe" class="nav-link" data-scroll-target="#sec\:cap02-informe">Qué se escribe en el informe</a></li>
+  <li><a href="#sec:cap02-defensas" id="toc-sec:cap02-defensas" class="nav-link" data-scroll-target="#sec\:cap02-defensas">Del ataque a la defensa: el mapa del resto del libro</a></li>
+  </ul></li>
+  <li><a href="#síntesis-y-puente" id="toc-síntesis-y-puente" class="nav-link" data-scroll-target="#síntesis-y-puente">Síntesis y puente</a></li>
+  <li><a href="#errores-comunes" id="toc-errores-comunes" class="nav-link" data-scroll-target="#errores-comunes">Errores comunes</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Capítulo 2. Ataques a la privacidad</h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<p><span id="cap:ataques"></span> El capítulo anterior terminó con un mapa de canales de fuga y una promesa: que sin medir no hay decisión defendible. Toca cumplirla. La única manera honesta de saber cuánta privacidad tiene un sistema es adoptar el punto de vista de quien intenta romperla, ejecutar el ataque y anotar el número que sale. Este capítulo hace eso cuatro veces, con código que el lector puede correr: cruza una tabla «anonimizada» con una fuente auxiliar, pregunta a un modelo si una persona estuvo en su entrenamiento, reconstruye atributos desde las salidas, y mide cuánto se aprende de memoria un modelo de aquello que vio una sola vez.</p>
+<p>Conviene decir desde el principio qué clase de capítulo es este. <strong>No es un manual de intrusión</strong>: los cuatro ataques operan sobre el dataset sintético del libro y sobre modelos que entrenamos nosotros mismos, y su propósito es exclusivamente defensivo —igual que un ingeniero de estructuras calcula el momento de rotura de una viga que no piensa romper—. Ejecutar cualquiera de estas técnicas sobre datos o modelos ajenos sin autorización no es investigación: es un tratamiento ilícito, con las consecuencias del artículo&nbsp;83 del RGPD <span class="citation" data-cites="ue2016rgpd">(<a href="#ref-ue2016rgpd" role="doc-biblioref">Reglamento (UE) 2016/679, General de Protección de Datos (RGPD) 2016</a>)</span>, y además carece de interés técnico, porque el resultado que importa —el de <em>tus</em> datos— solo se obtiene atacando lo propio.</p>
+<p>El orden sigue una escalada natural del acceso del adversario. En la sección&nbsp;<a href="#sec:cap02-linkage" data-reference-type="ref" data-reference="sec:cap02-linkage">1.1</a> ve una tabla publicada y nada más. En la&nbsp;<a href="#sec:cap02-mia" data-reference-type="ref" data-reference="sec:cap02-mia">1.2</a> ya no hay tabla: hay un modelo entrenado con ella, y la pregunta se reduce a la más pequeña posible —«¿estabas dentro?»—. En la&nbsp;<a href="#sec:cap02-inversion" data-reference-type="ref" data-reference="sec:cap02-inversion">1.3</a> el adversario sube la apuesta y pide de vuelta el contenido: atributos, registros, textos literales. Y en la&nbsp;<a href="#sec:cap02-memorizacion" data-reference-type="ref" data-reference="sec:cap02-memorizacion">1.4</a> nos preguntamos por el mecanismo que hace posibles las dos anteriores —la memorización—, lo medimos en bits y descubrimos por qué no basta con «entrenar mejor». La tabla&nbsp;<a href="#tab:cap02-mapa" data-reference-type="ref" data-reference="tab:cap02-mapa">1.1</a> resume el recorrido.</p>
+<div id="tab:cap02-mapa">
+<table class="caption-top table">
+<caption>Los cuatro ataques del capítulo, por acceso del adversario y por lo que consiguen.</caption>
+<thead>
+<tr class="header">
+<th style="text-align: left;"><strong>Ataque</strong></th>
+<th style="text-align: left;"><strong>Qué ve</strong></th>
+<th style="text-align: left;"><strong>Qué obtiene</strong></th>
+<th style="text-align: left;"><strong>Sección</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">enlace (<em>linkage</em>)</td>
+<td style="text-align: left;">la tabla publicada</td>
+<td style="text-align: left;">identidad + atributo sensible</td>
+<td style="text-align: left;"><a href="#sec:cap02-linkage" data-reference-type="ref" data-reference="sec:cap02-linkage">1.1</a></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">pertenencia (MIA)</td>
+<td style="text-align: left;">el modelo o su API</td>
+<td style="text-align: left;">«esta persona estuvo en el entrenamiento»</td>
+<td style="text-align: left;"><a href="#sec:cap02-mia" data-reference-type="ref" data-reference="sec:cap02-mia">1.2</a></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">inversión y extracción</td>
+<td style="text-align: left;">el modelo o su API</td>
+<td style="text-align: left;">atributos, registros o texto literal</td>
+<td style="text-align: left;"><a href="#sec:cap02-inversion" data-reference-type="ref" data-reference="sec:cap02-inversion">1.3</a></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">memorización (medida)</td>
+<td style="text-align: left;">el modelo</td>
+<td style="text-align: left;">cuántos bits del secreto se filtran</td>
+<td style="text-align: left;"><a href="#sec:cap02-memorizacion" data-reference-type="ref" data-reference="sec:cap02-memorizacion">1.4</a></td>
+</tr>
+</tbody>
+</table>
+</div>
+<section id="sec:cap02-linkage" class="level2">
+<h2 class="anchored" data-anchor-id="sec:cap02-linkage">Reidentificación y enlace</h2>
+<p>Empecemos por el ataque más antiguo, más barato y todavía más frecuente: cruzar dos tablas. El adversario tiene delante un conjunto publicado del que se han suprimido los identificadores directos, y por otro lado una fuente auxiliar donde las mismas personas aparecen con nombre. Si alguna combinación de columnas compartidas es única en ambas, la fila queda unida a su nombre y todo lo demás —el diagnóstico, el salario, la búsqueda— viaja con ella.</p>
+<section id="sec:cap02-mecanismo" class="level3">
+<h3 class="anchored" data-anchor-id="sec:cap02-mecanismo">El mecanismo, con precisión</h3>
+<div class="definicion">
+<p><span id="def:linkage" data-label="def:linkage"></span> Sea <span class="math inline">\(T\)</span> una tabla publicada sobre una población <span class="math inline">\(P\)</span>, sin identificadores directos, y <span class="math inline">\(A\)</span> una <em>fuente auxiliar</em> que contiene, para un subconjunto <span class="math inline">\(P_A \subseteq P\)</span>, la identidad de cada individuo junto a un conjunto de atributos <span class="math inline">\(Q\)</span> presentes también en <span class="math inline">\(T\)</span>. El <em>ataque de enlace</em> calcula la reunión natural <span class="math inline">\(T \bowtie_Q A\)</span> y considera reidentificada toda fila cuya proyección <span class="math inline">\(\pi_Q\)</span> tenga exactamente un candidato en la reunión.</p>
+</div>
+<p>La condición de éxito es, entonces, doble: la combinación debe ser única en <span class="math inline">\(T\)</span> <em>y</em> única en <span class="math inline">\(A\)</span>. Esto da una cota inmediata y útil para estimar el daño antes de publicar.</p>
+<div class="proposicion">
+<p><span id="prop:linkage" data-label="prop:linkage"></span> Sea <span class="math inline">\(u\)</span> la fracción de individuos de la población cuya proyección <span class="math inline">\(\pi_Q\)</span> es única (la unicidad poblacional de la definición&nbsp;<a href="#def:cuasi" data-reference-type="ref" data-reference="def:cuasi">[def:cuasi]</a>) y sea <span class="math inline">\(c = \lvert P_A\rvert / \lvert
+P\rvert\)</span> la cobertura de la fuente auxiliar. Si <span class="math inline">\(A\)</span> es una muestra aleatoria de <span class="math inline">\(P\)</span>, la fracción esperada de filas de <span class="math inline">\(T\)</span> reidentificadas de forma unívoca es, aproximadamente, <span class="math inline">\(u \cdot c\)</span>.</p>
+</div>
+<div class="proof">
+<p><span class="proof-title"><em>Demostración</em>. </span><em>Justificación.</em> Una fila se reidentifica si (i) su combinación es única en la población, con probabilidad <span class="math inline">\(u\)</span>, y (ii) su titular está en la auxiliar, con probabilidad <span class="math inline">\(c\)</span> bajo muestreo aleatorio. Ambos sucesos son independientes por construcción del muestreo, de donde <span class="math inline">\(u\,c\)</span>. Las filas no únicas pueden todavía quedar <em>acotadas</em> a unos pocos candidatos, lo que no es reidentificación pero sí una pérdida de privacidad medible —y a menudo suficiente para el adversario—.&nbsp;◻</p>
+</div>
+<p>Dos consecuencias prácticas. La primera: el atacante no necesita una auxiliar exhaustiva; con cubrir a la mitad de la población obtiene la mitad del daño, linealmente. La segunda, más incómoda: la unicidad poblacional <span class="math inline">\(u\)</span> es un dato de la <em>población</em>, no del fichero, y por tanto <strong>la tasa de reidentificación de una publicación puede subir después de publicarla</strong>, sin que nadie toque el fichero, el día que aparezca una auxiliar mejor. Es el supuesto A2 del capítulo anterior convertido en aritmética.</p>
+</section>
+<section id="sec:cap02-casos" class="level3">
+<h3 class="anchored" data-anchor-id="sec:cap02-casos">Tres casos que definieron la disciplina</h3>
+<p><strong>El historial del gobernador (1997).</strong> El Grupo de Seguros de la Comisión de Massachusetts publicó los datos hospitalarios de los empleados públicos del estado, «anonimizados» suprimiendo nombre y dirección, y dejando —entre otras— fecha de nacimiento, sexo y código postal. Latanya Sweeney compró por veinte dólares el censo electoral del municipio de Cambridge, que traía nombre y esas mismas tres columnas, y localizó el historial médico del gobernador del estado: en su código postal solo seis personas compartían su fecha de nacimiento, y de ellas solo tres eran hombres <span class="citation" data-cites="sweeney2015only">(<a href="#ref-sweeney2015only" role="doc-biblioref">Sweeney 2015</a>)</span>. El caso fundó la disciplina y sostiene el 87 % de unicidad demográfica que el capítulo anterior citó —con las cautelas del ejemplo&nbsp;<a href="#ej:sweeney" data-reference-type="ref" data-reference="ej:sweeney">[ej:sweeney]</a>: la cifra es de 2000, sobre el censo de 1990, y <span class="citation" data-cites="golle2006revisiting">Golle (<a href="#ref-golle2006revisiting" role="doc-biblioref">2006</a>)</span> la recalculó en un 63 % con el censo de 2000—.</p>
+<p><strong>La usuaria n.º 4417749 (2006).</strong> AOL publicó, con ánimo de contribuir a la investigación, veinte millones de consultas de búsqueda de 650 000 usuarios, sustituyendo el nombre de cuenta por un número. No hacía falta ninguna fuente auxiliar formal: bastaba leer las consultas. La usuaria 4417749 había buscado «hombres solteros de 60 años», «perros que orinan en todo» y decenas de apellidos junto al nombre de una localidad de Georgia; dos periodistas del <em>New York Times</em> llamaron a su puerta y publicaron su nombre con su consentimiento <span class="citation" data-cites="barbaro2006aol">(<a href="#ref-barbaro2006aol" role="doc-biblioref">Barbaro y Zeller 2006</a>)</span>. La lección técnica es la del capítulo anterior llevada al extremo: <strong>el contenido es un cuasi-identificador</strong>. Nadie había marcado «consulta de búsqueda» como columna identificante, y sin embargo lo era, con una resolución enorme.</p>
+<p><strong>El premio Netflix (2008).</strong> Netflix publicó cien millones de valoraciones de 480 000 suscriptores para un concurso de algoritmos de recomendación, sustituyendo el identificador de usuario por un número aleatorio. Narayanan y Shmatikov cruzaron ese conjunto con los perfiles públicos de IMDb y demostraron que el conocimiento de unas pocas películas valoradas, con sus fechas aproximadas, basta para señalar a un suscriptor concreto <span class="citation" data-cites="narayanan2008robust">(<a href="#ref-narayanan2008robust" role="doc-biblioref">Narayanan y Shmatikov 2008</a>)</span>. Su resultado clave es de geometría, no de demografía: en un espacio de alta dimensión y <em>disperso</em> —cada usuario valora una fracción minúscula del catálogo— los registros están tan separados unos de otros que un puñado de coordenadas ruidosas los identifica. De ahí que su algoritmo funcione incluso con errores en las fechas y con valoraciones equivocadas.</p>
+</section>
+<section id="sec:cap02-dispersion" class="level3">
+<h3 class="anchored" data-anchor-id="sec:cap02-dispersion">Por qué la dispersión mata la anonimización</h3>
+<p>Merece la pena entender el argumento de Netflix, porque explica de un golpe por qué fallan las técnicas clásicas sobre datos modernos. Sea un catálogo de <span class="math inline">\(m\)</span> ítems y un usuario que interactúa con <span class="math inline">\(s\)</span> de ellos, con <span class="math inline">\(s \ll m\)</span>. El número de combinaciones posibles es <span class="math inline">\(\binom{m}{s}\)</span>, y su logaritmo —los bits de la sección&nbsp;<a href="#sec:cap01-bits" data-reference-type="ref" data-reference="sec:cap01-bits">[sec:cap01-bits]</a>— crece de forma explosiva: <span class="math display">\[\log_2 \binom{m}{s} \;\approx\; s \log_2 \frac{m\,e}{s}.\]</span> Con un catálogo de <span class="math inline">\(m = 17\,700\)</span> películas y solo <span class="math inline">\(s = 8\)</span> valoradas, la cuenta da unos 90 bits: tres veces y media lo necesario para señalar a un habitante del planeta. La conclusión es que <strong>en datos dispersos de alta dimensión la unicidad es la norma, no la excepción</strong>, y por tanto la pregunta «¿es reidentificable?» tiene respuesta afirmativa por defecto. Cambie el lector «películas valoradas» por productos comprados, canciones escuchadas, páginas visitadas, antenas de móvil o diagnósticos codificados en CIE-10: la aritmética no distingue.</p>
+<p>Aquí se ve también por qué las jerarquías de generalización del capítulo&nbsp;4 —que funcionan razonablemente sobre edad o código postal— fracasan sobre este tipo de dato: para bajar de 90 bits hay que destruir casi toda la información, y lo que queda ya no sirve para recomendar nada. La disciplina tardó una década en aceptar la consecuencia: si el dato es disperso y de alta dimensión, la única defensa con garantía es formal —y ese es el argumento de la Parte&nbsp;II—.</p>
+</section>
+<section id="sec:cap02-algoritmo" class="level3">
+<h3 class="anchored" data-anchor-id="sec:cap02-algoritmo">El algoritmo, no solo la idea</h3>
+<p>Conviene ver cómo se ataca cuando las columnas no casan exactamente, porque es el caso realista: las fechas difieren en unos días, hay valores ausentes, el adversario recuerda mal. El procedimiento de <span class="citation" data-cites="narayanan2008robust">Narayanan y Shmatikov (<a href="#ref-narayanan2008robust" role="doc-biblioref">2008</a>)</span> —publicado como <em>Scoreboard-RH</em>— resuelve las tres cosas a la vez y merece enunciarse con precisión, porque su estructura reaparece en todos los ataques de enlace modernos.</p>
+<p>Sea <span class="math inline">\(r\)</span> el registro auxiliar del adversario y <span class="math inline">\(r'\)</span> un candidato de la tabla publicada. Se define primero una <em>similitud</em> atributo a atributo, tolerante al error: <span class="math display">\[\mathrm{Sim}(r, r') \;=\; \sum_{i \in \mathrm{supp}(r)}
+  w_i \cdot \mathbb{1}\bigl[\,\lvert r_i - r'_i \rvert \le
+  \tau_i \,\bigr],
+  \qquad
+  w_i \;=\; \frac{1}{\log \lvert \mathrm{supp}(i) \rvert},\]</span> donde <span class="math inline">\(\tau_i\)</span> es la tolerancia del atributo <span class="math inline">\(i\)</span> —dos semanas para una fecha, un punto para una valoración— y el peso <span class="math inline">\(w_i\)</span> hace lo esencial: <strong>los atributos raros valen más</strong>. Que dos personas hayan visto la misma película minoritaria informa muchísimo más que que ambas hayan visto un éxito de taquilla, y el factor <span class="math inline">\(1/\log\lvert\mathrm{supp}(i)\rvert\)</span> pone ese sentido común en la fórmula.</p>
+<p>El segundo ingrediente es el que evita los falsos positivos, y es el más ingenioso. En lugar de quedarse sin más con el candidato de mayor puntuación, el algoritmo mide la <em>excentricidad</em>: cuánto destaca el mejor sobre el segundo, en unidades de la dispersión del resto, <span class="math display">\[\phi \;=\; \frac{\max_1 - \max_2}{\sigma},\]</span> y solo declara reidentificación si <span class="math inline">\(\phi\)</span> supera un umbral. Un adversario serio no dice «esta es la fila»: dice «esta fila destaca tanto sobre las demás que la coincidencia no puede ser casual». Traducido a nuestra medición de la sección siguiente, la excentricidad es lo que separa una reidentificación de un cruce con mil candidatos plausibles.</p>
+<p>Con este aparato, los autores mostraron que conocer ocho valoraciones con sus fechas aproximadas —dos de ellas posiblemente equivocadas— basta para señalar de forma única al 99 % de los suscriptores del conjunto de Netflix, y que con solo dos valoraciones y fechas ajustadas a tres días se identifica a cerca de un 68 %. El conjunto llevaba publicado dos años.</p>
+</section>
+<section id="sec:cap02-auxiliares" class="level3">
+<h3 class="anchored" data-anchor-id="sec:cap02-auxiliares">Las fuentes auxiliares que existen de verdad</h3>
+<p>La proposición&nbsp;<a href="#prop:linkage" data-reference-type="ref" data-reference="prop:linkage">[prop:linkage]</a> depende de un parámetro que el defensor suele tratar como pequeño: la cobertura <span class="math inline">\(c\)</span> de la fuente auxiliar. Conviene enumerar lo que un adversario en España puede reunir hoy sin cometer ningún delito ni gastar apenas dinero, porque la cifra realista no es pequeña.</p>
+<div id="tab:cap02-auxiliares">
+<table class="caption-top table">
+<caption>Fuentes auxiliares reales: la cobertura efectiva de un adversario paciente es alta, y solo crece con el tiempo.</caption>
+<colgroup>
+<col style="width: 27%">
+<col style="width: 31%">
+<col style="width: 31%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;"><strong>Fuente</strong></th>
+<th style="text-align: left;"><strong>Qué aporta</strong></th>
+<th style="text-align: left;"><strong>Acceso</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">censo electoral y padrón</td>
+<td style="text-align: left;">nombre + demografía + domicilio</td>
+<td style="text-align: left;">consulta reglada; copias históricas circulan</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">boletines oficiales</td>
+<td style="text-align: left;">nombre + oposiciones, ayudas, sanciones</td>
+<td style="text-align: left;">abierto y buscable</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">redes sociales y perfiles</td>
+<td style="text-align: left;">edad, ciudad, profesión, fotos</td>
+<td style="text-align: left;">abierto</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">registros mercantiles y colegios</td>
+<td style="text-align: left;">profesión, dirección profesional</td>
+<td style="text-align: left;">abierto o de pago</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">filtraciones acumuladas</td>
+<td style="text-align: left;">correo, teléfono, contraseñas, domicilio</td>
+<td style="text-align: left;">mercado negro</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">datos abiertos municipales</td>
+<td style="text-align: left;">agregados finos por sección censal</td>
+<td style="text-align: left;">abierto</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>Dos observaciones. La primera es que estas fuentes se <em>acumulan</em>: cada filtración nueva se suma a las anteriores, y su unión tiene mejor cobertura que cualquiera por separado —por eso la industria de los corredores de datos es viable—. La segunda es temporal: el defensor decide publicar hoy con la cobertura de hoy, pero la publicación seguirá ahí cuando la cobertura sea mayor. Es la diferencia entre un riesgo estático y uno creciente, y explica por qué la única política defendible sobre datos publicados es la del capítulo&nbsp;5: acotar lo que se filtra <em>con independencia</em> de lo que el adversario llegue a saber.</p>
+</section>
+<section id="sec:cap02-espanol" class="level3">
+<h3 class="anchored" data-anchor-id="sec:cap02-espanol">La cuenta, en un caso español</h3>
+<p>Para que la aritmética de la dispersión no quede en abstracto, hágase la cuenta sobre un conjunto de datos que cualquier servicio de salud autonómico maneja: la lista de medicamentos dispensados a una persona en un año. El nomenclátor español ronda los 20 000 códigos de presentación; un paciente crónico recibe con facilidad <span class="math inline">\(s = 10\)</span> distintos. Aplicando la fórmula anterior, <span class="math display">\[\log_2\binom{20\,000}{10} \;\approx\;
+  10 \cdot \log_2\frac{20\,000 \cdot e}{10} \;\approx\; 124 \text{ bits},\]</span> frente a los 25,5 que exige señalar a un residente en España. Es decir, el patrón de medicación de un paciente crónico lo identifica con un margen de casi cien bits: no es que sea reidentificable, es que la combinación es única con abrumadora probabilidad aunque la mitad de los códigos estuviera mal.</p>
+<p>Nada de esto exige fecha, edad ni código postal. Y como el adversario solo necesita conocer <em>unos pocos</em> de esos medicamentos —los que se ven en el bolso, en una receta olvidada o en una conversación—, el argumento del capítulo&nbsp;1 se cierra: sobre datos dispersos, la anonimización por supresión de identificadores no es una protección débil, es ninguna.</p>
+</section>
+<section id="sec:cap02-medido" class="level3">
+<h3 class="anchored" data-anchor-id="sec:cap02-medido">El ataque, medido sobre el dataset del libro</h3>
+<p>Bastante teoría. El script <code>src/cap02/linkage.py</code> ejecuta la definición&nbsp;<a href="#def:linkage" data-reference-type="ref" data-reference="def:linkage">[def:linkage]</a> sobre nuestra tabla: publica los 20 000 registros sin <code>num_historia</code>, construye una fuente auxiliar que cubre al 60 % de las personas con nombre, edad, sexo y código postal —exactamente lo que traería un padrón, una filtración comercial o un perfil público—, y cruza. El resultado, medido:</p>
+<pre><code>tabla publicada: 20000 filas, sin identificadores directos
+fuente auxiliar: 12000 personas (60% de cobertura)
+REIDENTIFICADAS de forma univoca: 11522
+  (57.6% de la tabla publicada, 96.0% de las personas de la auxiliar)
+acotadas a 5 candidatos o menos: 12397 (62.0%)</code></pre>
+<p>El 96 % es la cifra que importa: de cada cien personas que el adversario tenía en su lista, noventa y seis quedan unidas a su diagnóstico, con nombre. Y obsérvese cómo encaja con la proposición&nbsp;<a href="#prop:linkage" data-reference-type="ref" data-reference="prop:linkage">[prop:linkage]</a>: la unicidad muestral de estos tres cuasi-identificadores ronda el 96 %, la cobertura es del 60 %, y el producto <span class="math inline">\(0{,}96 \times 0{,}60 \approx 0{,}58\)</span> predice el 57,6 % de la tabla publicada que efectivamente se reidentifica. El modelo sencillo acierta porque sus dos hipótesis —muestreo aleatorio, independencia— se cumplen por construcción; sobre una auxiliar real (sesgada hacia quien tiene presencia pública) la tasa sube en el grupo cubierto y baja fuera de él.</p>
+<figure id="fig:cap02-embudo" data-latex-placement="htbp" class="figure">
+<img src="figs/cap02/fig_01.svg" style="width:94.0%" class="figure-img">
+<figcaption>
+El embudo del ataque de enlace, medido: de la tabla publicada a las personas con nombre y diagnóstico.
+</figcaption>
+</figure>
+<p>La figura&nbsp;<a href="#fig:cap02-embudo" data-reference-type="ref" data-reference="fig:cap02-embudo">1.1</a> dibuja el embudo. Conviene fijarse en el escalón que <em>no</em> existe: entre «personas en la auxiliar» y «reidentificadas» apenas hay pérdida. Publicar la tabla no es dar una pista: es entregar el dato.</p>
+</section>
+<section id="sec:cap02-atributo" class="level3">
+<h3 class="anchored" data-anchor-id="sec:cap02-atributo">Revelar sin reidentificar</h3>
+<p>Un matiz que se pasa por alto y que en la práctica decide auditorías. El ataque de enlace tiene un hermano menor que no necesita señalar a nadie: la <em>revelación de atributo</em>. Si todas las filas de una clase de equivalencia comparten el valor sensible —las filas 4 a 6 de la tabla de juguete del capítulo anterior, todas con asma—, el adversario que sepa que su objetivo está en esa clase aprende el diagnóstico sin distinguir <em>cuál</em> de las tres filas es.</p>
+<p>La consecuencia es que las métricas basadas solo en el tamaño de la clase (<span class="math inline">\(k\)</span>-anonimato) declaran segura una publicación que filtra el atributo entero. En el ataque medido, las 875 filas acotadas a cinco candidatos o menos son formalmente «no reidentificadas» y sin embargo reducen la incertidumbre del adversario de veinte mil personas a cinco. El capítulo&nbsp;3 convertirá esta observación en las métricas de diversidad, y el capítulo&nbsp;4 en el motivo por el que la anonimización clásica necesita más de un criterio.</p>
+</section>
+</section>
+<section id="sec:cap02-mia" class="level2">
+<h2 class="anchored" data-anchor-id="sec:cap02-mia">Inferencia de pertenencia</h2>
+<p>Subamos un escalón. Supongamos que la tabla no se publica —escarmiento de la sección anterior— y que lo único que sale al mundo es un modelo entrenado con ella: un clasificador de riesgo, un recomendador, una API que devuelve probabilidades. La pregunta del adversario se vuelve mucho más modesta, y por eso mismo más peligrosa: no quiere el historial de nadie, solo saber si una persona concreta <strong>estuvo en el conjunto de entrenamiento</strong>.</p>
+<p>Parece poco. No lo es. Si el modelo se entrenó con pacientes de una unidad de VIH, con solicitantes de asilo o con clientes en mora, saber que alguien estuvo dentro <em>es</em> el dato sensible: la pertenencia al conjunto revela la condición que define el conjunto.</p>
+<section id="sec:cap02-juego" class="level3">
+<h3 class="anchored" data-anchor-id="sec:cap02-juego">El juego de la pertenencia</h3>
+<p>La forma limpia de definirlo es como un experimento, al modo criptográfico, porque así queda claro qué significa «el ataque funciona».</p>
+<div class="definicion">
+<p><span id="def:mia" data-label="def:mia"></span> Sea <span class="math inline">\(\mathcal{A}\)</span> un algoritmo de entrenamiento, <span class="math inline">\(D\)</span> un conjunto de datos y <span class="math inline">\(z\)</span> un registro. Se lanza una moneda <span class="math inline">\(b \in \{0,1\}\)</span>: si <span class="math inline">\(b=1\)</span> se entrena <span class="math inline">\(M \leftarrow \mathcal{A}(D \cup \{z\})\)</span>; si <span class="math inline">\(b=0\)</span>, <span class="math inline">\(M \leftarrow \mathcal{A}(D)\)</span>. El adversario recibe acceso a <span class="math inline">\(M\)</span> (y posiblemente a <span class="math inline">\(z\)</span> y a la distribución de los datos) y devuelve un <span class="math inline">\(\hat b\)</span>. Su <em>ventaja</em> es <span class="math inline">\(\mathrm{Adv} = \Pr[\hat b = b] - \tfrac{1}{2}\)</span>.</p>
+</div>
+<p>Ventaja cero significa que el modelo no dice nada sobre la presencia de <span class="math inline">\(z\)</span>; ventaja <span class="math inline">\(\tfrac12\)</span> significa que lo dice todo. Merece la pena retener esta definición porque <strong>es exactamente lo que la privacidad diferencial acota</strong>: cuando en el capítulo&nbsp;5 aparezca la garantía <span class="math inline">\(\eps\)</span>, lo que estará limitando es la ventaja de este adversario, para todo <span class="math inline">\(z\)</span> y todo <span class="math inline">\(D\)</span>. Los ataques de esta sección son, en ese sentido, el reverso empírico de la garantía formal: miden lo que la teoría promete acotar.</p>
+</section>
+<section id="sec:cap02-porque" class="level3">
+<h3 class="anchored" data-anchor-id="sec:cap02-porque">Por qué el modelo sabe</h3>
+<p>El mecanismo es la <em>brecha de generalización</em>. Un modelo ajusta sus parámetros para reducir la pérdida sobre lo que ve; si su capacidad excede lo que el problema exige, parte de esa reducción no es aprendizaje sino memoria. El resultado observable es que la pérdida sobre los datos de entrenamiento queda sistemáticamente por debajo de la pérdida sobre datos nuevos, y esa diferencia es una señal que el adversario puede leer.</p>
+<p>El ataque más simple, y sorprendentemente competitivo, es un umbral sobre la pérdida: si <span class="math inline">\(\ell(M, z)\)</span> es baja, apostar «miembro». <span class="citation" data-cites="shokri2017membership">Shokri et&nbsp;al. (<a href="#ref-shokri2017membership" role="doc-biblioref">2017</a>)</span> lo formalizaron con <em>modelos sombra</em>: entrenar decenas de modelos propios sobre datos de la misma distribución, con miembros conocidos, y aprender de ellos qué aspecto tiene la salida de un modelo ante un miembro. La idea sigue siendo la base de todo lo que vino después.</p>
+</section>
+<section id="sec:cap02-sombra" class="level3">
+<h3 class="anchored" data-anchor-id="sec:cap02-sombra">Modelos sombra, paso a paso</h3>
+<p>El umbral sobre la pérdida tiene un defecto: el valor que separa «miembro» de «no miembro» depende del problema, del modelo y hasta del registro concreto. Los <em>modelos sombra</em> resuelven esa calibración sin conocer el modelo víctima por dentro. La receta, enunciada como algoritmo:</p>
+<ol type="1">
+<li><p>El adversario reúne datos de la misma distribución que los de la víctima (no hace falta que sean los mismos).</p></li>
+<li><p>Entrena <span class="math inline">\(N\)</span> modelos sombra con el mismo procedimiento que supone usó la víctima, cada uno sobre un subconjunto aleatorio distinto. Para cada registro sabe, por construcción, en qué sombras estuvo dentro y en cuáles fuera.</p></li>
+<li><p>Para cada registro recoge dos poblaciones de estadísticos: la de las sombras que lo vieron y la de las que no.</p></li>
+<li><p>Ante el modelo víctima, compara el estadístico observado con esas dos poblaciones y decide.</p></li>
+</ol>
+<p><span class="citation" data-cites="carlini2022lira">Carlini, Chien, et&nbsp;al. (<a href="#ref-carlini2022lira" role="doc-biblioref">2022</a>)</span> llevaron el paso 4 a su forma óptima. Si se modelan las dos poblaciones como gaussianas —sobre la transformación logit de la confianza, donde se aproximan bien—, la decisión estadísticamente correcta es el cociente de verosimilitudes: <span class="math display">\[\Lambda(z) \;=\;
+  \frac{p\bigl(\,\ell(M,z)\; \big|\;
+        \mathcal{N}(\mu_{\text{dentro}},
+        \sigma^2_{\text{dentro}})\,\bigr)}
+       {p\bigl(\,\ell(M,z)\; \big|\;
+        \mathcal{N}(\mu_{\text{fuera}},
+        \sigma^2_{\text{fuera}})\,\bigr)} ,\]</span> y se acusa cuando <span class="math inline">\(\Lambda\)</span> supera un umbral. La diferencia con el criterio ingenuo es que <strong>la calibración es por registro</strong>: un ejemplo fácil, que todos los modelos clasifican bien lo hayan visto o no, ya no genera falsas acusaciones, mientras que un ejemplo difícil —raro, atípico, de la cola— delata su pertenencia con enorme claridad. De ahí que este ataque funcione precisamente donde más duele, y de ahí la insistencia en medir a FPR baja.</p>
+<p>Una consecuencia que conviene retener para el capítulo&nbsp;6: el coste del ataque es alto (entrenar decenas de modelos) pero <em>se paga una vez</em>, y su resultado —saber qué registros son vulnerables— sirve también al defensor. Auditar un modelo propio con LiRA antes de publicarlo es hoy buena práctica, y es exactamente lo que recomendará la metodología de la sección&nbsp;<a href="#sec:cap02-auditoria" data-reference-type="ref" data-reference="sec:cap02-auditoria">1.5</a>.</p>
+</section>
+<section id="sec:cap02-lira" class="level3">
+<h3 class="anchored" data-anchor-id="sec:cap02-lira">El ataque medido, y una lección de método</h3>
+<p>El script <code>src/cap02/membership.py</code> entrena dos bosques aleatorios sobre la mitad de nuestra tabla —misma tarea, mismos datos, distinta capacidad— y ataca ambos con el criterio de pérdida:</p>
+<pre><code>memorizador:  exactitud dentro 0.999 · fuera 0.466 · brecha 0.532
+  MIA AUC = 0.910 | TPR@FPR=1% : 0.144 | TPR@FPR=0.1% : 0.021
+regularizado: exactitud dentro 0.549 · fuera 0.551 · brecha -0.002
+  MIA AUC = 0.525 | TPR@FPR=1% : 0.018 | TPR@FPR=0.1% : 0.002</code></pre>
+<p>El contraste no puede ser más limpio: el modelo con memoria delata a sus miembros con un AUC de 0,91; el regularizado, que generaliza igual de bien —fíjese el lector en que su exactitud <em>fuera</em> es incluso mayor—, apenas supera el azar. La figura&nbsp;<a href="#fig:cap02-gap" data-reference-type="ref" data-reference="fig:cap02-gap">1.2</a> muestra la relación completa: la vulnerabilidad sigue a la brecha, no al tamaño ni a la arquitectura.</p>
+<figure id="fig:cap02-gap" data-latex-placement="htbp" class="figure">
+<img src="figs/cap02/fig_02.svg" style="width:86.0%" class="figure-img">
+<figcaption>
+La vulnerabilidad sigue a la brecha de generalización: dos modelos sobre los mismos datos, medidos.
+</figcaption>
+</figure>
+<p>Y ahora la lección de método, que es probablemente lo más importante del capítulo. Durante años los ataques de pertenencia se evaluaron por su <em>exactitud media</em> o su AUC, y con esa vara muchos parecían inofensivos: un 52 % de aciertos suena a ruido. <span class="citation" data-cites="carlini2022lira">Carlini, Chien, et&nbsp;al. (<a href="#ref-carlini2022lira" role="doc-biblioref">2022</a>)</span> demostraron que esa métrica es engañosa, porque promedia sobre toda la población y esconde lo único que importa: un ataque es peligroso si consigue señalar a <em>unos pocos</em> individuos con <em>mucha</em> confianza. La métrica correcta es la tasa de acierto (TPR) a tasas de falsa alarma muy bajas —0,1 % o menos—, y se lee en una ROC en ejes logarítmicos, no lineales.</p>
+<figure id="fig:cap02-roc" data-latex-placement="htbp" class="figure">
+<img src="figs/cap02/fig_03.svg" style="width:90.0%" class="figure-img">
+<figcaption>
+La ROC del ataque en ejes logarítmicos: la zona que importa es la de la izquierda, donde el adversario acusa poco y acierta mucho.
+</figcaption>
+</figure>
+<p>La figura&nbsp;<a href="#fig:cap02-roc" data-reference-type="ref" data-reference="fig:cap02-roc">1.3</a> lo enseña con nuestros datos. En la esquina de interés, el modelo memorizador acierta el 14,4 % de sus acusaciones cuando solo se permite equivocarse en el 1 % de los no miembros —más de catorce veces el azar—, y sigue funcionando a FPR del 0,1 %. Traducido: el adversario puede seleccionar un subconjunto pequeño de personas y afirmar con alta confianza que estuvieron dentro. Para las personas de ese subconjunto la privacidad se ha perdido del todo, aunque el promedio de la población diga que el ataque «apenas funciona». Es la misma lección de las colas del capítulo&nbsp;1, ahora del lado del atacante.</p>
+</section>
+<section id="sec:cap02-agregados" class="level3">
+<h3 class="anchored" data-anchor-id="sec:cap02-agregados">Pertenencia sin modelo: agregados y la ley fundamental</h3>
+<p>Conviene desmontar aquí una creencia extendida: que el problema es de los modelos y que publicar solo estadísticos agregados es seguro.</p>
+<p>En 2008, <span class="citation" data-cites="homer2008resolving"><span class="nocase">Homer et&nbsp;al.</span> (<a href="#ref-homer2008resolving" role="doc-biblioref">2008</a>)</span> demostraron que a partir de las frecuencias alélicas agregadas de un estudio genómico —medias de miles de participantes— se puede decidir si el ADN de una persona concreta formaba parte de la cohorte, comparando su perfil con las medias del estudio y con una población de referencia. La consecuencia institucional fue inmediata: los Institutos Nacionales de Salud estadounidenses retiraron del acceso público los datos agregados de sus estudios de asociación. Publicar medias resultó ser publicar pertenencia, y en un dominio donde la pertenencia revela enfermedad.</p>
+<p>El resultado no era, en realidad, una sorpresa teórica. Cinco años antes, <span class="citation" data-cites="dinur2003revealing">Dinur y Nissim (<a href="#ref-dinur2003revealing" role="doc-biblioref">2003</a>)</span> habían probado lo que hoy se conoce como la <em>ley fundamental de la recuperación de información</em>: si se responden demasiadas consultas agregadas con demasiada exactitud sobre una base de datos, un adversario puede reconstruirla casi por completo. En su formulación, con una base de <span class="math inline">\(n\)</span> registros binarios, responder consultas de suma con error <span class="math inline">\(o(\sqrt{n})\)</span> permite reconstruir casi todas las entradas.</p>
+<div class="teorema">
+<p><span id="teo:dinur" data-label="teo:dinur"></span> Toda publicación de estadísticos suficientemente exactos y suficientemente numerosos sobre un conjunto de datos permite reconstruirlo. En consecuencia, ninguna técnica que se limite a agregar —sin añadir incertidumbre calibrada— puede ofrecer una garantía de privacidad frente a un número creciente de consultas.</p>
+</div>
+<p>Este teorema es la razón de existir de la Parte&nbsp;II. Marca el límite de todo lo que el capítulo&nbsp;4 llamará «anonimización clásica» y obliga a un cambio de estrategia: si no se puede evitar que la información se escape sumando consultas, hay que <em>contabilizar</em> cuánta se escapa y ponerle un presupuesto. Eso es exactamente la privacidad diferencial.</p>
+</section>
+<section id="sec:cap02-censo" class="level3">
+<h3 class="anchored" data-anchor-id="sec:cap02-censo">El caso que cambió una política de Estado</h3>
+<p>El teorema&nbsp;<a href="#teo:dinur" data-reference-type="ref" data-reference="teo:dinur">[teo:dinur]</a> podría parecer una curiosidad teórica: en la práctica nadie hace millones de consultas exactas a una base de datos. Pero sí las hace —sin llamarlas así— toda oficina estadística cuando publica tablas.</p>
+<p>La Oficina del Censo de Estados Unidos lo comprobó sobre sí misma. Tomó las tablas agregadas que había publicado del censo de 2010 —miles de millones de cifras: recuentos por manzana, edad, sexo, raza y etnia— y las trató como un enorme sistema de ecuaciones cuyas incógnitas eran los registros individuales. Reconstruyó microdatos de persona para la población entera y, cruzándolos después con ficheros comerciales, obtuvo reidentificaciones a gran escala <span class="citation" data-cites="abowd2023census">(<a href="#ref-abowd2023census" role="doc-biblioref">Abowd y Hawes 2023</a>)</span>. Nada de lo publicado contenía un solo registro individual; el conjunto de las publicaciones, sí.</p>
+<p>La reacción institucional fue proporcional al hallazgo: el censo de 2020 se publicó protegido con privacidad diferencial, con un presupuesto de privacidad explícito y una discusión pública —y áspera— sobre cuánto ruido era aceptable y quién decidía. Es, hasta la fecha, el mayor despliegue de una garantía formal de privacidad sobre datos de una nación entera, y su origen no fue un ataque externo, sino un equipo rojo interno haciendo exactamente lo que recomienda la sección&nbsp;<a href="#sec:cap02-auditoria" data-reference-type="ref" data-reference="sec:cap02-auditoria">1.5</a>.</p>
+<p>Dos lecturas para el lector español. La primera, técnica: si el riesgo existe para una oficina censal —con estadísticos profesionales, supresión de celdas pequeñas y décadas de metodología de control de divulgación—, existe para cualquier publicación de agregados municipales, sanitarios o educativos. La segunda, de gobernanza: el paso de «control de divulgación» a «privacidad diferencial» no fue una moda técnica, sino la consecuencia de haber medido. Otra vez la misma idea: primero se mide, y la medida decide la política.</p>
+</section>
+<section id="sec:cap02-esceptico" class="level3">
+<h3 class="anchored" data-anchor-id="sec:cap02-esceptico">El escepticismo de 2024: cuando el ataque no funciona</h3>
+<p>Un capítulo de ataques que solo cuente éxitos sería propaganda. La evidencia reciente obliga a matizar, y el matiz es tan importante como los ataques.</p>
+<p>En 2024, <span class="citation" data-cites="duan2024mia"><span class="nocase">Duan et&nbsp;al.</span> (<a href="#ref-duan2024mia" role="doc-biblioref">2024</a>)</span> evaluaron ataques de pertenencia sobre grandes modelos de lenguaje —de 160 millones a 12 mil millones de parámetros— controlando cuidadosamente que los candidatos «miembro» y «no miembro» procedieran de la misma distribución y del mismo periodo temporal. Su conclusión es demoledora para la literatura previa: en la mayoría de configuraciones los ataques <em>apenas superan al azar</em>. Lo que muchos benchmarks estaban midiendo no era pertenencia, sino <em>contaminación temporal</em>: los textos «no miembros» hablaban de cosas posteriores al entrenamiento, y el modelo los encontraba raros por eso, no por no haberlos visto. <span class="citation" data-cites="meeus2024sok"><span class="nocase">Meeus et&nbsp;al.</span> (<a href="#ref-meeus2024sok" role="doc-biblioref">2024</a>)</span> llegan a un diagnóstico parecido revisando el campo entero, y <span class="citation" data-cites="maini2024datasetinference">Maini et&nbsp;al. (<a href="#ref-maini2024datasetinference" role="doc-biblioref">2024</a>)</span> proponen mover la pregunta de la fila al conjunto —«¿entrenaste con <em>mi</em> dataset?»—, que sí resulta contestable con fiabilidad.</p>
+<p>Las tres lecciones son de método, y valen para todo el libro:</p>
+<ul>
+<li><p><strong>Un ataque que funciona demuestra fuga; uno que falla no demuestra seguridad.</strong> Puede que el adversario no fuera lo bastante bueno, o que la evaluación estuviera mal montada.</p></li>
+<li><p><strong>La comparación debe ser justa.</strong> Miembros y no miembros deben venir de la misma distribución y del mismo tiempo; si no, se mide otra cosa.</p></li>
+<li><p><strong>El régimen importa.</strong> Los modelos de lenguaje ven cada ejemplo una o pocas veces sobre corpus gigantescos; los modelos tabulares y los ajustes finos ven pocos datos muchas veces. La memorización —y por tanto el ataque— se comporta de forma muy distinta en cada régimen, como veremos al medirla en la sección&nbsp;<a href="#sec:cap02-memorizacion" data-reference-type="ref" data-reference="sec:cap02-memorizacion">1.4</a>.</p></li>
+</ul>
+</section>
+</section>
+<section id="sec:cap02-inversion" class="level2">
+<h2 class="anchored" data-anchor-id="sec:cap02-inversion">Inversión del modelo y extracción de datos</h2>
+<p>La pertenencia era la pregunta mínima. Subamos al último escalón: que el adversario pida de vuelta el <em>contenido</em>. Aquí conviene separar tres cosas que la prensa mezcla y que tienen garantías, dificultades y consecuencias distintas.</p>
+<section id="sec:cap02-fredrikson" class="level3">
+<h3 class="anchored" data-anchor-id="sec:cap02-fredrikson">Inversión: reconstruir un atributo</h3>
+<p><span class="citation" data-cites="fredrikson2015model">Fredrikson et&nbsp;al. (<a href="#ref-fredrikson2015model" role="doc-biblioref">2015</a>)</span> plantearon el problema así: dado un modelo que predice <span class="math inline">\(y\)</span> a partir de atributos <span class="math inline">\((x_1,\dots,x_d)\)</span>, y conocidos todos los atributos menos uno, ¿puede recuperarse el que falta? La respuesta es sí, y el procedimiento es directo: probar todos los valores posibles del atributo desconocido y quedarse con el que maximiza la confianza del modelo en la etiqueta observada. Formalmente, <span class="math display">\[\hat x_j \;=\; \argmax_{v} \; \Pr\nolimits_M\bigl[\,y \mid
+  x_1,\dots,x_{j-1}, v, x_{j+1},\dots,x_d \,\bigr] \cdot \Pr[x_j = v],\]</span> donde el segundo factor es el conocimiento previo del adversario sobre la distribución del atributo. Su demostración más citada —recuperar una cara reconocible a partir de un modelo de reconocimiento facial y un nombre— se hizo célebre, y también fue objeto de una crítica importante que conviene conocer: lo que el procedimiento recupera se parece más a un <em>promedio de la clase</em> que al rostro de un individuo concreto. La distinción es exactamente la del capítulo&nbsp;1 entre reidentificar y revelar un atributo: la inversión no devuelve el registro, devuelve lo que el modelo aprendió sobre la categoría a la que ese registro pertenece —que puede ser mucho o casi nada según cuántos individuos haya en la clase—.</p>
+<p>Nuestro dataset permite ver el fenómeno sin mitología. Si el modelo predice diagnóstico a partir de los cuasi-identificadores, invertirlo para adivinar el código postal de una persona funciona bien allí donde el modelo memorizó —la sección siguiente lo medirá— y devuelve el código postal <em>más común</em> de la clase donde no memorizó. Un adversario prudente sabe distinguir las dos situaciones; un titular de prensa, no.</p>
+</section>
+<section id="sec:cap02-atributo-medido" class="level3">
+<h3 class="anchored" data-anchor-id="sec:cap02-atributo-medido">La inferencia de atributo, medida: un resultado incómodo</h3>
+<p>Toca comprobar la inversión sobre nuestros datos, y el resultado obliga a matizar el discurso habitual. El script <code>src/cap02/vulnerabilidad.py</code> entrena el modelo memorizador con la mitad de la tabla e intenta adivinar el diagnóstico de personas a partir de sus cuasi-identificadores:</p>
+<pre><code>inferencia de atributo sobre personas NO vistas: 46.6%
+  (linea base «responder siempre ninguno»: 55.1%)
+la misma inferencia sobre personas del entrenamiento: 99.9%</code></pre>
+<p>Léanse las dos cifras juntas, porque juntas dicen algo importante. Sobre personas que el modelo <em>no</em> vio, el ataque de inferencia de atributo <strong>fracasa</strong>: acierta menos que la estrategia trivial de responder siempre el diagnóstico más frecuente. Sobre personas que sí vio, acierta el 99,9 %. En este dataset el diagnóstico es independiente de los cuasi-identificadores por construcción, de modo que <em>no hay nada generalizable que aprender</em>; todo lo que el modelo «sabe» es memoria.</p>
+<p>De ahí la conclusión que conviene llevarse: lo que a menudo se presenta como «inversión del modelo» es, en realidad, <strong>memorización vista desde otro ángulo</strong>. Cuando existe una relación real entre atributos, el modelo la aprende y predecir el atributo sensible de un desconocido no es un ataque a la privacidad sino, sencillamente, estadística —y a nadie le sorprende que un modelo epidemiológico prediga riesgo a partir de la edad—. El daño específico a la privacidad aparece cuando la predicción es mucho mejor para quien estuvo en el entrenamiento que para quien no: esa diferencia, y no la exactitud absoluta, es la fuga. Es el mismo criterio de la definición&nbsp;<a href="#def:mia" data-reference-type="ref" data-reference="def:mia">[def:mia]</a>, y una buena vara para leer titulares alarmistas.</p>
+</section>
+<section id="sec:cap02-quien" class="level3">
+<h3 class="anchored" data-anchor-id="sec:cap02-quien">¿Quién es vulnerable? La respuesta depende de la cola</h3>
+<p>La segunda medición del mismo script cruza el ataque de pertenencia con la rareza de cada persona, medida como el tamaño de su clase de equivalencia (definición&nbsp;<a href="#def:clase" data-reference-type="ref" data-reference="def:clase">[def:clase]</a>). La hipótesis de partida —razonable, y respaldada por la literatura— era que las personas atípicas serían más vulnerables. Lo medido dice otra cosa:</p>
+<pre><code>clase de 1     (   86 filas): separacion 0.414
+clase de 3-4   (  504 filas): separacion 0.423
+clase de 9-16  (10649 filas): separacion 0.417
+clase de &gt;16   ( 5437 filas): separacion 0.411</code></pre>
+<p>La separación entre miembros y no miembros es <em>plana</em>: todo el mundo es igual de vulnerable. La explicación no invalida la hipótesis, la contextualiza: nuestra tabla, con un 99,5 % de filas únicas (capítulo&nbsp;1), <strong>es toda ella cola</strong>. No hay una «cabeza» de perfiles comunes con la que contrastar, porque el código postal convierte a cada fila en un caso aislado, y el modelo memoriza a todos por igual.</p>
+<p>Sobre datos reales —donde sí existen perfiles frecuentes— el efecto es el que describe <span class="citation" data-cites="feldman2020memorization">Feldman (<a href="#ref-feldman2020memorization" role="doc-biblioref">2020</a>)</span> y miden <span class="citation" data-cites="carlini2022lira">Carlini, Chien, et&nbsp;al. (<a href="#ref-carlini2022lira" role="doc-biblioref">2022</a>)</span>: la memorización, y con ella la vulnerabilidad, se concentra en los ejemplos atípicos. Nuestro resultado plano no contradice ese hallazgo; lo que hace es enseñar una condición previa que rara vez se enuncia: <strong>hablar de «los vulnerables» presupone que existe una mayoría no vulnerable</strong>. Cuando el dataset entero está en la cola —y muchos datasets clínicos, biométricos o de movilidad lo están— la protección no puede reservarse para un subgrupo: o cubre a todo el mundo o no cubre a nadie.</p>
+<figure id="fig:cap02-quien" data-latex-placement="htbp" class="figure">
+<img src="figs/cap02/fig_06.svg" style="width:90.0%" class="figure-img">
+<figcaption>
+Separación miembro/no miembro por rareza del registro: plana, porque en este dataset todas las filas son atípicas.
+</figcaption>
+</figure>
+</section>
+<section id="sec:cap02-balle" class="level3">
+<h3 class="anchored" data-anchor-id="sec:cap02-balle">Reconstrucción con adversario informado</h3>
+<p>La versión fuerte del problema es la que estudian <span class="citation" data-cites="balle2022reconstructing">Balle et&nbsp;al. (<a href="#ref-balle2022reconstructing" role="doc-biblioref">2022</a>)</span>: un adversario que conoce <em>todo</em> el conjunto de entrenamiento salvo un registro, y observa los parámetros del modelo, ¿puede reconstruir ese registro? Es un adversario deliberadamente irreal —nadie sabe tanto—, y esa es precisamente su virtud: si el sistema resiste <em>a este</em>, resiste a cualquiera. Sus resultados muestran que sin defensas formales la reconstrucción es viable, y que la privacidad diferencial la degrada de forma cuantificable. Retendremos la idea metodológica, que reaparecerá en toda la Parte&nbsp;II: <strong>para acotar el riesgo hay que razonar con el peor adversario imaginable, no con el probable</strong>.</p>
+</section>
+<section id="sec:cap02-extraccion" class="level3">
+<h3 class="anchored" data-anchor-id="sec:cap02-extraccion">Extracción literal en modelos de lenguaje</h3>
+<p>El caso que ha llevado el problema a la primera plana es la extracción de datos de entrenamiento en modelos generativos. <span class="citation" data-cites="carlini2021extracting"><span class="nocase">Carlini et&nbsp;al.</span> (<a href="#ref-carlini2021extracting" role="doc-biblioref">2021</a>)</span> demostraron sobre GPT-2 que consultando el modelo con prefijos adecuados y ordenando las generaciones por su relación de verosimilitud es posible recuperar cadenas literales del corpus —nombres, teléfonos, direcciones, fragmentos de código— que aparecían muy pocas veces. Dos años después, <span class="citation" data-cites="nasr2023extraction"><span class="nocase">Nasr et&nbsp;al.</span> (<a href="#ref-nasr2023extraction" role="doc-biblioref">2023</a>)</span> llevaron el ataque a modelos en producción: un <em>ataque de divergencia</em> —pedir al modelo que repita una palabra indefinidamente hasta que se desvía y empieza a emitir texto memorizado— multiplicaba por 150 la tasa de emisión de datos de entrenamiento, permitiendo recuperar gigabytes por un coste del orden de doscientos dólares.</p>
+<p>Tres observaciones para el ingeniero:</p>
+<ol type="1">
+<li><p><strong>La superficie no es solo el corpus, es la interfaz.</strong> El ataque de divergencia no explota un fallo del modelo sino una forma de consulta que nadie había previsto; ninguna revisión del conjunto de entrenamiento lo habría evitado.</p></li>
+<li><p><strong>El coste del atacante es ridículo</strong> comparado con el del defensor, como ya vimos en el capítulo anterior.</p></li>
+<li><p><strong>Lo extraído es lo raro.</strong> Las cadenas recuperadas son las que aparecían pocas veces y eran atípicas: los datos personales, precisamente, viven ahí.</p></li>
+</ol>
+</section>
+<section id="sec:cap02-gradientes" class="level3">
+<h3 class="anchored" data-anchor-id="sec:cap02-gradientes">Fuga por gradientes: cuando ni siquiera se comparte el dato</h3>
+<p>Cierro el catálogo con el ataque que más desconcierta a quien confía en el aprendizaje federado. En ese esquema (capítulo&nbsp;9) los datos no salen del dispositivo: solo salen los <em>gradientes</em> calculados sobre ellos. <span class="citation" data-cites="zhu2019deep">Zhu et&nbsp;al. (<a href="#ref-zhu2019deep" role="doc-biblioref">2019</a>)</span> demostraron que, en muchos escenarios, de un gradiente se puede reconstruir el ejemplo que lo produjo: basta optimizar una entrada sintética hasta que su gradiente coincida con el observado. Es la refutación empírica de la intuición «si no muevo el dato, no lo expongo»: el gradiente es una función del dato, y con frecuencia una función casi invertible.</p>
+</section>
+</section>
+<section id="sec:cap02-memorizacion" class="level2">
+<h2 class="anchored" data-anchor-id="sec:cap02-memorizacion">Memorización: el mecanismo detrás de todo</h2>
+<p>Los tres ataques anteriores tienen un origen común. Un modelo puede delatar pertenencia, permitir inversión o emitir texto literal por una sola razón: porque guarda, en sus parámetros, información específica de ejemplos concretos en lugar de solo el patrón general. A eso lo llamamos memorización, y como todo en este libro, se puede medir.</p>
+<section id="sec:cap02-exposicion" class="level3">
+<h3 class="anchored" data-anchor-id="sec:cap02-exposicion">Medir la memorización en bits</h3>
+<p>La técnica canónica es la de los <em>canarios</em> <span class="citation" data-cites="carlini2019secret">(<a href="#ref-carlini2019secret" role="doc-biblioref">Carlini et&nbsp;al. 2019</a>)</span>: introducir en el entrenamiento un registro artificial que contiene un secreto elegido al azar dentro de un espacio conocido, y comprobar después cuánto delata el modelo ese secreto frente a los demás candidatos.</p>
+<div class="definicion">
+<p><span id="def:exposicion" data-label="def:exposicion"></span> Sea <span class="math inline">\(\mathcal{S}\)</span> el espacio de secretos posibles, <span class="math inline">\(s^\star \in
+\mathcal{S}\)</span> el insertado, y sea <span class="math inline">\(\mathrm{rango}(s^\star)\)</span> la posición de <span class="math inline">\(s^\star\)</span> al ordenar todos los candidatos por la confianza que el modelo les asigna. La <em>exposición</em> es <span class="math display">\[\mathrm{exp}(s^\star) \;=\; \log_2 \lvert\mathcal{S}\rvert
+  - \log_2 \mathrm{rango}(s^\star).\]</span> Vale <span class="math inline">\(0\)</span> cuando el secreto es indistinguible del resto —rango medio <span class="math inline">\(\lvert\mathcal{S}\rvert/2\)</span>, salvo el término constante— y alcanza <span class="math inline">\(\log_2\lvert\mathcal{S}\rvert\)</span> cuando el modelo lo pone el primero.</p>
+</div>
+<p>La medida está en bits y se interpreta igual que en el capítulo&nbsp;1: dice cuánta información del secreto se ha filtrado a los parámetros. Una advertencia práctica que costó una medición equivocada al escribir este capítulo: los <em>empates</em> deben contar a medias. Si el modelo asigna la misma confianza a todos los candidatos, el secreto no está expuesto en absoluto, y un cálculo ingenuo del rango —«¿cuántos puntúan estrictamente más?»— devolvería rango&nbsp;1 y exposición máxima. El código del libro usa el rango medio; conviene revisarlo en cualquier implementación ajena.</p>
+</section>
+<section id="sec:cap02-canarios" class="level3">
+<h3 class="anchored" data-anchor-id="sec:cap02-canarios">El experimento, medido</h3>
+<p>El script <code>src/cap02/memorizacion.py</code> inserta un canario —un perfil con un código postal secreto, escogido entre mil reales— un número creciente de veces, y mide su exposición sobre dos modelos de distinta capacidad:</p>
+<pre><code>espacio de secretos: 1000 codigos postales (exposicion maxima 10.0 bits)
+memorizador   repetido  1 -&gt; rango    4, exposicion  8.0 bits
+memorizador   repetido  2 -&gt; rango    1, exposicion 10.0 bits
+regularizado  repetido  1 -&gt; rango  289, exposicion  1.8 bits
+regularizado  repetido  2 -&gt; rango  176, exposicion  2.5 bits
+regularizado  repetido  4 -&gt; rango   48, exposicion  4.4 bits
+regularizado  repetido  8 -&gt; rango    1, exposicion  9.4 bits</code></pre>
+<p>El resultado, dibujado en la figura&nbsp;<a href="#fig:cap02-memoria" data-reference-type="ref" data-reference="fig:cap02-memoria">1.5</a>, dice tres cosas que conviene no olvidar.</p>
+<figure id="fig:cap02-memoria" data-latex-placement="htbp" class="figure">
+<img src="figs/cap02/fig_04.svg" style="width:88.0%" class="figure-img">
+<figcaption>
+Exposición del secreto según cuántas veces aparece, para dos capacidades de modelo. La regularización sube el umbral; no lo elimina.
+</figcaption>
+</figure>
+<p><strong>Primera: una sola aparición basta.</strong> El modelo con hojas de un elemento delata el secreto con 8 de los 10 bits posibles habiendo visto el canario <em>una vez</em>. No hace falta que un dato se repita para que quede memorizado; basta que sea suficientemente distintivo —y en el capítulo&nbsp;1 vimos que casi todo el mundo lo es—.</p>
+<p><strong>Segunda: la regularización sube el umbral, no lo elimina.</strong> El modelo con hojas grandes empieza filtrando 1,8 bits, pero a las ocho repeticiones ya delata el secreto entero. Las técnicas habituales contra el sobreajuste —podar, regularizar, parar antes— reducen la memorización, y por eso ayudan; pero no ofrecen ninguna garantía, y su punto de ruptura depende de datos que el defensor no controla.</p>
+<p><strong>Tercera: no hay defensa sin contabilidad.</strong> Estas dos curvas son empíricas: describen lo que ocurrió con <em>estos</em> datos, <em>este</em> modelo y <em>este</em> canario. Cambie cualquiera de los tres y habrá que volver a medir. Una garantía de verdad debe valer para todo registro, todo conjunto y todo adversario —y eso, otra vez, es la Parte&nbsp;II—.</p>
+</section>
+<section id="sec:cap02-cebolla" class="level3">
+<h3 class="anchored" data-anchor-id="sec:cap02-cebolla">El efecto cebolla: por qué no basta con quitar los raros</h3>
+<p>Llegados aquí, la reacción natural de un equipo de ingeniería es tentadora y equivocada: «identifiquemos los registros vulnerables y saquémoslos del entrenamiento». <span class="citation" data-cites="carlini2022onion">Carlini, Jagielski, et&nbsp;al. (<a href="#ref-carlini2022onion" role="doc-biblioref">2022</a>)</span> pusieron nombre a por qué no funciona: el <em>efecto cebolla</em>. Al retirar la capa de registros más expuestos y reentrenar, los que quedaban justo detrás —antes protegidos por la presencia de aquellos— pasan a ser los más expuestos. Se pela una capa y aparece otra.</p>
+<p>El mecanismo es comprensible con lo que ya sabemos. Un registro atípico está «tapado» por otros parecidos que le proporcionan compañía estadística; si desaparecen, deja de tener con quién confundirse —su clase de equivalencia se encoge, en el vocabulario del capítulo&nbsp;1— y su exposición sube. La vulnerabilidad, por tanto, <strong>no es una propiedad del registro sino de su relación con el resto</strong>, y por eso no puede eliminarse quitando individuos: cada eliminación redefine el problema.</p>
+<div class="proposicion">
+<p><span id="prop:cebolla" data-label="prop:cebolla"></span> Sea <span class="math inline">\(V(D)\)</span> el conjunto de registros de <span class="math inline">\(D\)</span> cuya exposición supera un umbral fijo. En general no se cumple que <span class="math inline">\(V(D \setminus V(D)) =
+\emptyset\)</span>: retirar los vulnerables produce un conjunto nuevo con sus propios vulnerables. Iterar el procedimiento reduce el conjunto de datos sin garantizar en ningún paso que el resto esté protegido.</p>
+</div>
+<p>La consecuencia práctica es contundente y conviene decirla sin rodeos: <strong>no existe una versión «depurada» del conjunto de datos que sea segura por construcción</strong>. Toda defensa basada en seleccionar qué datos entran comparte este defecto, incluidas las que a veces se presentan como buenas prácticas —eliminar duplicados raros, filtrar identificadores del corpus, quitar minorías del entrenamiento—. Son mitigaciones útiles, reducen el daño esperado y hay que aplicarlas; pero no son garantías, y la diferencia entre una mitigación y una garantía es justo el asunto de la Parte&nbsp;II.</p>
+<p>Hay además un coste ético que no conviene esconder: los registros «vulnerables» que uno se sentiría tentado de eliminar son, con frecuencia, los de las minorías —la enfermedad rara, el origen poco frecuente, la profesión inusual—. Depurar el conjunto de datos mejora la métrica de privacidad a costa de expulsar del modelo precisamente a quien peor servido está ya. La solución correcta no es elegir entre proteger o servir a esas personas, sino pagar el precio en el parámetro que las cubre a todas por igual.</p>
+</section>
+<section id="sec:cap02-colalarga" class="level3">
+<h3 class="anchored" data-anchor-id="sec:cap02-colalarga">Por qué memorizan: la cola larga</h3>
+<p>Queda la pregunta incómoda: si memorizar es malo, ¿por qué no entrenar simplemente modelos que no memoricen? <span class="citation" data-cites="feldman2020memorization">Feldman (<a href="#ref-feldman2020memorization" role="doc-biblioref">2020</a>)</span> dio una respuesta que cambió la forma de ver el problema: cuando la distribución de los datos tiene <em>cola larga</em> —muchas subpoblaciones raras, cada una con poquísimos ejemplos—, memorizar esos ejemplos atípicos es <strong>necesario</strong> para generalizar bien sobre ellos. Un modelo que se negara a memorizar la cola sería peor clasificando a las personas que están en la cola.</p>
+<p>Y aquí se cierra el círculo del capítulo con el anterior. Las colas son exactamente donde vive la privacidad: la persona con la combinación rara es la que queda única (sección&nbsp;<a href="#sec:cap01-gemelos" data-reference-type="ref" data-reference="sec:cap01-gemelos">[sec:cap01-gemelos]</a>), la que el modelo memoriza y la que el atacante extrae. Existe, por tanto, una tensión real —no un fallo de ingeniería— entre servir bien a las minorías y protegerlas. Esa tensión no se resuelve con buenas prácticas: se <em>gestiona</em> con un parámetro que diga cuánto se está dispuesto a filtrar. Ese parámetro tiene nombre desde el capítulo&nbsp;5 y se llama <span class="math inline">\(\eps\)</span>.</p>
+</section>
+</section>
+<section id="sec:cap02-auditoria" class="level2">
+<h2 class="anchored" data-anchor-id="sec:cap02-auditoria">Auditar el propio sistema: una metodología</h2>
+<p>Un catálogo de ataques solo sirve si se convierte en procedimiento. Lo que sigue es la metodología que el libro usará en los capítulos de aplicación y que un equipo puede adoptar tal cual: una auditoría de privacidad —un <em>equipo rojo</em> propio— ejecutada sobre los sistemas de la casa antes de que la ejecute alguien de fuera.</p>
+<section id="sec:cap02-pasos" class="level3">
+<h3 class="anchored" data-anchor-id="sec:cap02-pasos">Los cinco pasos</h3>
+<p><strong>1. Fijar el modelo de adversario, por escrito.</strong> Las tres coordenadas del capítulo&nbsp;1: conocimiento auxiliar, acceso y objetivo. Sin este paso, cualquier resultado es ininterpretable, porque «el sistema es seguro» no significa nada si no se dice frente a quién. Un error frecuente es escribir un adversario cómodo; la tabla&nbsp;<a href="#tab:cap02-auxiliares" data-reference-type="ref" data-reference="tab:cap02-auxiliares">1.2</a> sirve de antídoto.</p>
+<p><strong>2. Elegir los ataques que corresponden al acceso.</strong> No todos aplican a todos los sistemas. La regla es sencilla: si se publica una tabla, enlace; si se publica un modelo o una API, pertenencia y, según el caso, inversión o extracción; si se entrena de forma distribuida, además fuga por gradientes.</p>
+<p><strong>3. Medir con la métrica adecuada.</strong> Para el enlace, la tasa de reidentificación unívoca y la distribución de candidatos. Para la pertenencia, TPR a FPR baja —y no la exactitud media—. Para la memorización, exposición en bits. Toda medida se acompaña de la población sobre la que se hizo y de la fecha, por lo dicho en el ejemplo&nbsp;<a href="#ej:sweeney" data-reference-type="ref" data-reference="ej:sweeney">[ej:sweeney]</a>.</p>
+<p><strong>4. Mirar las colas, no la media.</strong> El resultado que interesa a una autoridad de control no es «el ataque acierta un 52 %», sino «existen <span class="math inline">\(n\)</span> personas cuya pertenencia se determina con confianza alta». Un informe honesto identifica esos subgrupos.</p>
+<p><strong>5. Repetir en cada cambio.</strong> Un resultado de auditoría caduca: caduca cuando cambia el modelo, cuando cambian los datos y —esto es lo que se olvida— cuando cambia el mundo, porque aparecen fuentes auxiliares nuevas. La auditoría es un control periódico, no un certificado.</p>
+<figure id="fig:cap02-auditoria" data-latex-placement="htbp" class="figure">
+<img src="figs/cap02/fig_05.svg" style="width:95.0%" class="figure-img">
+<figcaption>
+El ciclo de auditoría de privacidad: los ataques del capítulo, convertidos en control periódico.
+</figcaption>
+</figure>
+</section>
+<section id="sec:cap02-informe" class="level3">
+<h3 class="anchored" data-anchor-id="sec:cap02-informe">Qué se escribe en el informe</h3>
+<p>La forma del entregable importa, porque es lo que leerá quien decida. Con la experiencia de los cuatro ataques de este capítulo, un informe mínimo defendible contiene:</p>
+<ul>
+<li><p><strong>Modelo de adversario</strong> asumido, con sus tres coordenadas y la justificación de la cobertura supuesta.</p></li>
+<li><p><strong>Ataques ejecutados</strong>, con versión del código y semilla, para que la medición sea reproducible.</p></li>
+<li><p><strong>Resultados con su métrica correcta</strong> y, en pertenencia, la curva ROC en ejes logarítmicos.</p></li>
+<li><p><strong>Población afectada en la cola</strong>: cuántas personas y con qué características quedan expuestas por encima del umbral que el equipo haya fijado.</p></li>
+<li><p><strong>Decisión</strong>: publicar, publicar con mitigación, o no publicar; y si hay mitigación, con qué parámetro y qué coste en utilidad medido.</p></li>
+<li><p><strong>Caducidad</strong>: cuándo se repite.</p></li>
+</ul>
+<p>Ese documento es, en la práctica, la parte técnica de la evaluación de impacto del artículo&nbsp;35 del RGPD <span class="citation" data-cites="ue2016rgpd">(<a href="#ref-ue2016rgpd" role="doc-biblioref">Reglamento (UE) 2016/679, General de Protección de Datos (RGPD) 2016</a>)</span> que el capítulo&nbsp;14 formalizará; y para modelos, la evidencia con la que se sostiene —o se desmonta— la pretensión de anonimidad que el EDPB exige demostrar caso por caso <span class="citation" data-cites="edpb2024opinion28">(<a href="#ref-edpb2024opinion28" role="doc-biblioref">European Data Protection Board 2024</a>)</span>.</p>
+</section>
+<section id="sec:cap02-defensas" class="level3">
+<h3 class="anchored" data-anchor-id="sec:cap02-defensas">Del ataque a la defensa: el mapa del resto del libro</h3>
+<p>Termino con la tabla que convierte este capítulo en el índice de los siguientes. Cada ataque tiene una familia de defensas, y ninguna es gratis: la columna de la derecha anticipa el precio que se paga, que es de lo que trata la frontera utilidad–privacidad de la figura&nbsp;<a href="#fig:cap01-frontera" data-reference-type="ref" data-reference="fig:cap01-frontera">[fig:cap01-frontera]</a>.</p>
+<div id="tab:cap02-defensas">
+<table class="caption-top table">
+<caption>De cada ataque a su defensa con garantía, con el capítulo donde se mide su coste.</caption>
+<colgroup>
+<col style="width: 20%">
+<col style="width: 31%">
+<col style="width: 20%">
+<col style="width: 20%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;"><strong>Ataque</strong></th>
+<th style="text-align: left;"><strong>Defensa con garantía</strong></th>
+<th style="text-align: left;"><strong>Capítulo</strong></th>
+<th style="text-align: left;"><strong>Precio</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">enlace</td>
+<td style="text-align: left;">generalización y supresión (sin garantía formal); publicación con DP</td>
+<td style="text-align: left;">4, 5</td>
+<td style="text-align: left;">resolución de las columnas</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">pertenencia</td>
+<td style="text-align: left;">DP en el entrenamiento (DP-SGD)</td>
+<td style="text-align: left;">6</td>
+<td style="text-align: left;">exactitud y cómputo</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">inversión y extracción</td>
+<td style="text-align: left;">DP; filtrado y deduplicación del corpus</td>
+<td style="text-align: left;">5, 6, 8</td>
+<td style="text-align: left;">utilidad del generativo</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">fuga por gradientes</td>
+<td style="text-align: left;">agregación segura + DP en cliente</td>
+<td style="text-align: left;">9</td>
+<td style="text-align: left;">complejidad y rondas</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">memorización</td>
+<td style="text-align: left;">DP con presupuesto contabilizado</td>
+<td style="text-align: left;">5, 6</td>
+<td style="text-align: left;"><span class="math inline">\(\eps\)</span> frente a utilidad</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>Obsérvese que la columna central converge: casi todas las filas acaban en privacidad diferencial. No es casualidad ni entusiasmo de autor, sino consecuencia del teorema&nbsp;<a href="#teo:dinur" data-reference-type="ref" data-reference="teo:dinur">[teo:dinur]</a>: cuando la fuga es inevitable, lo único que queda es contabilizarla y acotarla. Cómo se hace eso, con qué matemática y a qué precio, es la Parte&nbsp;II.</p>
+</section>
+</section>
+<section id="síntesis-y-puente" class="level2 unnumbered">
+<h2 class="unnumbered anchored" data-anchor-id="síntesis-y-puente">Síntesis y puente</h2>
+<p>Cuatro ataques, cuatro medidas. El enlace convierte una tabla publicada en nombres con diagnóstico: en nuestro dataset, el 96 % de las personas que el adversario tenía en su lista, con un modelo sencillo —unicidad por cobertura— que predice la tasa. La inferencia de pertenencia reduce la pregunta a un bit y lo consigue cuando hay brecha de generalización: AUC de 0,91 en el modelo con memoria frente a 0,53 en el regularizado, y —lección de método— lo que hay que mirar no es el promedio sino la tasa de acierto a falsa alarma muy baja. La inversión y la extracción devuelven contenido, y lo que devuelven es siempre lo raro. Y la memorización, que es el mecanismo común, se mide en bits: ocho de diez con una sola aparición del secreto.</p>
+<p>De todo ello se sigue el argumento que sostiene el resto del libro. Las defensas ad hoc —suprimir identificadores, agregar, regularizar— funcionan hasta que dejan de hacerlo, y el defensor no puede saber cuándo, porque depende de auxiliares futuras, de consultas imprevistas y de la cola de su propia distribución. La ley fundamental de la recuperación de información (teorema&nbsp;<a href="#teo:dinur" data-reference-type="ref" data-reference="teo:dinur">[teo:dinur]</a>) lo dice de manera terminante. El capítulo siguiente da el paso intermedio imprescindible —dejar de contar anécdotas y empezar a cuantificar el riesgo con métricas reproducibles—, y la Parte&nbsp;II cambia de estrategia: en vez de esperar que el ataque no llegue, se acota por diseño lo que podría lograr.</p>
+</section>
+<section id="errores-comunes" class="level2 unnumbered">
+<h2 class="unnumbered anchored" data-anchor-id="errores-comunes">Errores comunes</h2>
+<ul>
+<li><p>Creer que un ataque fallido demuestra seguridad: solo demuestra que ese ataque, tal como se montó, no funcionó <span class="citation" data-cites="duan2024mia">(<a href="#ref-duan2024mia" role="doc-biblioref"><span class="nocase">Duan et&nbsp;al.</span> 2024</a>)</span>.</p></li>
+<li><p>Evaluar un ataque de pertenencia por su exactitud media: esconde precisamente el caso peligroso, que es acertar mucho sobre pocos <span class="citation" data-cites="carlini2022lira">(<a href="#ref-carlini2022lira" role="doc-biblioref">Carlini, Chien, et&nbsp;al. 2022</a>)</span>.</p></li>
+<li><p>Comparar miembros y no miembros de distinta procedencia o distinta época: se mide contaminación temporal, no pertenencia.</p></li>
+<li><p>Suponer que publicar solo agregados es seguro: la ley fundamental (teorema&nbsp;<a href="#teo:dinur" data-reference-type="ref" data-reference="teo:dinur">[teo:dinur]</a>) y el caso de los estudios genómicos <span class="citation" data-cites="homer2008resolving">(<a href="#ref-homer2008resolving" role="doc-biblioref"><span class="nocase">Homer et&nbsp;al.</span> 2008</a>)</span> dicen lo contrario.</p></li>
+<li><p>Confundir la inversión de un modelo con recuperar el registro de una persona: a menudo devuelve el promedio de su clase, y la diferencia importa al valorar el daño.</p></li>
+<li><p>Confiar en que el aprendizaje federado protege por no mover el dato: el gradiente es función del dato y con frecuencia se invierte <span class="citation" data-cites="zhu2019deep">(<a href="#ref-zhu2019deep" role="doc-biblioref">Zhu et&nbsp;al. 2019</a>)</span>.</p></li>
+<li><p>Pensar que un dato solo se memoriza si se repite: en nuestro experimento una sola aparición filtró 8 de 10 bits.</p></li>
+<li><p>Confiar la defensa a la regularización: sube el umbral de memorización, pero no da ninguna garantía y su punto de ruptura depende de datos que el defensor no controla.</p></li>
+</ul>
+<blockquote class="blockquote">
+<p><em>Práctica medida y ejercicios — disponibles en la obra completa (papel, PDF y EPUB).</em></p>
+</blockquote>
+<blockquote class="blockquote">
+<p><em>Marcos frente a frente: ENS/UE vs NIST — sección disponible en la obra completa.</em></p>
+</blockquote>
+
+
+
+</section>
+
+<div id="quarto-appendix" class="default"><section class="quarto-appendix-contents" role="doc-bibliography" id="quarto-bibliography"><h2 class="anchored quarto-appendix-heading">Referencias</h2><div id="refs" class="references csl-bib-body hanging-indent" role="list">
+<div id="ref-abowd2023census" class="csl-entry" role="listitem">
+Abowd, John M., y Michael B. Hawes. 2023. <span>«Confidentiality Protection in the 2020 US Census of Population and Housing»</span>. <em>Annual Review of Statistics and Its Application</em> 10.
+</div>
+<div id="ref-balle2022reconstructing" class="csl-entry" role="listitem">
+Balle, Borja, Giovanni Cherubin, y Jamie Hayes. 2022. <span>«Reconstructing Training Data with Informed Adversaries»</span>. <em>IEEE Symposium on Security and Privacy</em>.
+</div>
+<div id="ref-barbaro2006aol" class="csl-entry" role="listitem">
+Barbaro, Michael, y Tom Zeller. 2006. <span>«A Face Is Exposed for AOL Searcher No.&nbsp;4417749»</span>. <em>The New York Times</em>, agosto 9.
+</div>
+<div id="ref-carlini2022lira" class="csl-entry" role="listitem">
+Carlini, Nicholas, Steve Chien, Milad Nasr, Shuang Song, Andreas Terzis, y Florian Tramèr. 2022. <span>«Membership Inference Attacks From First Principles»</span>. <em>IEEE Symposium on Security and Privacy</em>.
+</div>
+<div id="ref-carlini2022onion" class="csl-entry" role="listitem">
+Carlini, Nicholas, Matthew Jagielski, Chiyuan Zhang, Nicolas Papernot, Andreas Terzis, y Florian Tramèr. 2022. <span>«The Privacy Onion Effect: Memorization is Relative»</span>. <em>Advances in Neural Information Processing Systems (NeurIPS)</em>.
+</div>
+<div id="ref-carlini2019secret" class="csl-entry" role="listitem">
+Carlini, Nicholas, Chang Liu, Úlfar Erlingsson, Jernej Kos, y Dawn Song. 2019. <span>«The Secret Sharer: Evaluating and Testing Unintended Memorization in Neural Networks»</span>. <em>USENIX Security Symposium</em>.
+</div>
+<div id="ref-carlini2021extracting" class="csl-entry" role="listitem">
+<span class="nocase">Carlini, Nicholas, Florian Tramèr, Eric Wallace, et&nbsp;al.</span> 2021. <span>«Extracting Training Data from Large Language Models»</span>. <em>USENIX Security Symposium</em>.
+</div>
+<div id="ref-dinur2003revealing" class="csl-entry" role="listitem">
+Dinur, Irit, y Kobbi Nissim. 2003. <span>«Revealing Information While Preserving Privacy»</span>. <em>ACM Symposium on Principles of Database Systems (PODS)</em>.
+</div>
+<div id="ref-duan2024mia" class="csl-entry" role="listitem">
+<span class="nocase">Duan, Michael, Anshuman Suri, Niloofar Mireshghallah, et&nbsp;al.</span> 2024. <span>«Do Membership Inference Attacks Work on Large Language Models?»</span> <em>Conference on Language Modeling (COLM)</em>. <a href="https://arxiv.org/abs/2402.07841">https://arxiv.org/abs/2402.07841</a>.
+</div>
+<div id="ref-edpb2024opinion28" class="csl-entry" role="listitem">
+European Data Protection Board. 2024. <em>Opinion 28/2024 on Certain Data Protection Aspects Related to the Processing of Personal Data in the Context of AI Models</em>. EDPB.
+</div>
+<div id="ref-feldman2020memorization" class="csl-entry" role="listitem">
+Feldman, Vitaly. 2020. <span>«Does Learning Require Memorization? A Short Tale about a Long Tail»</span>. <em>ACM Symposium on Theory of Computing (STOC)</em>.
+</div>
+<div id="ref-fredrikson2015model" class="csl-entry" role="listitem">
+Fredrikson, Matt, Somesh Jha, y Thomas Ristenpart. 2015. <span>«Model Inversion Attacks that Exploit Confidence Information and Basic Countermeasures»</span>. <em>ACM SIGSAC Conference on Computer and Communications Security (CCS)</em>.
+</div>
+<div id="ref-golle2006revisiting" class="csl-entry" role="listitem">
+Golle, Philippe. 2006. <span>«Revisiting the Uniqueness of Simple Demographics in the US Population»</span>. <em>ACM Workshop on Privacy in the Electronic Society (WPES)</em>.
+</div>
+<div id="ref-homer2008resolving" class="csl-entry" role="listitem">
+<span class="nocase">Homer, Nils, Szabolcs Szelinger, Margot Redman, et&nbsp;al.</span> 2008. <span>«Resolving Individuals Contributing Trace Amounts of DNA to Highly Complex Mixtures Using High-Density SNP Genotyping Microarrays»</span>. <em>PLoS Genetics</em>.
+</div>
+<div id="ref-maini2024datasetinference" class="csl-entry" role="listitem">
+Maini, Pratyush, Hengrui Jia, Nicolas Papernot, y Adam Dziedzic. 2024. <span>«LLM Dataset Inference: Did You Train on My Dataset?»</span> <em>Advances in Neural Information Processing Systems (NeurIPS)</em>.
+</div>
+<div id="ref-meeus2024sok" class="csl-entry" role="listitem">
+<span class="nocase">Meeus, Matthieu, Igor Shilov, Shubham Jain, et&nbsp;al.</span> 2024. <em>SoK: Membership Inference Attacks on LLMs are Rushing Nowhere (and How to Fix It)</em>. <a href="https://arxiv.org/abs/2406.17975">https://arxiv.org/abs/2406.17975</a>.
+</div>
+<div id="ref-narayanan2008robust" class="csl-entry" role="listitem">
+Narayanan, Arvind, y Vitaly Shmatikov. 2008. <span>«Robust De-anonymization of Large Sparse Datasets»</span>. <em>IEEE Symposium on Security and Privacy</em>.
+</div>
+<div id="ref-nasr2023extraction" class="csl-entry" role="listitem">
+<span class="nocase">Nasr, Milad, Nicholas Carlini, Jonathan Hayase, et&nbsp;al.</span> 2023. <em>Scalable Extraction of Training Data from (Production) Language Models</em>. <a href="https://arxiv.org/abs/2311.17035">https://arxiv.org/abs/2311.17035</a>.
+</div>
+<div id="ref-ue2016rgpd" class="csl-entry" role="listitem">
+Reglamento (UE) 2016/679, General de Protección de Datos (RGPD) (2016).
+</div>
+<div id="ref-shokri2017membership" class="csl-entry" role="listitem">
+Shokri, Reza, Marco Stronati, Congzheng Song, y Vitaly Shmatikov. 2017. <span>«Membership Inference Attacks Against Machine Learning Models»</span>. <em>IEEE Symposium on Security and Privacy</em>.
+</div>
+<div id="ref-sweeney2015only" class="csl-entry" role="listitem">
+Sweeney, Latanya. 2015. <span>«Only You, Your Doctor, and Many Others May Know»</span>. <em>Technology Science</em>.
+</div>
+<div id="ref-zhu2019deep" class="csl-entry" role="listitem">
+Zhu, Ligeng, Zhijian Liu, y Song Han. 2019. <span>«Deep Leakage from Gradients»</span>. <em>Advances in Neural Information Processing Systems (NeurIPS)</em>.
+</div>
+</div></section></div></main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copiado");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copiado");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="./cap01.html" class="pagination-link" aria-label="Capítulo 1. El dato personal como objeto de ingeniería">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text">Capítulo 1. El dato personal como objeto de ingeniería</span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+  </div>
+</nav>
+</div> <!-- /content -->
+<footer class="footer">
+  <div class="nav-footer">
+    <div class="nav-footer-left">
+      &nbsp;
+    </div>   
+    <div class="nav-footer-center">
+<p>© 2026 Manuel Muñoz Plá · Edición web bajo licencia <a href="https://creativecommons.org/licenses/by-nc-nd/4.0/deed.es">CC BY-NC-ND 4.0</a> (uso académico con atribución; sin uso comercial ni obras derivadas) · El código va aparte bajo licencia MIT · <a href="https://manpla.net/libros/privacidad-ciencia-datos/">Ficha del libro en manpla.net</a></p>
+</div>
+    <div class="nav-footer-right">
+      &nbsp;
+    </div>
+  </div>
+</footer>
+
+
+
+
+</body></html>
