@@ -53,8 +53,10 @@ qmd: figuras
 	  quarto pandoc $(WORK)/$${c}_web.tex -f latex -t markdown \
 	    -o $(QMD_DIR)/$$c.qmd || exit 1; \
 	done
+	python3 herramientas/ajustar_qmd.py $(patsubst %,$(QMD_DIR)/%.qmd,$(CAPS))
 	cp herramientas/index_base.md $(QMD_DIR)/index.qmd
 	cp herramientas/quarto_armazon.yml $(QMD_DIR)/_quarto.yml
+	cp herramientas/estilo.scss $(QMD_DIR)/estilo.scss
 	$(MAKE) $(QMD_DIR)/figs/portada_web.jpg
 
 # portada para la web: pagina 1 del PDF compuesto (titulo + logo +

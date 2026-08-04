@@ -1,0 +1,12 @@
+/*-- scss:defaults --*/
+$font-size-root: 17px;
+
+/*-- scss:rules --*/
+.callout.callout-style-default { border-left-width: 5px; }
+/* Figuras: SVG vectoriales de TikZ. Se topan a la columna (nunca
+   desbordan) y se centran; se neutraliza el display:inline-block que
+   Bootstrap pone en .figure (causaba desbordes con figuras pequeñas). */
+figure.figure { display: block; text-align: center; }
+figure img, img.figure-img { max-width: 100%; height: auto; }
+figure figcaption { font-size: 0.9em; color: #555; text-align: left; }
+pre { font-size: 0.86em; }

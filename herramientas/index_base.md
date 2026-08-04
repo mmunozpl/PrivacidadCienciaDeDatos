@@ -1,60 +1,62 @@
 ---
-title: "Privacidad para la ciencia de datos"
+title: "Privacidad · Ciencia de datos"
 ---
 
-![](figs/portada_web.jpg){width=300 fig-align="center"
-alt="Portada del libro: Privacidad — Ciencia de datos, Manuel Muñoz Plá, qWORD.dev"}
+:::: {.columns}
+::: {.column width="32%"}
+![](figs/portada_web.jpg){width=100%}
+:::
+::: {.column width="4%"}
+:::
+::: {.column width="64%"}
+Edición web generada desde el libro LaTeX. Navega por los capítulos
+en la barra lateral o desde el índice siguiente.
 
-Edición web, en abierto, del libro **Privacidad para la ciencia de
-datos** (Manuel Muñoz Plá, qWORD.dev): del riesgo de reidentificación a
-las tecnologías de privacidad con código —privacidad diferencial, datos
-sintéticos, aprendizaje federado, computación cifrada— y la norma
-(RGPD, AI Act, ENS) tratada como ingeniería. Escrito con afán
-divulgativo y rigor técnico y matemático: la intuición primero, la
-formalización completa después.
+Privacidad aplicada a la **ciencia de datos**, con afán divulgativo y
+rigor técnico y matemático a la vez: del riesgo de reidentificación
+—medido en bits sobre una población sintética calibrada con las
+cifras oficiales del INE de 2025— a las tecnologías de privacidad con
+código que funciona (privacidad diferencial, datos sintéticos,
+aprendizaje federado, computación cifrada) y la norma europea (RGPD,
+AI Act) tratada como requisitos de ingeniería. Diecisiete capítulos
+en cuatro partes: *El dato y su riesgo*, *PETs con código*,
+*Categorías especiales como hilo* y *La norma como ingeniería*.
+:::
+::::
 
-Cada capítulo de la edición web omite sus cierres de pago —la
-práctica medida, los ejercicios (con soluciones en apéndice) y la
-sección «Marcos frente a frente: ENS/UE vs NIST»—, disponibles en la
-obra completa (papel, PDF y EPUB).
 
-## Parte I — El dato y su riesgo
+::: {.callout-note title="Próximamente"}
+Los capítulos se publican en esta web **conforme se terminan**. La
+**obra completa** —con la práctica medida, los ejercicios y sus
+soluciones, y las secciones «Marcos frente a frente: ENS/UE vs
+NIST»— se publicará en **papel, PDF y EPUB**.
+:::
 
-Medir antes de proteger: qué es el dato personal visto desde la
-ingeniería y por dónde se fuga.
+## Índice
 
-1. [El dato personal como objeto de ingeniería](cap01.qmd)
-2. Ataques a la privacidad *(en preparación)*
-3. Cuantificar el riesgo *(en preparación)*
+- [Capítulo 1. El dato personal como objeto de ingeniería](cap01.qmd)
+- Capítulo 2. Ataques a la privacidad *(en preparación)*
+- Capítulo 3. Cuantificar el riesgo *(en preparación)*
+- Capítulo 4. Seudonimización y anonimización clásica *(en preparación)*
+- Capítulo 5. Privacidad diferencial *(en preparación)*
+- Capítulo 6. DP en el entrenamiento *(en preparación)*
+- Capítulo 7. Privacidad diferencial local *(en preparación)*
+- Capítulo 8. Datos sintéticos *(en preparación)*
+- Capítulo 9. Aprendizaje federado *(en preparación)*
+- Capítulo 10. Computación cifrada *(en preparación)*
+- Capítulo 11. Biometría *(en preparación)*
+- Capítulo 12. Dato de salud e imagen médica *(en preparación)*
+- Capítulo 13. Procedencia y autenticidad *(en preparación)*
+- Capítulo 14. RGPD operativo *(en preparación)*
+- Capítulo 15. AI Act y gobernanza de modelos *(en preparación)*
+- Capítulo 16. Privacy by design en arquitectura *(en preparación)*
+- Capítulo 17. Caso integral *(en preparación)*
 
-## Parte II — PETs con código
+---
 
-El núcleo técnico: cada tecnología con su matemática mínima, su
-implementación y su coste medido en utilidad.
-
-4. Seudonimización y anonimización clásica *(en preparación)*
-5. Privacidad diferencial *(en preparación)*
-6. DP en el entrenamiento *(en preparación)*
-7. Privacidad diferencial local *(en preparación)*
-8. Datos sintéticos *(en preparación)*
-9. Aprendizaje federado *(en preparación)*
-10. Computación cifrada *(en preparación)*
-
-## Parte III — Categorías especiales como hilo
-
-Biometría y salud: los dos dominios del artículo 9 tratados con
-investigación directa.
-
-11. Biometría *(en preparación)*
-12. Dato de salud e imagen médica *(en preparación)*
-13. Procedencia y autenticidad *(en preparación)*
-
-## Parte IV — La norma como ingeniería
-
-La capa normativa tratada como requisitos ejecutables, no como
-trámite.
-
-14. RGPD operativo *(en preparación)*
-15. AI Act y gobernanza de modelos *(en preparación)*
-16. Privacy by design en arquitectura *(en preparación)*
-17. Caso integral *(en preparación)*
+::: {.text-muted}
+Las marginales de población de `data/ine/` proceden de los datos
+abiertos del INE (Cifras de Población a 1 de enero de 2025) y
+conservan sus condiciones de atribución; no están cubiertas por la
+licencia de esta obra.
+:::
