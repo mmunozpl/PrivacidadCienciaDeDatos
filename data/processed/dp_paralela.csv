@@ -1,0 +1,3 @@
+tratamiento,casillas,eps_por_casilla,error_medio
+paralela (grupos disjuntos),311,1.0,1.0023704632917683
+secuencial (mal contabilizada),311,0.003215434083601286,310.4525213819048

@@ -1,14 +1,27 @@
 # Makefile — orquesta figuras, conversión LaTeX -> Quarto y obra completa.
 #
 #   make figuras    figuras TikZ: PDF (obra completa) + SVG (web)
-#   make qmd        variante web de cada capítulo -> qmd/capXX.qmd
+#   make qmd        variante web de los capítulos PUBLICADOS
 #   make web        qmd + quarto render -> docs/
+#   make borrador   como qmd, pero incluyendo los aún no publicados
 #   make completa   PDF de la obra completa (latex/main.pdf)
 #   make limpiar    borra artefactos y generados (qmd/, .work/)
 #
 # qmd/ y docs/ son GENERADOS: nunca se editan a mano.
 
+# Capítulos PUBLICADOS en la web. Publicar uno es moverlo aquí desde
+# CAPS_BORRADOR y darle su entrada en herramientas/quarto_armazon.yml
+# y herramientas/index_base.md.
 CAPS := cap01 cap02 cap03 cap04
+
+# Terminados y compilados en el PDF de pago, pero NO publicados. Se
+# previsualizan con `make borrador`; `make web` no los toca y además
+# borra su .qmd si quedó de una previsualización anterior, para que no
+# puedan llegar a docs/ por descuido.
+CAPS_BORRADOR := cap05
+
+# lo que se convierte a .qmd; `make borrador` lo amplía
+CAPS_QMD ?= $(CAPS)
 
 LATEX_DIR := latex
 QMD_DIR   := qmd
@@ -23,7 +36,7 @@ FIG_SVG := $(patsubst $(LATEX_DIR)/figs/%.tex,$(QMD_DIR)/figs/%.svg,$(FIG_SRC))
 SOL_SRC := $(wildcard $(LATEX_DIR)/figs/soluciones/fig_*.tex)
 SOL_PDF := $(SOL_SRC:.tex=.pdf)
 
-.PHONY: figuras qmd web completa limpiar
+.PHONY: figuras qmd borrador web completa limpiar
 
 # ── figuras ──────────────────────────────────────────────────────────
 figuras: $(FIG_PDF) $(FIG_SVG) $(SOL_PDF)
@@ -47,13 +60,19 @@ $(QMD_DIR)/figs/%.svg: $(LATEX_DIR)/figs/%.tex
 # resultado conserva cualquier resto de ensnist.
 qmd: figuras
 	mkdir -p $(WORK) $(QMD_DIR)
+	# se retira el .qmd de todo capítulo que no toque convertir: si
+	# quedó de un `make borrador`, quarto lo renderizaría igual
+	for c in $(CAPS) $(CAPS_BORRADOR); do \
+	  echo " $(CAPS_QMD) " | grep -q " $$c " || \
+	    rm -f $(QMD_DIR)/$$c.qmd; \
+	done
 	python3 herramientas/variante_web.py \
-	  $(patsubst %,$(LATEX_DIR)/%.tex,$(CAPS))
-	for c in $(CAPS); do \
+	  $(patsubst %,$(LATEX_DIR)/%.tex,$(CAPS_QMD))
+	for c in $(CAPS_QMD); do \
 	  quarto pandoc $(WORK)/$${c}_web.tex -f latex -t markdown \
 	    -o $(QMD_DIR)/$$c.qmd || exit 1; \
 	done
-	python3 herramientas/ajustar_qmd.py $(patsubst %,$(QMD_DIR)/%.qmd,$(CAPS))
+	python3 herramientas/ajustar_qmd.py $(patsubst %,$(QMD_DIR)/%.qmd,$(CAPS_QMD))
 	cp herramientas/index_base.md $(QMD_DIR)/index.qmd
 	cp herramientas/quarto_armazon.yml $(QMD_DIR)/_quarto.yml
 	cp herramientas/estilo.scss $(QMD_DIR)/estilo.scss
@@ -81,6 +100,11 @@ web: qmd
 	quarto render $(QMD_DIR)
 	touch docs/.nojekyll
 	git add -f docs/.nojekyll 2> /dev/null || true
+
+# previsualización local de lo aún no publicado: llega hasta el .qmd y
+# NO renderiza docs/, que es lo que se sube
+borrador:
+	$(MAKE) qmd CAPS_QMD="$(CAPS) $(CAPS_BORRADOR)"
 
 # ── obra completa ────────────────────────────────────────────────────
 completa: $(FIG_PDF) $(SOL_PDF)

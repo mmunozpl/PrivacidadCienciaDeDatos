@@ -1,0 +1,4 @@
+posprocesado,epsilon,error,pct_negativos
+ninguno,1.0,1.452192267157163,1.4326923076923075
+recorte de negativos,1.0,1.2925404110956908,0.0
+recorte + cuadre con el total,1.0,1.2960900717283157,0.0
