@@ -308,7 +308,7 @@ window.Quarto = {
 
 <p><span id="cap:ataques"></span> El capítulo anterior terminó con un mapa de canales de fuga y una promesa: que sin medir no hay decisión defendible. Toca cumplirla. La única manera honesta de saber cuánta privacidad tiene un sistema es adoptar el punto de vista de quien intenta romperla, ejecutar el ataque y anotar el número que sale. Este capítulo hace eso cuatro veces, con código que el lector puede correr: cruza una tabla «anonimizada» con una fuente auxiliar, pregunta a un modelo si una persona estuvo en su entrenamiento, reconstruye atributos desde las salidas, y mide cuánto se aprende de memoria un modelo de aquello que vio una sola vez.</p>
 <p>Conviene decir desde el principio qué clase de capítulo es este. <strong>No es un manual de intrusión</strong>: los cuatro ataques operan sobre el dataset sintético del libro y sobre modelos que entrenamos nosotros mismos, y su propósito es exclusivamente defensivo —igual que un ingeniero de estructuras calcula el momento de rotura de una viga que no piensa romper—. Ejecutar cualquiera de estas técnicas sobre datos o modelos ajenos sin autorización no es investigación: es un tratamiento ilícito, con las consecuencias del artículo&nbsp;83 del RGPD <span class="citation" data-cites="ue2016rgpd">(<a href="#ref-ue2016rgpd" role="doc-biblioref">Reglamento (UE) 2016/679, General de Protección de Datos (RGPD) 2016</a>)</span>, y además carece de interés técnico, porque el resultado que importa —el de <em>tus</em> datos— solo se obtiene atacando lo propio.</p>
-<p>El orden sigue una escalada natural del acceso del adversario. En la sección&nbsp;<a href="#sec:cap02-linkage" data-reference-type="ref" data-reference="sec:cap02-linkage">1.1</a> ve una tabla publicada y nada más. En la&nbsp;<a href="#sec:cap02-mia" data-reference-type="ref" data-reference="sec:cap02-mia">1.2</a> ya no hay tabla: hay un modelo entrenado con ella, y la pregunta se reduce a la más pequeña posible —«¿estabas dentro?»—. En la&nbsp;<a href="#sec:cap02-inversion" data-reference-type="ref" data-reference="sec:cap02-inversion">1.3</a> el adversario sube la apuesta y pide de vuelta el contenido: atributos, registros, textos literales. Y en la&nbsp;<a href="#sec:cap02-memorizacion" data-reference-type="ref" data-reference="sec:cap02-memorizacion">1.4</a> nos preguntamos por el mecanismo que hace posibles las dos anteriores —la memorización—, lo medimos en bits y descubrimos por qué no basta con «entrenar mejor». La tabla&nbsp;<a href="#tab:cap02-mapa" data-reference-type="ref" data-reference="tab:cap02-mapa">1.1</a> resume el recorrido.</p>
+<p>El orden sigue una escalada natural del acceso del adversario. En la sección&nbsp;<a href="#sec:cap02-linkage" data-reference-type="ref" data-reference="sec:cap02-linkage">1.1</a> ve una tabla publicada y nada más. En la&nbsp;<a href="#sec:cap02-mia" data-reference-type="ref" data-reference="sec:cap02-mia">1.2</a> ya no hay tabla: hay un modelo entrenado con ella, y la pregunta se reduce a la más pequeña posible —«¿estabas dentro?»—. En la&nbsp;<a href="#sec:cap02-inversion" data-reference-type="ref" data-reference="sec:cap02-inversion">1.3</a> el adversario sube la apuesta y pide de vuelta el contenido: atributos, registros, textos literales. Y en la&nbsp;<a href="#sec:cap02-memorizacion" data-reference-type="ref" data-reference="sec:cap02-memorizacion">1.4</a> nos preguntamos por el mecanismo que hace posibles las dos anteriores —la memorización—, lo medimos en bits y descubrimos por qué no basta con «entrenar mejor». La tabla&nbsp;<a href="#tab:cap02-mapa" data-reference-type="ref" data-reference="tab:cap02-mapa">1.1</a> resume el recorrido y la figura&nbsp;<a href="#fig:cap02-escalada" data-reference-type="ref" data-reference="fig:cap02-escalada">1.1</a> lo ordena por acceso.</p>
 <div id="tab:cap02-mapa">
 <table class="caption-top table">
 <caption>Los cuatro ataques del capítulo, por acceso del adversario y por lo que consiguen.</caption>
@@ -348,6 +348,12 @@ window.Quarto = {
 </tbody>
 </table>
 </div>
+<figure id="fig:cap02-escalada" data-latex-placement="htbp" class="figure">
+<img src="figs/cap02/fig_07.svg" style="width:98.0%" class="figure-img">
+<figcaption>
+La escalada de acceso del adversario: cada nivel habilita una familia de ataques distinta.
+</figcaption>
+</figure>
 <section id="sec:cap02-linkage" class="level2">
 <h2 class="anchored" data-anchor-id="sec:cap02-linkage">Reidentificación y enlace</h2>
 <p>Empecemos por el ataque más antiguo, más barato y todavía más frecuente: cruzar dos tablas. El adversario tiene delante un conjunto publicado del que se han suprimido los identificadores directos, y por otro lado una fuente auxiliar donde las mismas personas aparecen con nombre. Si alguna combinación de columnas compartidas es única en ambas, la fila queda unida a su nombre y todo lo demás —el diagnóstico, el salario, la búsqueda— viaja con ella.</p>
@@ -447,6 +453,12 @@ P\rvert\)</span> la cobertura de la fuente auxiliar. Si <span class="math inline
 <p>Para que la aritmética de la dispersión no quede en abstracto, hágase la cuenta sobre un conjunto de datos que cualquier servicio de salud autonómico maneja: la lista de medicamentos dispensados a una persona en un año. El nomenclátor español ronda los 20 000 códigos de presentación; un paciente crónico recibe con facilidad <span class="math inline">\(s = 10\)</span> distintos. Aplicando la fórmula anterior, <span class="math display">\[\log_2\binom{20\,000}{10} \;\approx\;
   10 \cdot \log_2\frac{20\,000 \cdot e}{10} \;\approx\; 124 \text{ bits},\]</span> frente a los 25,5 que exige señalar a un residente en España. Es decir, el patrón de medicación de un paciente crónico lo identifica con un margen de casi cien bits: no es que sea reidentificable, es que la combinación es única con abrumadora probabilidad aunque la mitad de los códigos estuviera mal.</p>
 <p>Nada de esto exige fecha, edad ni código postal. Y como el adversario solo necesita conocer <em>unos pocos</em> de esos medicamentos —los que se ven en el bolso, en una receta olvidada o en una conversación—, el argumento del capítulo&nbsp;1 se cierra: sobre datos dispersos, la anonimización por supresión de identificadores no es una protección débil, es ninguna.</p>
+<figure id="fig:cap02-dispersion" data-latex-placement="htbp" class="figure">
+<img src="figs/cap02/fig_10.svg" style="width:86.0%" class="figure-img">
+<figcaption>
+La aritmética de la dispersión: con catálogos grandes, dos o tres ítems conocidos bastan para cruzar el listón de identificación.
+</figcaption>
+</figure>
 </section>
 <section id="sec:cap02-medido" class="level3">
 <h3 class="anchored" data-anchor-id="sec:cap02-medido">El ataque, medido sobre el dataset del libro</h3>
@@ -463,7 +475,7 @@ acotadas a 5 candidatos o menos: 12397 (62.0%)</code></pre>
 El embudo del ataque de enlace, medido: de la tabla publicada a las personas con nombre y diagnóstico.
 </figcaption>
 </figure>
-<p>La figura&nbsp;<a href="#fig:cap02-embudo" data-reference-type="ref" data-reference="fig:cap02-embudo">1.1</a> dibuja el embudo. Conviene fijarse en el escalón que <em>no</em> existe: entre «personas en la auxiliar» y «reidentificadas» apenas hay pérdida. Publicar la tabla no es dar una pista: es entregar el dato.</p>
+<p>La figura&nbsp;<a href="#fig:cap02-embudo" data-reference-type="ref" data-reference="fig:cap02-embudo">1.3</a> dibuja el embudo. Conviene fijarse en el escalón que <em>no</em> existe: entre «personas en la auxiliar» y «reidentificadas» apenas hay pérdida. Publicar la tabla no es dar una pista: es entregar el dato.</p>
 </section>
 <section id="sec:cap02-atributo" class="level3">
 <h3 class="anchored" data-anchor-id="sec:cap02-atributo">Revelar sin reidentificar</h3>
@@ -481,7 +493,13 @@ El embudo del ataque de enlace, medido: de la tabla publicada a las personas con
 <div class="definicion">
 <p><span id="def:mia" data-label="def:mia"></span> Sea <span class="math inline">\(\mathcal{A}\)</span> un algoritmo de entrenamiento, <span class="math inline">\(D\)</span> un conjunto de datos y <span class="math inline">\(z\)</span> un registro. Se lanza una moneda <span class="math inline">\(b \in \{0,1\}\)</span>: si <span class="math inline">\(b=1\)</span> se entrena <span class="math inline">\(M \leftarrow \mathcal{A}(D \cup \{z\})\)</span>; si <span class="math inline">\(b=0\)</span>, <span class="math inline">\(M \leftarrow \mathcal{A}(D)\)</span>. El adversario recibe acceso a <span class="math inline">\(M\)</span> (y posiblemente a <span class="math inline">\(z\)</span> y a la distribución de los datos) y devuelve un <span class="math inline">\(\hat b\)</span>. Su <em>ventaja</em> es <span class="math inline">\(\mathrm{Adv} = \Pr[\hat b = b] - \tfrac{1}{2}\)</span>.</p>
 </div>
-<p>Ventaja cero significa que el modelo no dice nada sobre la presencia de <span class="math inline">\(z\)</span>; ventaja <span class="math inline">\(\tfrac12\)</span> significa que lo dice todo. Merece la pena retener esta definición porque <strong>es exactamente lo que la privacidad diferencial acota</strong>: cuando en el capítulo&nbsp;5 aparezca la garantía <span class="math inline">\(\eps\)</span>, lo que estará limitando es la ventaja de este adversario, para todo <span class="math inline">\(z\)</span> y todo <span class="math inline">\(D\)</span>. Los ataques de esta sección son, en ese sentido, el reverso empírico de la garantía formal: miden lo que la teoría promete acotar.</p>
+<p>Ventaja cero significa que el modelo no dice nada sobre la presencia de <span class="math inline">\(z\)</span>; ventaja <span class="math inline">\(\tfrac12\)</span> significa que lo dice todo. Merece la pena retener esta definición porque <strong>es exactamente lo que la privacidad diferencial acota</strong>: cuando en el capítulo&nbsp;5 aparezca la garantía <span class="math inline">\(\eps\)</span>, lo que estará limitando es la ventaja de este adversario, para todo <span class="math inline">\(z\)</span> y todo <span class="math inline">\(D\)</span>. Los ataques de esta sección son, en ese sentido, el reverso empírico de la garantía formal: miden lo que la teoría promete acotar. La figura&nbsp;<a href="#fig:cap02-juego" data-reference-type="ref" data-reference="fig:cap02-juego">1.4</a> dibuja el experimento.</p>
+<figure id="fig:cap02-juego" data-latex-placement="htbp" class="figure">
+<img src="figs/cap02/fig_08.svg" style="width:98.0%" class="figure-img">
+<figcaption>
+El experimento de pertenencia: la moneda decide si el registro entra, y el adversario intenta adivinarlo.
+</figcaption>
+</figure>
 </section>
 <section id="sec:cap02-porque" class="level3">
 <h3 class="anchored" data-anchor-id="sec:cap02-porque">Por qué el modelo sabe</h3>
@@ -503,8 +521,14 @@ El embudo del ataque de enlace, medido: de la tabla publicada a las personas con
         \sigma^2_{\text{dentro}})\,\bigr)}
        {p\bigl(\,\ell(M,z)\; \big|\;
         \mathcal{N}(\mu_{\text{fuera}},
-        \sigma^2_{\text{fuera}})\,\bigr)} ,\]</span> y se acusa cuando <span class="math inline">\(\Lambda\)</span> supera un umbral. La diferencia con el criterio ingenuo es que <strong>la calibración es por registro</strong>: un ejemplo fácil, que todos los modelos clasifican bien lo hayan visto o no, ya no genera falsas acusaciones, mientras que un ejemplo difícil —raro, atípico, de la cola— delata su pertenencia con enorme claridad. De ahí que este ataque funcione precisamente donde más duele, y de ahí la insistencia en medir a FPR baja.</p>
+        \sigma^2_{\text{fuera}})\,\bigr)} ,\]</span> y se acusa cuando <span class="math inline">\(\Lambda\)</span> supera un umbral. La diferencia con el criterio ingenuo es que <strong>la calibración es por registro</strong>: un ejemplo fácil, que todos los modelos clasifican bien lo hayan visto o no, ya no genera falsas acusaciones, mientras que un ejemplo difícil —raro, atípico, de la cola— delata su pertenencia con enorme claridad. De ahí que este ataque funcione precisamente donde más duele, y de ahí la insistencia en medir a FPR baja. La figura&nbsp;<a href="#fig:cap02-lira-fig" data-reference-type="ref" data-reference="fig:cap02-lira-fig">1.5</a> resume el procedimiento.</p>
 <p>Una consecuencia que conviene retener para el capítulo&nbsp;6: el coste del ataque es alto (entrenar decenas de modelos) pero <em>se paga una vez</em>, y su resultado —saber qué registros son vulnerables— sirve también al defensor. Auditar un modelo propio con LiRA antes de publicarlo es hoy buena práctica, y es exactamente lo que recomendará la metodología de la sección&nbsp;<a href="#sec:cap02-auditoria" data-reference-type="ref" data-reference="sec:cap02-auditoria">1.5</a>.</p>
+<figure id="fig:cap02-lira-fig" data-latex-placement="htbp" class="figure">
+<img src="figs/cap02/fig_09.svg" style="width:90.0%" class="figure-img">
+<figcaption>
+Modelos sombra y LiRA: dos distribuciones del estadístico y una decisión por cociente de verosimilitudes, calibrada registro a registro.
+</figcaption>
+</figure>
 </section>
 <section id="sec:cap02-lira" class="level3">
 <h3 class="anchored" data-anchor-id="sec:cap02-lira">El ataque medido, y una lección de método</h3>
@@ -513,7 +537,7 @@ El embudo del ataque de enlace, medido: de la tabla publicada a las personas con
   MIA AUC = 0.910 | TPR@FPR=1% : 0.144 | TPR@FPR=0.1% : 0.021
 regularizado: exactitud dentro 0.549 · fuera 0.551 · brecha -0.002
   MIA AUC = 0.525 | TPR@FPR=1% : 0.018 | TPR@FPR=0.1% : 0.002</code></pre>
-<p>El contraste no puede ser más limpio: el modelo con memoria delata a sus miembros con un AUC de 0,91; el regularizado, que generaliza igual de bien —fíjese el lector en que su exactitud <em>fuera</em> es incluso mayor—, apenas supera el azar. La figura&nbsp;<a href="#fig:cap02-gap" data-reference-type="ref" data-reference="fig:cap02-gap">1.2</a> muestra la relación completa: la vulnerabilidad sigue a la brecha, no al tamaño ni a la arquitectura.</p>
+<p>El contraste no puede ser más limpio: el modelo con memoria delata a sus miembros con un AUC de 0,91; el regularizado, que generaliza igual de bien —fíjese el lector en que su exactitud <em>fuera</em> es incluso mayor—, apenas supera el azar. La figura&nbsp;<a href="#fig:cap02-gap" data-reference-type="ref" data-reference="fig:cap02-gap">1.6</a> muestra la relación completa: la vulnerabilidad sigue a la brecha, no al tamaño ni a la arquitectura.</p>
 <figure id="fig:cap02-gap" data-latex-placement="htbp" class="figure">
 <img src="figs/cap02/fig_02.svg" style="width:86.0%" class="figure-img">
 <figcaption>
@@ -527,7 +551,7 @@ La vulnerabilidad sigue a la brecha de generalización: dos modelos sobre los mi
 La ROC del ataque en ejes logarítmicos: la zona que importa es la de la izquierda, donde el adversario acusa poco y acierta mucho.
 </figcaption>
 </figure>
-<p>La figura&nbsp;<a href="#fig:cap02-roc" data-reference-type="ref" data-reference="fig:cap02-roc">1.3</a> lo enseña con nuestros datos. En la esquina de interés, el modelo memorizador acierta el 14,4 % de sus acusaciones cuando solo se permite equivocarse en el 1 % de los no miembros —más de catorce veces el azar—, y sigue funcionando a FPR del 0,1 %. Traducido: el adversario puede seleccionar un subconjunto pequeño de personas y afirmar con alta confianza que estuvieron dentro. Para las personas de ese subconjunto la privacidad se ha perdido del todo, aunque el promedio de la población diga que el ataque «apenas funciona». Es la misma lección de las colas del capítulo&nbsp;1, ahora del lado del atacante.</p>
+<p>La figura&nbsp;<a href="#fig:cap02-roc" data-reference-type="ref" data-reference="fig:cap02-roc">1.7</a> lo enseña con nuestros datos. En la esquina de interés, el modelo memorizador acierta el 14,4 % de sus acusaciones cuando solo se permite equivocarse en el 1 % de los no miembros —más de catorce veces el azar—, y sigue funcionando a FPR del 0,1 %. Traducido: el adversario puede seleccionar un subconjunto pequeño de personas y afirmar con alta confianza que estuvieron dentro. Para las personas de ese subconjunto la privacidad se ha perdido del todo, aunque el promedio de la población diga que el ataque «apenas funciona». Es la misma lección de las colas del capítulo&nbsp;1, ahora del lado del atacante.</p>
 </section>
 <section id="sec:cap02-agregados" class="level3">
 <h3 class="anchored" data-anchor-id="sec:cap02-agregados">Pertenencia sin modelo: agregados y la ley fundamental</h3>
@@ -608,7 +632,13 @@ Separación miembro/no miembro por rareza del registro: plana, porque en este da
 </section>
 <section id="sec:cap02-gradientes" class="level3">
 <h3 class="anchored" data-anchor-id="sec:cap02-gradientes">Fuga por gradientes: cuando ni siquiera se comparte el dato</h3>
-<p>Cierro el catálogo con el ataque que más desconcierta a quien confía en el aprendizaje federado. En ese esquema (capítulo&nbsp;9) los datos no salen del dispositivo: solo salen los <em>gradientes</em> calculados sobre ellos. <span class="citation" data-cites="zhu2019deep">Zhu et&nbsp;al. (<a href="#ref-zhu2019deep" role="doc-biblioref">2019</a>)</span> demostraron que, en muchos escenarios, de un gradiente se puede reconstruir el ejemplo que lo produjo: basta optimizar una entrada sintética hasta que su gradiente coincida con el observado. Es la refutación empírica de la intuición «si no muevo el dato, no lo expongo»: el gradiente es una función del dato, y con frecuencia una función casi invertible.</p>
+<p>Cierro el catálogo con el ataque que más desconcierta a quien confía en el aprendizaje federado. En ese esquema (capítulo&nbsp;9) los datos no salen del dispositivo: solo salen los <em>gradientes</em> calculados sobre ellos. <span class="citation" data-cites="zhu2019deep">Zhu et&nbsp;al. (<a href="#ref-zhu2019deep" role="doc-biblioref">2019</a>)</span> demostraron que, en muchos escenarios, de un gradiente se puede reconstruir el ejemplo que lo produjo: basta optimizar una entrada sintética hasta que su gradiente coincida con el observado. Es la refutación empírica de la intuición «si no muevo el dato, no lo expongo»: el gradiente es una función del dato, y con frecuencia una función casi invertible; la figura&nbsp;<a href="#fig:cap02-gradientes" data-reference-type="ref" data-reference="fig:cap02-gradientes">1.9</a> lo esquematiza.</p>
+<figure id="fig:cap02-gradientes" data-latex-placement="htbp" class="figure">
+<img src="figs/cap02/fig_12.svg" style="width:98.0%" class="figure-img">
+<figcaption>
+Fuga por gradientes: el dato no sale del dispositivo y aun así se reconstruye.
+</figcaption>
+</figure>
 </section>
 </section>
 <section id="sec:cap02-memorizacion" class="level2">
@@ -634,7 +664,7 @@ regularizado  repetido  1 -&gt; rango  289, exposicion  1.8 bits
 regularizado  repetido  2 -&gt; rango  176, exposicion  2.5 bits
 regularizado  repetido  4 -&gt; rango   48, exposicion  4.4 bits
 regularizado  repetido  8 -&gt; rango    1, exposicion  9.4 bits</code></pre>
-<p>El resultado, dibujado en la figura&nbsp;<a href="#fig:cap02-memoria" data-reference-type="ref" data-reference="fig:cap02-memoria">1.5</a>, dice tres cosas que conviene no olvidar.</p>
+<p>El resultado, dibujado en la figura&nbsp;<a href="#fig:cap02-memoria" data-reference-type="ref" data-reference="fig:cap02-memoria">1.10</a>, dice tres cosas que conviene no olvidar.</p>
 <figure id="fig:cap02-memoria" data-latex-placement="htbp" class="figure">
 <img src="figs/cap02/fig_04.svg" style="width:88.0%" class="figure-img">
 <figcaption>
@@ -647,7 +677,7 @@ Exposición del secreto según cuántas veces aparece, para dos capacidades de m
 </section>
 <section id="sec:cap02-cebolla" class="level3">
 <h3 class="anchored" data-anchor-id="sec:cap02-cebolla">El efecto cebolla: por qué no basta con quitar los raros</h3>
-<p>Llegados aquí, la reacción natural de un equipo de ingeniería es tentadora y equivocada: «identifiquemos los registros vulnerables y saquémoslos del entrenamiento». <span class="citation" data-cites="carlini2022onion">Carlini, Jagielski, et&nbsp;al. (<a href="#ref-carlini2022onion" role="doc-biblioref">2022</a>)</span> pusieron nombre a por qué no funciona: el <em>efecto cebolla</em>. Al retirar la capa de registros más expuestos y reentrenar, los que quedaban justo detrás —antes protegidos por la presencia de aquellos— pasan a ser los más expuestos. Se pela una capa y aparece otra.</p>
+<p>Llegados aquí, la reacción natural de un equipo de ingeniería es tentadora y equivocada: «identifiquemos los registros vulnerables y saquémoslos del entrenamiento». <span class="citation" data-cites="carlini2022onion">Carlini, Jagielski, et&nbsp;al. (<a href="#ref-carlini2022onion" role="doc-biblioref">2022</a>)</span> pusieron nombre a por qué no funciona: el <em>efecto cebolla</em>. Al retirar la capa de registros más expuestos y reentrenar, los que quedaban justo detrás —antes protegidos por la presencia de aquellos— pasan a ser los más expuestos. Se pela una capa y aparece otra, como en la figura&nbsp;<a href="#fig:cap02-cebolla-fig" data-reference-type="ref" data-reference="fig:cap02-cebolla-fig">1.11</a>.</p>
 <p>El mecanismo es comprensible con lo que ya sabemos. Un registro atípico está «tapado» por otros parecidos que le proporcionan compañía estadística; si desaparecen, deja de tener con quién confundirse —su clase de equivalencia se encoge, en el vocabulario del capítulo&nbsp;1— y su exposición sube. La vulnerabilidad, por tanto, <strong>no es una propiedad del registro sino de su relación con el resto</strong>, y por eso no puede eliminarse quitando individuos: cada eliminación redefine el problema.</p>
 <div class="proposicion">
 <p><span id="prop:cebolla" data-label="prop:cebolla"></span> Sea <span class="math inline">\(V(D)\)</span> el conjunto de registros de <span class="math inline">\(D\)</span> cuya exposición supera un umbral fijo. En general no se cumple que <span class="math inline">\(V(D \setminus V(D)) =
@@ -655,6 +685,12 @@ Exposición del secreto según cuántas veces aparece, para dos capacidades de m
 </div>
 <p>La consecuencia práctica es contundente y conviene decirla sin rodeos: <strong>no existe una versión «depurada» del conjunto de datos que sea segura por construcción</strong>. Toda defensa basada en seleccionar qué datos entran comparte este defecto, incluidas las que a veces se presentan como buenas prácticas —eliminar duplicados raros, filtrar identificadores del corpus, quitar minorías del entrenamiento—. Son mitigaciones útiles, reducen el daño esperado y hay que aplicarlas; pero no son garantías, y la diferencia entre una mitigación y una garantía es justo el asunto de la Parte&nbsp;II.</p>
 <p>Hay además un coste ético que no conviene esconder: los registros «vulnerables» que uno se sentiría tentado de eliminar son, con frecuencia, los de las minorías —la enfermedad rara, el origen poco frecuente, la profesión inusual—. Depurar el conjunto de datos mejora la métrica de privacidad a costa de expulsar del modelo precisamente a quien peor servido está ya. La solución correcta no es elegir entre proteger o servir a esas personas, sino pagar el precio en el parámetro que las cubre a todas por igual.</p>
+<figure id="fig:cap02-cebolla-fig" data-latex-placement="htbp" class="figure">
+<img src="figs/cap02/fig_11.svg" style="width:92.0%" class="figure-img">
+<figcaption>
+El efecto cebolla: retirar la capa expuesta deja expuesta a la siguiente.
+</figcaption>
+</figure>
 </section>
 <section id="sec:cap02-colalarga" class="level3">
 <h3 class="anchored" data-anchor-id="sec:cap02-colalarga">Por qué memorizan: la cola larga</h3>
