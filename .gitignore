@@ -33,3 +33,8 @@ latex/main.pdf
 latex/figs/**/*.pdf
 # excepción: el logo editorial de la portada es recurso, no artefacto
 !latex/figs/portada/qword_editorial_5.5cm.pdf
+
+# el FUENTE del libro no sube a GitHub JAMÁS (tampoco en privado):
+# latex/ tiene su propio git LOCAL sin remoto; qmd/ es generado
+/latex/
+/qmd/
