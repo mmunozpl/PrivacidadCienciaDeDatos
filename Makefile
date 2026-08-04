@@ -8,7 +8,7 @@
 #
 # qmd/ y docs/ son GENERADOS: nunca se editan a mano.
 
-CAPS := cap01 cap02
+CAPS := cap01 cap02 cap03
 
 LATEX_DIR := latex
 QMD_DIR   := qmd
@@ -65,7 +65,9 @@ $(QMD_DIR)/figs/portada_web.jpg: $(LATEX_DIR)/main.pdf
 	mkdir -p $(QMD_DIR)/figs
 	pdftoppm -f 1 -l 1 -r 150 -jpeg -jpegopt quality=92 \
 	  $(LATEX_DIR)/main.pdf $(QMD_DIR)/figs/portada_web
-	mv $(QMD_DIR)/figs/portada_web-01.jpg $@
+	# pdftoppm rellena el numero de pagina segun el total (-1, -01,
+	# -001...): se recoge con comodin para que no dependa del tamano
+	mv $(QMD_DIR)/figs/portada_web-*.jpg $@
 
 $(LATEX_DIR)/main.pdf:
 	$(MAKE) completa

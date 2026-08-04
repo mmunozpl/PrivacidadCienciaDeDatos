@@ -1,0 +1,1210 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="es" xml:lang="es"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.9.38">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>Capítulo 3. Cuantificar el riesgo – Privacidad · Ciencia de datos</title>
+<style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for citations */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+}
+.hanging-indent div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<link href="./cap02.html" rel="prev">
+<script src="site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-15634bcf2e68342d4ad2dfa704d543f6.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap-c51ee271f6426d8ddbbd81f2fce6c0c5.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "language": {
+    "search-no-results-text": "No se han encontrado resultados",
+    "search-matching-documents-text": "documentos encontrados",
+    "search-copy-link-title": "Copiar el enlace en la búsqueda",
+    "search-hide-matches-text": "Ocultar resultados adicionales",
+    "search-more-match-text": "resultado adicional en este documento",
+    "search-more-matches-text": "resultados adicionales en este documento",
+    "search-clear-button-title": "Borrar",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancelar",
+    "search-submit-button-title": "Enviar",
+    "search-label": "Buscar"
+  }
+}</script>
+
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script defer="" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+</head>
+
+<body class="nav-sidebar docked quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Alternar barra lateral" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./cap03.html">Capítulo 3. Cuantificar el riesgo</a></li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Alternar barra lateral" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+      <button type="button" class="btn quarto-search-button" aria-label="Buscar" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation docked overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header">
+    <div class="sidebar-title mb-0 py-0">
+      <a href="./">Privacidad · Ciencia de datos</a> 
+        <div class="sidebar-tools-main">
+  <a href="" class="quarto-reader-toggle quarto-navigation-tool px-1" onclick="window.quartoToggleReader(); return false;" title="Alternar modo lector">
+  <div class="quarto-reader-toggle-btn">
+  <i class="bi"></i>
+  </div>
+</a>
+</div>
+    </div>
+      </div>
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Buscar"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Inicio</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./cap01.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Capítulo 1. El dato personal como objeto de ingeniería</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./cap02.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Capítulo 2. Ataques a la privacidad</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./cap03.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text">Capítulo 3. Cuantificar el riesgo</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+ <span class="menu-text">4. Seudonimización y anonimización clásica (en preparación)</span>
+  </li>
+        <li class="sidebar-item">
+ <span class="menu-text">5. Privacidad diferencial (en preparación)</span>
+  </li>
+        <li class="sidebar-item">
+ <span class="menu-text">6. DP en el entrenamiento (en preparación)</span>
+  </li>
+        <li class="sidebar-item">
+ <span class="menu-text">7. Privacidad diferencial local (en preparación)</span>
+  </li>
+        <li class="sidebar-item">
+ <span class="menu-text">8. Datos sintéticos (en preparación)</span>
+  </li>
+        <li class="sidebar-item">
+ <span class="menu-text">9. Aprendizaje federado (en preparación)</span>
+  </li>
+        <li class="sidebar-item">
+ <span class="menu-text">10. Computación cifrada (en preparación)</span>
+  </li>
+        <li class="sidebar-item">
+ <span class="menu-text">11. Biometría (en preparación)</span>
+  </li>
+        <li class="sidebar-item">
+ <span class="menu-text">12. Dato de salud e imagen médica (en preparación)</span>
+  </li>
+        <li class="sidebar-item">
+ <span class="menu-text">13. Procedencia y autenticidad (en preparación)</span>
+  </li>
+        <li class="sidebar-item">
+ <span class="menu-text">14. RGPD operativo (en preparación)</span>
+  </li>
+        <li class="sidebar-item">
+ <span class="menu-text">15. AI Act y gobernanza de modelos (en preparación)</span>
+  </li>
+        <li class="sidebar-item">
+ <span class="menu-text">16. Privacy by design en arquitectura (en preparación)</span>
+  </li>
+        <li class="sidebar-item">
+ <span class="menu-text">17. Caso integral (en preparación)</span>
+  </li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">En esta página</h2>
+   
+  <ul>
+  <li><a href="#sec:cap03-metricas" id="toc-sec:cap03-metricas" class="nav-link active" data-scroll-target="#sec\:cap03-metricas">Las tres métricas clásicas</a>
+  <ul class="collapse">
+  <li><a href="#sec:cap03-k" id="toc-sec:cap03-k" class="nav-link" data-scroll-target="#sec\:cap03-k"><span class="math inline">\(k\)</span>-anonimato: esconderse en el grupo</a></li>
+  <li><a href="#sec:cap03-l" id="toc-sec:cap03-l" class="nav-link" data-scroll-target="#sec\:cap03-l"><span class="math inline">\(l\)</span>-diversidad: que el grupo no sea unánime</a></li>
+  <li><a href="#sec:cap03-t" id="toc-sec:cap03-t" class="nav-link" data-scroll-target="#sec\:cap03-t"><span class="math inline">\(t\)</span>-cercanía: que el grupo se parezca al todo</a></li>
+  <li><a href="#sec:cap03-limites" id="toc-sec:cap03-limites" class="nav-link" data-scroll-target="#sec\:cap03-limites">Lo que ninguna de las tres captura</a></li>
+  </ul></li>
+  <li><a href="#sec:cap03-medido" id="toc-sec:cap03-medido" class="nav-link" data-scroll-target="#sec\:cap03-medido">Las métricas, medidas</a>
+  <ul class="collapse">
+  <li><a href="#sec:cap03-supresion" id="toc-sec:cap03-supresion" class="nav-link" data-scroll-target="#sec\:cap03-supresion">El precio de la supresión</a></li>
+  <li><a href="#sec:cap03-algoritmos" id="toc-sec:cap03-algoritmos" class="nav-link" data-scroll-target="#sec\:cap03-algoritmos">Cómo se alcanza <span class="math inline">\(k\)</span>: los algoritmos</a></li>
+  <li><a href="#sec:cap03-frontera3" id="toc-sec:cap03-frontera3" class="nav-link" data-scroll-target="#sec\:cap03-frontera3">Utilidad y riesgo, otra vez la frontera</a></li>
+  </ul></li>
+  <li><a href="#sec:cap03-poblacion" id="toc-sec:cap03-poblacion" class="nav-link" data-scroll-target="#sec\:cap03-poblacion">De la muestra a la población</a>
+  <ul class="collapse">
+  <li><a href="#sec:cap03-ingenuo" id="toc-sec:cap03-ingenuo" class="nav-link" data-scroll-target="#sec\:cap03-ingenuo">Por qué el estimador obvio está mal</a></li>
+  <li><a href="#sec:cap03-superpoblacion" id="toc-sec:cap03-superpoblacion" class="nav-link" data-scroll-target="#sec\:cap03-superpoblacion">Modelos de superpoblación</a></li>
+  <li><a href="#sec:cap03-quehacer" id="toc-sec:cap03-quehacer" class="nav-link" data-scroll-target="#sec\:cap03-quehacer">Qué hacer, entonces</a></li>
+  <li><a href="#sec:cap03-sinf" id="toc-sec:cap03-sinf" class="nav-link" data-scroll-target="#sec\:cap03-sinf">Cuando no se conoce la fracción muestral</a></li>
+  <li><a href="#sec:cap03-dano" id="toc-sec:cap03-dano" class="nav-link" data-scroll-target="#sec\:cap03-dano">El riesgo no es el daño</a></li>
+  </ul></li>
+  <li><a href="#sec:cap03-modelos" id="toc-sec:cap03-modelos" class="nav-link" data-scroll-target="#sec\:cap03-modelos">Los tres modelos de riesgo</a>
+  <ul class="collapse">
+  <li><a href="#sec:cap03-kmap" id="toc-sec:cap03-kmap" class="nav-link" data-scroll-target="#sec\:cap03-kmap">Dos primos cercanos: <span class="math inline">\(k\)</span>-map y <span class="math inline">\(\delta\)</span>-presencia</a></li>
+  </ul></li>
+  <li><a href="#sec:cap03-umbrales" id="toc-sec:cap03-umbrales" class="nav-link" data-scroll-target="#sec\:cap03-umbrales">De dónde salen los umbrales</a>
+  <ul class="collapse">
+  <li><a href="#sec:cap03-hipaa" id="toc-sec:cap03-hipaa" class="nav-link" data-scroll-target="#sec\:cap03-hipaa">La vía estadounidense: reglas o experto</a></li>
+  <li><a href="#sec:cap03-europa" id="toc-sec:cap03-europa" class="nav-link" data-scroll-target="#sec\:cap03-europa">La vía europea: tres criterios, ningún número</a></li>
+  <li><a href="#sec:cap03-fijar" id="toc-sec:cap03-fijar" class="nav-link" data-scroll-target="#sec\:cap03-fijar">Cómo fijar un umbral defendible</a></li>
+  </ul></li>
+  <li><a href="#sec:cap03-utilidad" id="toc-sec:cap03-utilidad" class="nav-link" data-scroll-target="#sec\:cap03-utilidad">Medir la utilidad, no solo el riesgo</a></li>
+  <li><a href="#sec:cap03-informe" id="toc-sec:cap03-informe" class="nav-link" data-scroll-target="#sec\:cap03-informe">El informe de riesgo como artefacto</a></li>
+  <li><a href="#sec:cap03-notabla" id="toc-sec:cap03-notabla" class="nav-link" data-scroll-target="#sec\:cap03-notabla">Cuando el dato no es una tabla</a></li>
+  <li><a href="#sec:cap03-caso" id="toc-sec:cap03-caso" class="nav-link" data-scroll-target="#sec\:cap03-caso">Un caso de principio a fin</a></li>
+  <li><a href="#síntesis-y-puente" id="toc-síntesis-y-puente" class="nav-link" data-scroll-target="#síntesis-y-puente">Síntesis y puente</a></li>
+  <li><a href="#errores-comunes" id="toc-errores-comunes" class="nav-link" data-scroll-target="#errores-comunes">Errores comunes</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Capítulo 3. Cuantificar el riesgo</h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<p><span id="cap:cuantificar"></span> Los dos capítulos anteriores dejaron un problema bien planteado y un método a medias. Sabemos qué convierte un dato en identificante (capítulo&nbsp;1) y hemos visto a un adversario romper defensas reales con código (capítulo&nbsp;2). Falta el paso que separa la anécdota de la ingeniería: convertir esa amenaza en un <em>número</em> que se pueda comparar con un umbral, discutir en un comité y volver a calcular dentro de seis meses.</p>
+<p>Ese paso tiene más trampas de las que parece, y este capítulo las recorre todas. Empieza por las tres métricas clásicas —<span class="math inline">\(k\)</span>-anonimato, <span class="math inline">\(l\)</span>-diversidad y <span class="math inline">\(t\)</span>-cercanía—, que son el vocabulario obligado de cualquier conversación sobre anonimización y que, medidas sobre nuestros datos, resultan valer bastante menos de lo que su fama sugiere. Sigue por el problema estadístico de fondo —estimar la unicidad en la <em>población</em> cuando solo se observa una muestra—, donde comprobaremos que el estimador que todo el mundo usa por inercia llega a multiplicar el riesgo por 68. Continúa con los tres modelos de riesgo que la literatura sanitaria consolidó —el fiscal, el periodista y el comercial—, que sobre el mismo conjunto de datos dan cifras separadas por tres órdenes de magnitud. Y termina con el artefacto que debería producir todo lo anterior: un informe de riesgo reproducible, generado por un script versionado, con sus hipótesis declaradas y su fecha de caducidad.</p>
+<p>Una advertencia sobre el tono de este capítulo, porque es el más incómodo del libro. Su conclusión no es «use usted estas métricas», sino algo más matizado y más útil: <strong>las métricas sintácticas son necesarias y no son suficientes</strong>. Necesarias porque sin número no hay decisión defendible, ni ante un comité de ética ni ante la AEPD. Insuficientes porque cada una tapa el agujero de la anterior y ninguna tapa el conocimiento externo del adversario, que es infinito por el supuesto A2 del capítulo&nbsp;1. Quien salga de aquí sabiendo medir <em>y</em> sabiendo qué no capturan sus medidas estará listo para la Parte&nbsp;II, que es donde aparecen las garantías que sí cierran el problema.</p>
+<section id="sec:cap03-metricas" class="level2">
+<h2 class="anchored" data-anchor-id="sec:cap03-metricas">Las tres métricas clásicas</h2>
+<section id="sec:cap03-k" class="level3">
+<h3 class="anchored" data-anchor-id="sec:cap03-k"><span class="math inline">\(k\)</span>-anonimato: esconderse en el grupo</h3>
+<p>La idea es la del capítulo&nbsp;1: si una fila comparte su combinación de cuasi-identificadores con otras, el adversario no puede distinguirla. Basta con exigir un mínimo.</p>
+<div class="definicion">
+<p><span id="def:kanon" data-label="def:kanon"></span> Una tabla <span class="math inline">\(T\)</span> satisface <em><span class="math inline">\(k\)</span>-anonimato</em> respecto de un cuasi-identificador <span class="math inline">\(Q\)</span> si toda clase de equivalencia (definición&nbsp;<a href="#def:clase" data-reference-type="ref" data-reference="def:clase">[def:clase]</a>) tiene al menos <span class="math inline">\(k\)</span> filas: <span class="math display">\[\min_{x \in T} \; \bigl\lvert [x]_Q \bigr\rvert \;\geq\; k .\]</span></p>
+</div>
+<p>La propiedad es intuitiva y tiene una lectura probabilística directa: bajo el supuesto de que el objetivo del adversario está en la tabla, la probabilidad de acertar cuál es su fila es como mucho <span class="math inline">\(1/k\)</span>. De ahí la costumbre de fijar <span class="math inline">\(k=5\)</span> —riesgo del 20 % en el peor caso— o <span class="math inline">\(k=11\)</span> en publicaciones sanitarias, que es el umbral que manejan buena parte de las guías del sector.</p>
+<p>Ahora bien, la definición esconde una propiedad que decide casi todo lo demás: <strong><span class="math inline">\(k\)</span> es un mínimo</strong>. No describe la tabla, describe su peor fila. Una publicación de veinte mil registros en la que diecinueve mil novecientos estén en clases de cincuenta personas y cien estén solos tiene <span class="math inline">\(k=1\)</span>, exactamente igual que una tabla donde todos estén solos. Nuestros datos lo ilustran sin piedad, como se verá en la sección&nbsp;<a href="#sec:cap03-medido" data-reference-type="ref" data-reference="sec:cap03-medido">1.2</a>.</p>
+</section>
+<section id="sec:cap03-l" class="level3">
+<h3 class="anchored" data-anchor-id="sec:cap03-l"><span class="math inline">\(l\)</span>-diversidad: que el grupo no sea unánime</h3>
+<p><span class="citation" data-cites="machanavajjhala2007ldiversity">Machanavajjhala et&nbsp;al. (<a href="#ref-machanavajjhala2007ldiversity" role="doc-biblioref">2007</a>)</span> observaron que <span class="math inline">\(k\)</span>-anonimato protege la identidad y no el secreto, y lo demostraron con dos ataques que conviene tener presentes porque siguen apareciendo en auditorías reales.</p>
+<p>El <strong>ataque de homogeneidad</strong>: si todas las filas de una clase comparten el valor sensible —las tres personas de la clase tienen asma—, el adversario que sepa que su objetivo está en esa clase conoce su diagnóstico sin necesidad de distinguir la fila. El <span class="math inline">\(k\)</span>-anonimato se cumple; la privacidad, no.</p>
+<p>El <strong>ataque de conocimiento de fondo</strong>: si la clase tiene dos valores y el adversario sabe algo del objetivo que descarta uno de ellos —que es un hombre y el otro valor es un cáncer de ovario—, vuelve a quedarse con una sola posibilidad.</p>
+<div class="definicion">
+<p><span id="def:ldiv" data-label="def:ldiv"></span> Una clase de equivalencia es <em><span class="math inline">\(l\)</span>-diversa</em> si contiene al menos <span class="math inline">\(l\)</span> valores «bien representados» del atributo sensible; la tabla lo es si todas sus clases lo son. Las dos variantes que usaremos: la <em>entrópica</em>, que exige que la entropía de la distribución sensible dentro de la clase sea al menos <span class="math inline">\(\log l\)</span> —es decir, que los valores no solo estén, sino que estén repartidos—, y la que la literatura posterior llamó <em>distinta</em>, que se limita a contar valores diferentes.</p>
+</div>
+<p>Dos precisiones de atribución que casi nunca se hacen y que conviene fijar aquí. La primera: el nombre «<span class="math inline">\(l\)</span>-diversidad distinta» no aparece en el artículo original; procede de la sistematización que hicieron <span class="citation" data-cites="li2007tcloseness">Li et&nbsp;al. (<a href="#ref-li2007tcloseness" role="doc-biblioref">2007</a>)</span> al presentar <span class="math inline">\(t\)</span>-cercanía. La segunda: la idea de exigir entropía dentro de la clase es anterior, y los propios autores de <span class="math inline">\(l\)</span>-diversidad reconocen la prioridad de <span class="citation" data-cites="ohrn1999boolean">Øhrn y Ohno-Machado (<a href="#ref-ohrn1999boolean" role="doc-biblioref">1999</a>)</span>.</p>
+<p>La variante entrópica merece atención porque expresa mejor la intuición. Una clase con noventa y nueve «ninguno» y un «VIH» tiene dos valores distintos —y por tanto <span class="math inline">\(l=2\)</span> en la variante simple— pero su entropía es de 0,08 bits: el adversario sabe con un 99 % de confianza cuál es el diagnóstico. La forma entrópica lo detecta; la simple, no.</p>
+</section>
+<section id="sec:cap03-t" class="level3">
+<h3 class="anchored" data-anchor-id="sec:cap03-t"><span class="math inline">\(t\)</span>-cercanía: que el grupo se parezca al todo</h3>
+<p><span class="citation" data-cites="li2007tcloseness">Li et&nbsp;al. (<a href="#ref-li2007tcloseness" role="doc-biblioref">2007</a>)</span> dieron el paso siguiente al mostrar que <span class="math inline">\(l\)</span>-diversidad tampoco basta, otra vez con dos ataques.</p>
+<p>El <strong>ataque de sesgo</strong> (<em>skewness</em>): si en la población el 1 % tiene una enfermedad y en una clase la tiene el 50 %, la clase puede ser perfectamente <span class="math inline">\(l\)</span>-diversa y sin embargo multiplicar por cincuenta la sospecha sobre cualquiera de sus miembros. Lo que importa no es cuántos valores hay, sino cuánto ha cambiado la creencia del adversario.</p>
+<p>El <strong>ataque de similitud</strong>: una clase con «gastritis», «úlcera» y «reflujo» tiene tres valores distintos, pero los tres son enfermedades digestivas. Formalmente diversa, materialmente unánime.</p>
+<div class="definicion">
+<p><span id="def:tclose" data-label="def:tclose"></span> Una clase de equivalencia satisface <em><span class="math inline">\(t\)</span>-cercanía</em> si la distancia entre la distribución del atributo sensible dentro de la clase y su distribución en la tabla completa no supera <span class="math inline">\(t\)</span>. Li et al.&nbsp;proponen la distancia de <em>Earth Mover</em>, que respeta la proximidad semántica entre valores; para atributos categóricos sin orden natural, la distancia de variación total —la mitad de la distancia <span class="math inline">\(L_1\)</span>— es su análogo directo, y es la que implementa el código de este libro.</p>
+</div>
+<p>La figura&nbsp;<a href="#fig:cap03-ataques" data-reference-type="ref" data-reference="fig:cap03-ataques">1.1</a> resume los dos ataques que motivan cada métrica. Conviene leerla como una escalera de parches: cada criterio nace de un fallo del anterior, y ninguno es la garantía final —razón por la cual la Parte&nbsp;II cambia de estrategia en lugar de añadir una letra griega más—.</p>
+<figure id="fig:cap03-ataques" data-latex-placement="htbp" class="figure">
+<img src="figs/cap03/fig_01.svg" style="width:98.0%" class="figure-img">
+<figcaption>
+Los ataques que motivan cada métrica: homogeneidad para <span class="math inline"><em>l</em></span>-diversidad, sesgo y similitud para <span class="math inline"><em>t</em></span>-cercanía.
+</figcaption>
+</figure>
+</section>
+<section id="sec:cap03-limites" class="level3">
+<h3 class="anchored" data-anchor-id="sec:cap03-limites">Lo que ninguna de las tres captura</h3>
+<p>Antes de medir, conviene enumerar los cuatro agujeros que las tres comparten, porque son los que llevan a la Parte&nbsp;II.</p>
+<p><strong>Composición.</strong> Dos publicaciones que por separado cumplen <span class="math inline">\(k\)</span>-anonimato pueden, juntas, no cumplirlo: basta que las clases de una corten a las de la otra. Es el <em>ataque de composición</em> que formalizan <span class="citation" data-cites="ganta2008composition">Ganta et&nbsp;al. (<a href="#ref-ganta2008composition" role="doc-biblioref">2008</a>)</span>: no existe una regla de composición para estas métricas, y sin ella no se puede gobernar un programa de publicación continuo —justo lo que hace cualquier organismo estadístico—.</p>
+<p><strong>Conocimiento externo.</strong> Todas suponen que el adversario conoce los cuasi-identificadores declarados y nada más. El supuesto A2 dice lo contrario, y el capítulo&nbsp;2 lo demostró con la usuaria de AOL.</p>
+<p><strong>Elección del cuasi-identificador.</strong> Las tres métricas se calculan <em>dado</em> un conjunto <span class="math inline">\(Q\)</span>. Si el analista olvida una columna —la fecha de ingreso, el hospital, la traza de comportamiento—, el número sale bien y la publicación está rota. La métrica no puede avisar de lo que no se le ha dicho que mire.</p>
+<p><strong>Datos dispersos y de alta dimensión.</strong> Sobre trazas, transacciones o texto, alcanzar <span class="math inline">\(k=5\)</span> exige destruir la utilidad entera, por la aritmética de la sección&nbsp;<a href="#sec:cap02-dispersion" data-reference-type="ref" data-reference="sec:cap02-dispersion">[sec:cap02-dispersion]</a>. Estas métricas nacieron para tablas demográficas pequeñas y siguen siendo razonables ahí; fuera de ese terreno, no.</p>
+</section>
+</section>
+<section id="sec:cap03-medido" class="level2">
+<h2 class="anchored" data-anchor-id="sec:cap03-medido">Las métricas, medidas</h2>
+<p>Toca ejecutar. El script <code>src/cap03/metricas_medidas.py</code> recorre una <em>escalera de generalización</em> sobre el dataset del libro: seis peldaños que van de los datos en crudo a la combinación de franja etaria, sexo y provincia, calculando en cada uno las tres métricas, los riesgos y la utilidad restante —medida como la entropía conjunta del cuasi-identificador, es decir, cuánta capacidad de distinguir sobrevive para el analista—.</p>
+<div id="tab:cap03-escalera">
+<table class="caption-top table">
+<caption>La escalera de generalización, medida: el riesgo medio cae dos órdenes de magnitud y <span class="math inline">\(k\)</span> no se mueve.</caption>
+<thead>
+<tr class="header">
+<th style="text-align: left;"><strong>Peldaño</strong></th>
+<th style="text-align: right;"><strong>clases</strong></th>
+<th style="text-align: right;"><strong>únicas</strong></th>
+<th style="text-align: right;"><strong>riesgo medio</strong></th>
+<th style="text-align: right;"><strong>utilidad</strong></th>
+<th style="text-align: right;"><span class="math inline">\(k\)</span></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">crudo</td>
+<td style="text-align: right;">19 945</td>
+<td style="text-align: right;">99,5 %</td>
+<td style="text-align: right;">0,997</td>
+<td style="text-align: right;">14,3</td>
+<td style="text-align: right;">1</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">sin profesión</td>
+<td style="text-align: right;">19 556</td>
+<td style="text-align: right;">95,8 %</td>
+<td style="text-align: right;">0,978</td>
+<td style="text-align: right;">14,2</td>
+<td style="text-align: right;">1</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">CP a 3 dígitos</td>
+<td style="text-align: right;">12 106</td>
+<td style="text-align: right;">42,9 %</td>
+<td style="text-align: right;">0,605</td>
+<td style="text-align: right;">13,2</td>
+<td style="text-align: right;">1</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">edad en quinquenios</td>
+<td style="text-align: right;">6 591</td>
+<td style="text-align: right;">17,5 %</td>
+<td style="text-align: right;">0,330</td>
+<td style="text-align: right;">11,8</td>
+<td style="text-align: right;">1</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">provincia</td>
+<td style="text-align: right;">1 874</td>
+<td style="text-align: right;">1,1 %</td>
+<td style="text-align: right;">0,094</td>
+<td style="text-align: right;">10,0</td>
+<td style="text-align: right;">1</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">franja etaria</td>
+<td style="text-align: right;">518</td>
+<td style="text-align: right;">0,0 %</td>
+<td style="text-align: right;">0,026</td>
+<td style="text-align: right;">8,2</td>
+<td style="text-align: right;">1</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>La tabla&nbsp;<a href="#tab:cap03-escalera" data-reference-type="ref" data-reference="tab:cap03-escalera">1.1</a> contiene el resultado más instructivo del capítulo, y conviene detenerse en la última columna. El riesgo medio cae de 0,997 a 0,026 —un factor de casi cuarenta—, las filas únicas pasan del 99,5 % a prácticamente ninguna, y <strong><span class="math inline">\(k\)</span> sigue valiendo 1 en los seis peldaños</strong>. La razón es la que anunciaba la sección&nbsp;<a href="#sec:cap03-k" data-reference-type="ref" data-reference="sec:cap03-k">1.1.1</a>: en el último peldaño quedan apenas un puñado de personas solas —mayores de 65 años en provincias pequeñas, sobre todo— y basta con ellas para que el mínimo no se mueva.</p>
+<figure id="fig:cap03-kminimo" data-latex-placement="htbp" class="figure">
+<img src="figs/cap03/fig_03.svg" style="width:90.0%" class="figure-img">
+<figcaption>
+Distribución de tamaños de clase en el peldaño «provincia»: el 1,1 % de filas solitarias mantiene <span class="math inline"><em>k</em> = 1</span> para toda la tabla.
+</figcaption>
+</figure>
+<p>La figura&nbsp;<a href="#fig:cap03-kminimo" data-reference-type="ref" data-reference="fig:cap03-kminimo">1.2</a> lo dibuja. La lección práctica es doble. Primero, que <strong>informar solo de <span class="math inline">\(k\)</span> es informar del peor caso</strong>, lo cual está bien para un umbral duro y muy mal para describir una publicación: hay que dar también la distribución. Segundo, que la generalización sola no alcanza umbrales de <span class="math inline">\(k\)</span> razonables sobre datos reales; hace falta <em>suprimir</em>.</p>
+<section id="sec:cap03-supresion" class="level3">
+<h3 class="anchored" data-anchor-id="sec:cap03-supresion">El precio de la supresión</h3>
+<p>Todo algoritmo de <span class="math inline">\(k\)</span>-anonimización real combina las dos herramientas: generaliza hasta donde la utilidad aguanta y suprime lo que queda por debajo del umbral. Medir cuánto hay que suprimir en cada peldaño da la tercera cifra que un informe honesto necesita.</p>
+<figure id="fig:cap03-supresion" data-latex-placement="htbp" class="figure">
+<img src="figs/cap03/fig_04.svg" style="width:86.0%" class="figure-img">
+<figcaption>
+Filas que hay que suprimir para alcanzar <span class="math inline"><em>k</em> ≥ 5</span> en cada peldaño: la generalización previa decide si el precio es del 80 % o del 0,5 %.
+</figcaption>
+</figure>
+<p>Los números de la figura&nbsp;<a href="#fig:cap03-supresion" data-reference-type="ref" data-reference="fig:cap03-supresion">1.3</a> son elocuentes. Con los datos en crudo habría que suprimir la tabla entera. Con el código postal a tres dígitos, el 79,8 %. Con provincia y quinquenios, el 8,8 %. Y con franja etaria, provincia y sexo, solo el 0,48 % —noventa y seis personas de veinte mil—. La conclusión operativa es que <strong>generalizar y suprimir no son alternativas sino complementos</strong>, y que el orden importa: generalizar primero abarata la supresión de forma no lineal.</p>
+<p>Queda la pregunta incómoda: ¿a quién se suprime? A los raros. Es el mismo dilema ético del efecto cebolla (sección&nbsp;<a href="#sec:cap02-cebolla" data-reference-type="ref" data-reference="sec:cap02-cebolla">[sec:cap02-cebolla]</a>) con otro disfraz: la publicación resultante describe peor a las minorías, que es la población para la que más suele hacer falta la estadística pública. Ningún ajuste de <span class="math inline">\(k\)</span> resuelve eso; solo lo hace explícito.</p>
+</section>
+<section id="sec:cap03-algoritmos" class="level3">
+<h3 class="anchored" data-anchor-id="sec:cap03-algoritmos">Cómo se alcanza <span class="math inline">\(k\)</span>: los algoritmos</h3>
+<p>La escalera de la tabla&nbsp;<a href="#tab:cap03-escalera" data-reference-type="ref" data-reference="tab:cap03-escalera">1.1</a> la hemos recorrido a mano, peldaño a peldaño, y eso basta para entender el problema. En la práctica se resuelve con algoritmos, y conviene conocer sus nombres porque son los que implementan las herramientas del sector.</p>
+<p>El primer resultado que hay que tener presente es negativo: <strong>encontrar la <span class="math inline">\(k\)</span>-anonimización óptima es NP-difícil</strong> <span class="citation" data-cites="meyerson2004complexity">(<a href="#ref-meyerson2004complexity" role="doc-biblioref">Meyerson y Williams 2004</a>)</span>, entendiendo por óptima la que minimiza la información destruida. Toda herramienta usable es, por tanto, heurística, y su calidad se juzga por cuánta utilidad conserva. Las tres familias clásicas:</p>
+<ul>
+<li><p><strong>Generalización global</strong> —Datafly, Incognito—: elige un nivel de la jerarquía por columna y lo aplica a toda la tabla. Es lo que hace nuestra escalera. Ventaja: la tabla resultante es homogénea y fácil de interpretar. Inconveniente: para proteger a la persona más rara hay que generalizar a todo el mundo.</p></li>
+<li><p><strong>Generalización local o multidimensional</strong> —Mondrian <span class="citation" data-cites="lefevre2006mondrian">(<a href="#ref-lefevre2006mondrian" role="doc-biblioref">LeFevre et&nbsp;al. 2006</a>)</span>—: particiona el espacio de cuasi-identificadores en regiones y generaliza cada una por separado, de modo que las zonas densas conservan resolución. Conserva bastante más utilidad; el capítulo&nbsp;4 lo implementa.</p></li>
+<li><p><strong>Supresión</strong>: retirar filas o celdas, casi siempre combinada con las anteriores, como acabamos de medir.</p></li>
+</ul>
+<p>Las implementaciones de referencia, por si el lector quiere medir sin programar: <strong>ARX</strong> <span class="citation" data-cites="prasser2020arx">(<a href="#ref-prasser2020arx" role="doc-biblioref">Prasser et&nbsp;al. 2020</a>)</span>, que cubre las tres métricas, los modelos de riesgo y buena parte de los algoritmos; <strong>sdcMicro</strong> <span class="citation" data-cites="templ2015sdcmicro">(<a href="#ref-templ2015sdcmicro" role="doc-biblioref">Templ et&nbsp;al. 2015</a>)</span> para quien trabaje en R; y <strong><span class="math inline">\(\mu\)</span>-ARGUS</strong>, la herramienta clásica de los institutos estadísticos europeos, que no tiene artículo académico propio y se cita por su manual. Ninguna sustituye al análisis: eligen por uno las hipótesis por defecto, y esas hipótesis son justamente lo que hay que declarar.</p>
+<p>Una nota práctica que ahorra disgustos: estas herramientas piden que el usuario declare la jerarquía de generalización de cada columna —qué es «un nivel más arriba» para un código postal, para una edad, para un diagnóstico CIE-10—. Esa declaración no es un detalle técnico: es una decisión editorial que determina qué análisis sobrevivirán, y es donde conviene sentar al epidemiólogo o al analista que va a usar los datos.</p>
+</section>
+<section id="sec:cap03-frontera3" class="level3">
+<h3 class="anchored" data-anchor-id="sec:cap03-frontera3">Utilidad y riesgo, otra vez la frontera</h3>
+<p>Poniendo las dos columnas de la tabla una frente a otra aparece, medida, la frontera que el capítulo&nbsp;1 dibujó a mano.</p>
+<figure id="fig:cap03-frontera" data-latex-placement="htbp" class="figure">
+<img src="figs/cap03/fig_02.svg" style="width:90.0%" class="figure-img">
+<figcaption>
+La escalera de generalización en el espacio utilidad–riesgo: cada peldaño es un punto de operación medido.
+</figcaption>
+</figure>
+<p>La forma de la curva en la figura&nbsp;<a href="#fig:cap03-frontera" data-reference-type="ref" data-reference="fig:cap03-frontera">1.4</a> es la información que un comité necesita. Los primeros peldaños son <em>baratos</em>: pasar de crudo a código postal de tres dígitos cuesta 1,1 bits de utilidad y devuelve una reducción del riesgo del 40 %. Los últimos son <em>caros</em>: bajar de provincia a franja etaria cuesta 1,8 bits para ganar siete puntos de riesgo. Entre medias hay un codo, y ese codo —no el umbral – es lo que hay que discutir.</p>
+<p>Nótese también lo que la curva no dice: nada sobre qué análisis seguirán siendo válidos. La entropía es una medida de utilidad genérica y cómoda; un informe serio la acompañaría de métricas de utilidad <em>específicas</em> de los análisis previstos —error en las tasas de incidencia por provincia, por ejemplo—. Volveremos a ello en el capítulo&nbsp;5, donde la utilidad se medirá contra la consulta concreta que se quiere responder.</p>
+</section>
+</section>
+<section id="sec:cap03-poblacion" class="level2">
+<h2 class="anchored" data-anchor-id="sec:cap03-poblacion">De la muestra a la población</h2>
+<p>Hasta aquí hemos medido sobre la tabla que tenemos. Pero la pregunta que importa es otra, y ya apareció en el capítulo&nbsp;1: ¿cuántas de estas filas serían únicas en la <em>población</em>? Es la diferencia entre «esta persona es la única de la tabla con este perfil» y «esta persona es la única de España», que es la que decide si el adversario acierta.</p>
+<section id="sec:cap03-ingenuo" class="level3">
+<h3 class="anchored" data-anchor-id="sec:cap03-ingenuo">Por qué el estimador obvio está mal</h3>
+<p>El estimador que se usa por inercia es la unicidad de la muestra tal cual. La proposición&nbsp;<a href="#prop:muestra" data-reference-type="ref" data-reference="prop:muestra">[prop:muestra]</a> ya dijo que sobreestima; lo que faltaba era saber cuánto. El script <code>src/cap03/unicidad_poblacional.py</code> lo mide usando nuestra población sintética como población y muestras suyas como muestras, de modo que la verdad es conocida:</p>
+<pre><code>unicidad REAL con {edad5, sexo, provincia}: 1.12%
+
+  f= 1%   ingenuo=75.90%  (x67.8)   poisson-gamma= 0.00%
+  f= 5%   ingenuo=40.72%  (x36.4)   poisson-gamma= 0.00%
+  f=20%   ingenuo=12.30%  (x11.0)   poisson-gamma= 0.76%
+  f=50%   ingenuo= 3.49%  (x 3.1)   poisson-gamma= 1.23%</code></pre>
+<p>Con una muestra del 1 % —una fracción muy común en un estudio clínico o en una encuesta—, el estimador ingenuo dice que el 75,9 % de las filas son únicas cuando en realidad lo es el 1,12 %: <strong>multiplica el riesgo por 68</strong>. Un equipo que tomara decisiones con ese número o bien no publicaría nada, o bien destruiría la utilidad de sus datos para protegerse de un peligro que no existe con esa magnitud. El error es caro en las dos direcciones.</p>
+</section>
+<section id="sec:cap03-superpoblacion" class="level3">
+<h3 class="anchored" data-anchor-id="sec:cap03-superpoblacion">Modelos de superpoblación</h3>
+<p>La corrección clásica consiste en postular un modelo para el tamaño poblacional de cada clase y estimar sus parámetros con lo observado. Si una clase aparece <span class="math inline">\(n_j\)</span> veces en una muestra que cubre una fracción <span class="math inline">\(f\)</span> de la población, su tamaño poblacional esperado es <span class="math inline">\(n_j/f\)</span>, y bajo un modelo de Poisson la probabilidad de que esa clase tenga exactamente un individuo es <span class="math display">\[\Pr[F_j = 1] \;=\; \lambda_j e^{-\lambda_j},
+  \qquad \lambda_j = n_j / f .\]</span> Es el mismo <span class="math inline">\(\lambda\)</span> del capítulo&nbsp;1, ahora al servicio de la estimación. El problema de este modelo, y la razón de que en nuestra medición se hunda a cero con muestras pequeñas, es que supone <em>homogeneidad</em>: que todas las clases tienen el mismo tamaño esperado. En una población real hay clases enormes (mujeres de 40 a 44 en Madrid) y clases minúsculas (hombres de 95 a 99 en Soria), y esa heterogeneidad cambia el resultado.</p>
+<p>El remedio estándar es el modelo <em>Poisson-Gamma</em>: se admite que cada clase tiene su propio <span class="math inline">\(\lambda_j\)</span> y que esos valores se distribuyen según una Gamma cuyos parámetros se estiman de los datos. La probabilidad de que una clase observada una sola vez no tenga a nadie más en la población resulta ser <span class="math display">\[\Pr[\text{resto}=0 \mid n_j] \;=\;
+  \left( \frac{1/\beta + f}{1/\beta + 1} \right)^{\alpha + n_j},\]</span> con <span class="math inline">\(\alpha\)</span> y <span class="math inline">\(\beta\)</span> ajustados por momentos sobre los recuentos observados. La figura&nbsp;<a href="#fig:cap03-estimadores" data-reference-type="ref" data-reference="fig:cap03-estimadores">1.5</a> compara los dos estimadores con la verdad.</p>
+<figure id="fig:cap03-estimadores" data-latex-placement="htbp" class="figure">
+<img src="figs/cap03/fig_06.svg" style="width:82.0%" class="figure-img">
+<figcaption>
+Estimadores de unicidad poblacional frente a la verdad conocida: el ingenuo sobreestima hasta 68 veces; el de superpoblación converge, pero solo con muestras grandes.
+</figcaption>
+</figure>
+<p>El resultado es honesto y conviene no maquillarlo: el Poisson-Gamma acierta razonablemente cuando se observa la mitad de la población (1,23 % estimado frente a 1,12 % real, un 10 % de error) y <em>subestima</em> gravemente con muestras pequeñas, hasta dar cero. Es decir, cambia la dirección del error: donde el ingenuo asusta de más, el de superpoblación tranquiliza de más. Ninguno de los dos es utilizable a ciegas con fracciones muestrales del 1 %.</p>
+</section>
+<section id="sec:cap03-quehacer" class="level3">
+<h3 class="anchored" data-anchor-id="sec:cap03-quehacer">Qué hacer, entonces</h3>
+<p>De esa incomodidad salen tres reglas prácticas que este libro adopta.</p>
+<p><strong>Declarar la fracción muestral y el estimador.</strong> Un número de riesgo sin esas dos coordenadas no es interpretable. La mayoría de los informes que circulan omiten ambas.</p>
+<p><strong>Dar un intervalo, no un punto.</strong> Con muestras pequeñas la respuesta honesta es «entre el 1 % y el 8 %, según el modelo», y esa horquilla es información útil: dice que hace falta más muestra o un modelo mejor antes de decidir.</p>
+<p><strong>Usar modelos ajustados a los datos cuando la decisión sea grave.</strong> Es lo que hacen <span class="citation" data-cites="rocher2019estimating">Rocher et&nbsp;al. (<a href="#ref-rocher2019estimating" role="doc-biblioref">2019</a>)</span> con modelos generativos que capturan la dependencia entre atributos, y es el camino que sigue la práctica moderna. Su resultado del 99,98 % de reidentificabilidad con quince atributos, que citamos en el capítulo&nbsp;1, sale precisamente de estimar bien esta magnitud, no de contar filas únicas en una muestra.</p>
+</section>
+<section id="sec:cap03-sinf" class="level3">
+<h3 class="anchored" data-anchor-id="sec:cap03-sinf">Cuando no se conoce la fracción muestral</h3>
+<p>Todo lo anterior supone conocer <span class="math inline">\(f\)</span>, la fracción de la población que la tabla representa. En la práctica rara vez se sabe con precisión, y conviene tener claras las tres situaciones.</p>
+<p><strong>La muestra es la población.</strong> Es el caso del censo, del padrón o del registro completo de una consejería: <span class="math inline">\(f = 1\)</span> y no hay nada que estimar, porque la unicidad muestral <em>es</em> la poblacional. Es la situación más cómoda estadísticamente y la más peligrosa en la práctica, porque no hay ningún colchón: cada fila única lo es de verdad.</p>
+<p><strong>Se conoce <span class="math inline">\(f\)</span> razonablemente.</strong> Un registro hospitalario respecto de la población de su área de influencia, una encuesta con diseño muestral documentado. Aquí los estimadores de la sección&nbsp;<a href="#sec:cap03-superpoblacion" data-reference-type="ref" data-reference="sec:cap03-superpoblacion">1.3.2</a> tienen sentido, con la cautela de que la muestra casi nunca es aleatoria: los pacientes de un hospital están sesgados por edad y morbilidad, y ese sesgo hace que las clases raras <em>en la población</em> estén sobrerrepresentadas.</p>
+<p><strong>No se conoce <span class="math inline">\(f\)</span>.</strong> Es lo más común en datos secundarios: una tabla que llega de un tercero, sin documentación del muestreo. La tentación es suponer un <span class="math inline">\(f\)</span> favorable; la respuesta correcta es tratar el caso como el primero. Si no se puede sostener con evidencia que la tabla es una muestra pequeña de una población grande, <strong>se calcula el riesgo como si la muestra fuera la población</strong>, que es el supuesto conservador. Es la misma disciplina del capítulo&nbsp;2: cuando falta información sobre el adversario, se le supone el máximo.</p>
+</section>
+<section id="sec:cap03-dano" class="level3">
+<h3 class="anchored" data-anchor-id="sec:cap03-dano">El riesgo no es el daño</h3>
+<p>Una última advertencia antes de los modelos, porque es la que más se olvida en los comités. Todo este capítulo mide <em>probabilidad de reidentificación</em>. El daño de una reidentificación es otra cosa, y no aparece en ninguna fórmula.</p>
+<p>Reidentificar a alguien en un registro de altas por apendicitis y reidentificarlo en uno de interrupciones voluntarias del embarazo tienen la misma probabilidad si las tablas tienen la misma estructura, y consecuencias incomparables. Del mismo modo, el daño depende de quién sea la persona —una figura pública, una persona en situación de violencia de género, un menor— y del contexto social, que cambia con el tiempo: información inocua hoy puede ser peligrosa tras un cambio político o legal.</p>
+<p>De ahí tres reglas que este libro adopta y que el capítulo&nbsp;14 formalizará dentro de la evaluación de impacto:</p>
+<ol type="1">
+<li><p><strong>El umbral se fija por dato, no por organización.</strong> Un único umbral corporativo para «datos personales» ignora que la sensibilidad varía en órdenes de magnitud.</p></li>
+<li><p><strong>La severidad se documenta junto a la probabilidad.</strong> Un informe de riesgo que solo da probabilidades está incompleto: debe decir qué pasaría si la reidentificación ocurriese.</p></li>
+<li><p><strong>Los grupos vulnerables se evalúan aparte.</strong> La media oculta a las minorías, y son ellas quienes concentran a la vez el riesgo (por raras) y el daño (por vulnerables).</p></li>
+</ol>
+</section>
+</section>
+<section id="sec:cap03-modelos" class="level2">
+<h2 class="anchored" data-anchor-id="sec:cap03-modelos">Los tres modelos de riesgo</h2>
+<p>Falta una pieza para que los números signifiquen algo: decir qué adversario los produce. La literatura de datos sanitarios consolidó tres modelos que conviene manejar con soltura, porque son el vocabulario con el que se discute con un comité o con una autoridad.</p>
+<ul>
+<li><p><strong>El fiscal</strong> (<em>prosecutor</em>). Tiene un objetivo concreto y <em>sabe</em> que está en la tabla: un investigador, un familiar, un empleador. El riesgo de una fila es <span class="math inline">\(1/\lvert[x]_Q\rvert\)</span> calculado sobre la propia tabla.</p></li>
+<li><p><strong>El periodista</strong> (<em>journalist</em>). Tiene un objetivo concreto pero <em>no</em> sabe si está en la tabla, que es una muestra de una población mayor. El riesgo se calcula con el tamaño de la clase en la <em>población</em>, siempre mayor o igual, de modo que sale menor.</p></li>
+<li><p><strong>El comercial</strong> (<em>marketer</em>). No le interesa nadie en particular sino reidentificar a muchos: le vale acertar en promedio <span class="citation" data-cites="dankar2010marketer">(<a href="#ref-dankar2010marketer" role="doc-biblioref">Dankar y El Emam 2010</a>)</span>.</p></li>
+</ul>
+<p>Conviene deshacer aquí una confusión extendida, porque cambia las cuentas. Circula la idea de que «fiscal» significa riesgo máximo y «periodista» riesgo medio. <strong>No es así</strong>: hay <em>dos ejes independientes</em>. El primero es qué población usa el adversario para formar las clases —la tabla (fiscal) o la población de referencia (periodista)—. El segundo es cómo se agrega el riesgo de las filas —el máximo, que retrata a la persona peor protegida, o la media, que retrata a la publicación—. Los dos ejes se combinan: existe un riesgo máximo del periodista y un riesgo medio del fiscal, y ambos se usan. El modelo del comercial, en cambio, es intrínsecamente medio, porque su objetivo es el volumen. La tabla&nbsp;<a href="#tab:cap03-ejes" data-reference-type="ref" data-reference="tab:cap03-ejes">1.2</a> ordena las cuatro casillas.</p>
+<div id="tab:cap03-ejes">
+<table class="caption-top table">
+<caption>Los dos ejes que a menudo se confunden: qué población forma las clases y cómo se agregan los riesgos individuales.</caption>
+<colgroup>
+<col style="width: 22%">
+<col style="width: 34%">
+<col style="width: 34%">
+</colgroup>
+<thead>
+<tr class="header">
+<th></th>
+<th style="text-align: left;"><strong>clases sobre la tabla</strong> (fiscal)</th>
+<th style="text-align: left;"><strong>clases sobre la población</strong> (periodista)</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>máximo</strong></td>
+<td style="text-align: left;">la persona peor protegida del conjunto; el criterio de <span class="math inline">\(k\)</span>-anonimato</td>
+<td style="text-align: left;">la persona peor protegida suponiendo muestreo; el criterio de <span class="math inline">\(k\)</span>-map</td>
+</tr>
+<tr class="even">
+<td><strong>media</strong></td>
+<td style="text-align: left;">riesgo de la publicación si el adversario sabe que sus objetivos están dentro</td>
+<td style="text-align: left;">riesgo del comercial: cuántos puede reidentificar en promedio</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>Dos avisos más sobre esta terna, ambos importantes para un lector europeo. El primero: la formalización procede de la literatura sanitaria norteamericana —el modelo del fiscal y el del periodista en <span class="citation" data-cites="elemam2008protecting">El Emam y Dankar (<a href="#ref-elemam2008protecting" role="doc-biblioref">2008</a>)</span>, el del comercial dos años después <span class="citation" data-cites="dankar2010marketer">(<a href="#ref-dankar2010marketer" role="doc-biblioref">Dankar y El Emam 2010</a>)</span>— y <strong>no tiene respaldo en la doctrina europea</strong>: ni el RGPD ni el EDPB la mencionan. Es un marco de trabajo útil, no una obligación normativa. El segundo: la propia guía NIST considera ya esa terminología heredada y de connotaciones desafortunadas <span class="citation" data-cites="nist2023sp800188">(<a href="#ref-nist2023sp800188" role="doc-biblioref">Garfinkel et&nbsp;al. 2023</a>)</span>, de modo que en un informe conviene describir el modelo —qué sabe el adversario y cómo se agrega— antes que apoyarse en la etiqueta.</p>
+<figure id="fig:cap03-modelos" data-latex-placement="htbp" class="figure">
+<img src="figs/cap03/fig_05.svg" style="width:98.0%" class="figure-img">
+<figcaption>
+Los tres modelos sobre la misma tabla: tres cifras separadas por tres órdenes de magnitud.
+</figcaption>
+</figure>
+<p>La figura&nbsp;<a href="#fig:cap03-modelos" data-reference-type="ref" data-reference="fig:cap03-modelos">1.6</a> muestra el resultado sobre nuestro peldaño «provincia», y la distancia entre las tres cifras es la moraleja entera de la sección: 1,000 para el fiscal en el peor caso, 0,094 para el comercial, 0,0004 para el periodista. <strong>Tres órdenes de magnitud de diferencia sin cambiar un solo dato.</strong> Quien elige el modelo elige el resultado, y por eso el modelo va declarado en el informe, antes que las medidas.</p>
+<p>Una advertencia sobre el riesgo del periodista, que es el más favorable y por tanto el más tentador: su cálculo depende de suponer que la muestra es aleatoria respecto de la población de referencia. En un registro hospitalario esa hipótesis es sencillamente falsa —los pacientes de un hospital no son una muestra aleatoria de la provincia—, y usarlo entonces es maquillar el número. La regla prudente es la que aplica también NIST en su guía de desidentificación: cuando no se puede sostener la hipótesis de muestreo, se usa el modelo del fiscal <span class="citation" data-cites="nist2023sp800188">(<a href="#ref-nist2023sp800188" role="doc-biblioref">Garfinkel et&nbsp;al. 2023</a>)</span>.</p>
+<section id="sec:cap03-kmap" class="level3">
+<h3 class="anchored" data-anchor-id="sec:cap03-kmap">Dos primos cercanos: <span class="math inline">\(k\)</span>-map y <span class="math inline">\(\delta\)</span>-presencia</h3>
+<p>Los tres modelos anteriores tienen dos parientes que aparecen en las herramientas y en las guías, y que conviene distinguir bien.</p>
+<p>El <strong><span class="math inline">\(k\)</span>-map</strong> relaja el <span class="math inline">\(k\)</span>-anonimato en la dirección del periodista: no exige que cada clase tenga <span class="math inline">\(k\)</span> filas <em>en la tabla</em>, sino que se corresponda con al menos <span class="math inline">\(k\)</span> personas <em>en la población</em>. Es mucho menos destructivo —una clase de una sola fila puede ser aceptable si en la población hay cincuenta personas con ese perfil— y por eso NIST lo recomienda para publicaciones que son muestras <span class="citation" data-cites="nist2023sp800188">(<a href="#ref-nist2023sp800188" role="doc-biblioref">Garfinkel et&nbsp;al. 2023</a>)</span>. Su precio es que exige conocer o estimar la población, con toda la incertidumbre de la sección&nbsp;<a href="#sec:cap03-poblacion" data-reference-type="ref" data-reference="sec:cap03-poblacion">1.3</a>.</p>
+<p>La <strong><span class="math inline">\(\delta\)</span>-presencia</strong> contesta a otra pregunta, y a menudo la más grave: no «¿quién es esta fila?» sino «¿está fulano en esta tabla?». Si la tabla es el registro de una clínica de adicciones, la mera pertenencia es el dato sensible —es la inferencia de pertenencia del capítulo&nbsp;2, ahora sobre una tabla en vez de sobre un modelo—. Una publicación puede ser impecable en <span class="math inline">\(k\)</span>, <span class="math inline">\(l\)</span> y <span class="math inline">\(t\)</span> y seguir revelando presencia, porque esas tres métricas dan por supuesto que se sabe quién está dentro.</p>
+<p>La lección de conjunto: <strong>cada métrica responde a una pregunta distinta</strong>, y elegirla es elegir de qué se protege uno. La tabla&nbsp;<a href="#tab:cap03-preguntas" data-reference-type="ref" data-reference="tab:cap03-preguntas">1.3</a> las ordena por la pregunta que contestan, que es como deberían presentarse en un informe.</p>
+<div id="tab:cap03-preguntas">
+<table class="caption-top table">
+<caption>Cada métrica contesta una pregunta distinta; el informe debe decir cuál se ha contestado.</caption>
+<colgroup>
+<col style="width: 30%">
+<col style="width: 34%">
+<col style="width: 27%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;"><strong>Pregunta del adversario</strong></th>
+<th><strong>Métrica que la acota</strong></th>
+<th style="text-align: left;"><strong>Hipótesis que exige</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">¿cuál de estas filas es mi objetivo?</td>
+<td><span class="math inline">\(k\)</span>-anonimato; <span class="math inline">\(k\)</span>-map</td>
+<td style="text-align: left;">saber que está en la tabla (o la población)</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">¿qué valor sensible tiene?</td>
+<td><span class="math inline">\(l\)</span>-diversidad, <span class="math inline">\(t\)</span>-cercanía</td>
+<td style="text-align: left;">haberlo localizado en una clase</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">¿está mi objetivo en esta tabla?</td>
+<td><span class="math inline">\(\delta\)</span>-presencia</td>
+<td style="text-align: left;">conocer la población de referencia</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">¿a cuántos puedo reidentificar?</td>
+<td>riesgo medio (comercial)</td>
+<td style="text-align: left;">ninguna sobre individuos concretos</td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+</section>
+<section id="sec:cap03-umbrales" class="level2">
+<h2 class="anchored" data-anchor-id="sec:cap03-umbrales">De dónde salen los umbrales</h2>
+<p>Queda la pregunta que todo equipo hace en cuanto ve los números: ¿y qué valor es aceptable? Merece una sección propia porque la respuesta honesta —«depende, y menos de lo que parece está escrito»— suele sorprender.</p>
+<section id="sec:cap03-hipaa" class="level3">
+<h3 class="anchored" data-anchor-id="sec:cap03-hipaa">La vía estadounidense: reglas o experto</h3>
+<p>La normativa sanitaria estadounidense ofrece dos caminos, y su contraste es muy instructivo. El primero es una <strong>lista</strong>: retirar dieciocho tipos de identificadores —nombre, teléfono, fechas más finas que el año, códigos postales a cinco dígitos salvo agregación, etcétera— y dar el resultado por desidentificado. Es objetivo, barato y comprobable; también es rígido, y no dice nada sobre el riesgo real del conjunto concreto.</p>
+<p>El segundo es la <strong>determinación por experto</strong>: una persona cualificada certifica, con métodos estadísticos documentados, que el riesgo de reidentificación es «muy pequeño». La norma deliberadamente no fija el número, y de ahí que la práctica haya consolidado umbrales de facto que conviene saber de dónde vienen, porque circulan sin apellido. El <span class="math inline">\(k\)</span> de 5 y el de 11 proceden de la costumbre profesional del sector sanitario. El riesgo medio de 0,09, que se cita a menudo como si fuera un estándar general, procede de una guía de la Agencia Europea del Medicamento para la publicación de informes clínicos <span class="citation" data-cites="ema2018guidance">(<a href="#ref-ema2018guidance" role="doc-biblioref">European Medicines Agency 2018</a>)</span>: es sectorial, es una recomendación y es expresamente derogable. Y ninguno de los dos procede de NIST, que —conviene subrayarlo porque es el error de atribución más común en este terreno— <strong>no publica ningún umbral numérico</strong> en su guía de desidentificación <span class="citation" data-cites="nist2023sp800188">(<a href="#ref-nist2023sp800188" role="doc-biblioref">Garfinkel et&nbsp;al. 2023</a>)</span>.</p>
+</section>
+<section id="sec:cap03-europa" class="level3">
+<h3 class="anchored" data-anchor-id="sec:cap03-europa">La vía europea: tres criterios, ningún número</h3>
+<p>El enfoque europeo es distinto y conviene entenderlo bien porque es el que aplica en España. El Grupo del Artículo 29 —predecesor del EDPB— fijó en su dictamen sobre técnicas de anonimización tres criterios que una técnica debe superar para que el resultado se considere anónimo <span class="citation" data-cites="wp29opinion052014">(<a href="#ref-wp29opinion052014" role="doc-biblioref">Article 29 Data Protection Working Party 2014</a>)</span>: que no permita <em>singularizar</em> a un individuo, que no permita <em>vincular</em> registros de la misma persona, y que no permita <em>inferir</em> información sobre ella. Son tres preguntas cualitativas, no un umbral numérico, y esa es una decisión consciente: un número fijo envejecería mal ante fuentes auxiliares nuevas —otra vez el supuesto A2—.</p>
+<p>Ese dictamen, que tiene ya más de una década, está siendo sustituido: el EDPB adoptó en julio de 2026 unas directrices sobre anonimización <span class="citation" data-cites="edpb2026anonimizacion">(<a href="#ref-edpb2026anonimizacion" role="doc-biblioref">European Data Protection Board 2026</a>)</span> que refinan los tres criterios. A la fecha de redacción de este capítulo siguen en <strong>consulta pública</strong> —la fase se cierra a finales de octubre de 2026— y por tanto no son texto final: conviene citarlas como borrador y volver a comprobar su estado antes de apoyarse en ellas.</p>
+<p>La consecuencia práctica para un equipo español es la que este libro adopta: <strong>el número no lo da la norma, lo da el análisis, y la norma exige que el análisis esté documentado</strong>. De ahí que el artefacto de la sección&nbsp;<a href="#sec:cap03-informe" data-reference-type="ref" data-reference="sec:cap03-informe">1.7</a> —con sus hipótesis declaradas, su modelo de adversario y su caducidad— no sea burocracia sino exactamente lo que hay que poder enseñar. La Opinion 28/2024 del EDPB <span class="citation" data-cites="edpb2024opinion28">(<a href="#ref-edpb2024opinion28" role="doc-biblioref">European Data Protection Board 2024</a>)</span> refuerza esa lectura al exigir que la anonimidad se demuestre caso por caso.</p>
+<p>Las referencias técnicas que sostienen ese análisis son las mismas de siempre: ISO/IEC&nbsp;27559 <span class="citation" data-cites="iso27559">(<a href="#ref-iso27559" role="doc-biblioref">ISO/IEC 27559 2022</a>)</span> para el marco de gestión del riesgo a lo largo del ciclo de vida, y NIST SP&nbsp;800-188 <span class="citation" data-cites="nist2023sp800188">(<a href="#ref-nist2023sp800188" role="doc-biblioref">Garfinkel et&nbsp;al. 2023</a>)</span> para el instrumental de medida y la elección del modelo de adversario.</p>
+</section>
+<section id="sec:cap03-fijar" class="level3">
+<h3 class="anchored" data-anchor-id="sec:cap03-fijar">Cómo fijar un umbral defendible</h3>
+<p>Con todo lo anterior, la receta que este libro propone tiene cuatro pasos y ninguno es un número mágico:</p>
+<ol type="1">
+<li><p><strong>Estimar el daño</strong>, no solo la probabilidad. Un riesgo del 5 % sobre un diagnóstico de VIH y un riesgo del 5 % sobre la marca de coche no son el mismo problema.</p></li>
+<li><p><strong>Elegir el modelo de adversario</strong> según quién puede acceder de verdad a la publicación —abierta, bajo acuerdo, interna— y <em>antes</em> de ver los resultados.</p></li>
+<li><p><strong>Fijar el umbral y escribirlo</strong> antes de medir, con su justificación y su referencia sectorial.</p></li>
+<li><p><strong>Medir, decidir y fechar</strong>, dejando constancia de las mitigaciones aplicadas y de lo que se perdió con ellas.</p></li>
+</ol>
+</section>
+</section>
+<section id="sec:cap03-utilidad" class="level2">
+<h2 class="anchored" data-anchor-id="sec:cap03-utilidad">Medir la utilidad, no solo el riesgo</h2>
+<p>Un informe que solo mide riesgo empuja siempre en la misma dirección: generalizar más, suprimir más, publicar menos. Para que la decisión sea informada hace falta la otra mitad —cuánto se pierde—, y aquí también hay una trampa que conviene destapar.</p>
+<p>La utilidad se puede medir de dos maneras. Con métricas <strong>genéricas</strong> —la entropía que hemos usado, la granularidad media, el número de clases—, que son cómodas, comparables y no dicen nada sobre si el análisis que uno quiere hacer seguirá siendo válido. O con métricas <strong>específicas de la tarea</strong>: el error en la respuesta a las consultas que motivaron la publicación.</p>
+<p>Nuestro dataset permite verlo. Supongamos que la publicación existe para responder a una consulta epidemiológica concreta: la prevalencia de cada diagnóstico por provincia. El script mide el error de esa consulta sobre la tabla ya anonimizada —generalizada y suprimida hasta <span class="math inline">\(k\geq5\)</span>— frente a la verdad:</p>
+<pre><code>CP a 3 dígitos       suprimir 79.8%  -&gt;  error 11.63 puntos
+edad en quinquenios  suprimir 44.5%  -&gt;  error  5.20 puntos
+provincia            suprimir  8.8%  -&gt;  error  2.41 puntos
+franja etaria        suprimir  0.5%  -&gt;  error  0.50 puntos</code></pre>
+<figure id="fig:cap03-utilidad" data-latex-placement="htbp" class="figure">
+<img src="figs/cap03/fig_08.svg" style="width:86.0%" class="figure-img">
+<figcaption>
+El coste medido en la consulta que motiva la publicación: generalizar poco obliga a suprimir mucho, y suprimir mucho arruina la consulta.
+</figcaption>
+</figure>
+<p>El resultado de la figura&nbsp;<a href="#fig:cap03-utilidad" data-reference-type="ref" data-reference="fig:cap03-utilidad">1.7</a> es contraintuitivo para quien viene de la métrica genérica y es de enorme valor práctico. Según la entropía, generalizar «cuesta» utilidad de forma monótona: el peldaño de franja etaria es el que menos información conserva (8,2 bits frente a 14,3). Según la consulta que de verdad importa, <strong>ese mismo peldaño es el mejor de todos</strong>, con un error de medio punto porcentual, porque exige suprimir a casi nadie. El peldaño intermedio —código postal a tres dígitos, que parecía conservar mucha información— destroza la consulta con casi doce puntos de error, porque para alcanzar <span class="math inline">\(k\geq5\)</span> hay que tirar cuatro de cada cinco filas y las que se tiran no son aleatorias: son las de las zonas menos pobladas.</p>
+<p>De ahí la regla que cierra la sección, y que vale para todo el resto del libro: <strong>la utilidad se mide contra la pregunta que la publicación quiere responder</strong>, no en abstracto. Una anonimización que conserva muchos bits y arruina el análisis previsto es peor que otra que conserva pocos y lo mantiene intacto. En el capítulo&nbsp;5, cuando haya que elegir el valor de <span class="math inline">\(\eps\)</span>, el criterio será exactamente este.</p>
+</section>
+<section id="sec:cap03-informe" class="level2">
+<h2 class="anchored" data-anchor-id="sec:cap03-informe">El informe de riesgo como artefacto</h2>
+<p>Cierro el capítulo con lo que debería salir de todo lo anterior. No un PDF que alguien redacta al final del proyecto, sino un <strong>artefacto reproducible</strong>: la salida de un script versionado que cualquiera puede volver a ejecutar y obtener lo mismo.</p>
+<figure id="fig:cap03-artefacto" data-latex-placement="htbp" class="figure">
+<img src="figs/cap03/fig_07.svg" style="width:95.0%" class="figure-img">
+<figcaption>
+El informe de riesgo como salida de un script: entradas declaradas, medidas y caducidad.
+</figcaption>
+</figure>
+<p>El script <code>src/cap03/informe_riesgo.py</code> lo implementa para nuestro dataset. Sus cuatro secciones son las que este libro propone como mínimo defendible:</p>
+<p><strong>1. Identificación y trazabilidad.</strong> Qué conjunto, con qué semilla, con qué versión del código. Sin esto el informe no es reproducible y por tanto no es verificable.</p>
+<p><strong>2. Hipótesis declaradas.</strong> Qué se publica, qué columnas se consideran cuasi-identificadores, cuál es el atributo sensible, cuál es la población de referencia, qué adversario se supone y qué umbrales se aceptan. Es la sección que más discusiones ahorra y la que más informes omiten.</p>
+<p><strong>3. Medidas.</strong> Las tres métricas, los tres riesgos, la distribución de tamaños de clase y la fracción de filas únicas. No una cifra: el cuadro.</p>
+<p><strong>4. Veredicto y caducidad.</strong> Publicable o no, con qué mitigación, y cuándo se repite. Un informe de riesgo sin fecha de caducidad contradice el supuesto A2: el mundo cambia, aparecen fuentes auxiliares nuevas y el número de hoy no vale para siempre.</p>
+<p>Sobre nuestros datos, el veredicto es negativo y merece leerse completo, porque es el caso realista:</p>
+<pre><code>k-anonimato = 1
+riesgo del fiscal (medio) = 0.0937
+riesgo del periodista (max.) = 0.000407
+filas unicas (%) = 1.12
+veredicto = NO publicable tal cual</code></pre>
+<p>El conjunto generalizado a provincia y quinquenios cumpliría holgadamente el umbral si mirásemos solo al periodista, y falla con claridad mirando al fiscal y a <span class="math inline">\(k\)</span>. La decisión correcta —y la que el informe sugiere— no es cambiar de modelo hasta que el número salga bien, sino suprimir el 8,8 % de filas que la sección&nbsp;<a href="#sec:cap03-supresion" data-reference-type="ref" data-reference="sec:cap03-supresion">1.2.1</a> identifica, volver a medir y publicar el informe con las dos versiones. Esa transparencia sobre lo que se ha hecho para bajar el riesgo es, en la práctica, lo que distingue un ejercicio de cumplimiento de un ejercicio de maquillaje.</p>
+</section>
+<section id="sec:cap03-notabla" class="level2">
+<h2 class="anchored" data-anchor-id="sec:cap03-notabla">Cuando el dato no es una tabla</h2>
+<p>Todo este capítulo ha supuesto una tabla rectangular con unas pocas columnas demográficas. Conviene decir con claridad qué pasa fuera de ese caso, porque es donde está hoy la mayor parte del dato personal.</p>
+<p><strong>Trazas y series temporales.</strong> Ya lo vimos en el capítulo&nbsp;1: con cuatro puntos espacio-temporales se singulariza al 95 % de la población. Definir clases de equivalencia sobre trayectorias exige generalizar espacio y tiempo hasta un grano en que la traza deja de servir; los intentos de trasladar <span class="math inline">\(k\)</span>-anonimato a movilidad —agrupando trayectorias parecidas— funcionan sobre conjuntos pequeños y se derrumban con la dimensión.</p>
+<p><strong>Texto libre.</strong> Un informe clínico no tiene columnas. Se puede detectar y sustituir entidades —nombres, fechas, lugares— con herramientas de reconocimiento, y es lo que hace la práctica; pero ninguna métrica de este capítulo dice cuánto riesgo queda, porque el riesgo vive en el estilo, en la combinación de detalles y en lo que el texto insinúa. La evaluación aquí es empírica: intentar reidentificar.</p>
+<p><strong>Imagen.</strong> Una radiografía de tórax permite reconstruir rasgos; una resonancia craneal, la cara. Los métodos de este capítulo no aplican en absoluto, y el capítulo&nbsp;12 trata el problema con sus propias herramientas.</p>
+<p><strong>Grafos.</strong> En una red social, la estructura identifica: el patrón de conexiones de una persona es tan distintivo como su huella digital, y anonimizar los nodos no impide reidentificarlos por topología.</p>
+<p>La conclusión no es que este capítulo no sirva, sino que <strong>delimita su terreno</strong>: las métricas sintácticas son la herramienta adecuada para microdatos tabulares de dimensión moderada —encuestas, registros administrativos, altas hospitalarias—, que es exactamente el caso para el que se inventaron y una parte enorme de lo que publican las administraciones. Fuera de ahí hay que medir de otro modo, y sobre todo hay que apoyarse en garantías que no dependan de la forma del dato: las de la Parte&nbsp;II.</p>
+</section>
+<section id="sec:cap03-caso" class="level2">
+<h2 class="anchored" data-anchor-id="sec:cap03-caso">Un caso de principio a fin</h2>
+<p>Cierro con el recorrido completo sobre un encargo realista, porque la suma de todas las decisiones anteriores es lo que de verdad cuesta.</p>
+<p><strong>El encargo.</strong> Una consejería de sanidad quiere publicar en su portal de datos abiertos el conjunto de altas hospitalarias del año, para que investigadores y periodistas puedan estudiar la prevalencia de patologías por territorio. Veinte mil registros con edad, sexo, municipio, profesión y diagnóstico.</p>
+<p><strong>Paso 1: el modelo de adversario, antes de mirar nada.</strong> La publicación es abierta, así que el adversario puede ser cualquiera y disponer del padrón, del censo electoral y de fuentes comerciales. Hay además un adversario doméstico —el vecino, el compañero de trabajo— que conoce a su objetivo y sabe que fue hospitalizado: el modelo del fiscal es el que aplica, y sobre la propia tabla, porque no se puede sostener que sea una muestra aleatoria de la provincia.</p>
+<p><strong>Paso 2: el umbral, también antes.</strong> Riesgo del fiscal medio por debajo de 0,05 y <span class="math inline">\(k\geq5\)</span>, documentando que el 0,05 procede de la costumbre sectorial y no de la norma (sección&nbsp;<a href="#sec:cap03-umbrales" data-reference-type="ref" data-reference="sec:cap03-umbrales">1.5</a>).</p>
+<p><strong>Paso 3: medir el punto de partida.</strong> Con los datos en crudo, el 99,5 % de las filas son únicas y el riesgo medio es 0,997. No hay discusión posible: así no se publica.</p>
+<p><strong>Paso 4: recorrer la escalera y elegir el codo.</strong> La tabla&nbsp;<a href="#tab:cap03-escalera" data-reference-type="ref" data-reference="tab:cap03-escalera">1.1</a> da la respuesta: generalizar a provincia y quinquenios baja el riesgo medio a 0,094 —aún por encima del umbral— y a franja etaria, a 0,026. El primero incumple; el segundo cumple.</p>
+<p><strong>Paso 5: suprimir lo que falte y medir el coste real.</strong> En el peldaño de franja etaria basta con suprimir el 0,48 % de las filas para alcanzar <span class="math inline">\(k\geq5\)</span>, y la consulta que motivaba la publicación —prevalencia por provincia— sale con medio punto de error. En el peldaño anterior habría que suprimir el 8,8 % y el error subiría a 2,4 puntos. El más generalizado, que parecía el más destructivo, es el que mejor responde la pregunta.</p>
+<p><strong>Paso 6: escribir el informe y fecharlo.</strong> Con las hipótesis, las medidas de las dos alternativas evaluadas, la decisión y su justificación, y la fecha de revisión. Ese documento es lo que se entrega al comité y lo que se enseña a la autoridad si pregunta.</p>
+<p><strong>Lo que este proceso no resuelve, y hay que decirlo en el informe.</strong> Que el riesgo se ha medido frente a los cuasi-identificadores declarados y no frente a los que aparezcan mañana. Que el 0,48 % suprimido son personas de zonas poco pobladas, de modo que la publicación describe peor los territorios rurales —justo los que suelen estar peor estudiados—. Y que dos publicaciones sucesivas del mismo registro no componen: si el año que viene se publica otro conjunto con las mismas personas, el análisis hay que rehacerlo sobre la unión <span class="citation" data-cites="ganta2008composition">(<a href="#ref-ganta2008composition" role="doc-biblioref">Ganta et&nbsp;al. 2008</a>)</span>. Esas tres limitaciones no son un fallo del método: son la frontera del método, y el motivo de que la Parte&nbsp;II exista.</p>
+</section>
+<section id="síntesis-y-puente" class="level2 unnumbered">
+<h2 class="unnumbered anchored" data-anchor-id="síntesis-y-puente">Síntesis y puente</h2>
+<p>Medir el riesgo de reidentificación es posible, necesario y más resbaladizo de lo que su literatura sugiere. Las tres métricas clásicas forman una escalera de parches —<span class="math inline">\(k\)</span> contra la identificación, <span class="math inline">\(l\)</span> contra la homogeneidad, <span class="math inline">\(t\)</span> contra el sesgo— y comparten cuatro puntos ciegos: no componen, ignoran el conocimiento externo, dependen de que el analista haya declarado bien los cuasi-identificadores y no sirven sobre datos dispersos. Medidas sobre nuestro dataset, la generalización reduce el riesgo medio en un factor de cuarenta sin mover <span class="math inline">\(k\)</span>, que es un mínimo rehén de un puñado de personas; alcanzar <span class="math inline">\(k\geq5\)</span> exige suprimir, y el precio de la supresión depende radicalmente de cuánto se haya generalizado antes. Estimar la unicidad poblacional desde una muestra es un problema estadístico serio: el estimador ingenuo multiplica el riesgo por 68 y el de superpoblación lo hunde, de modo que la respuesta honesta con muestras pequeñas es un intervalo. Y los tres modelos de adversario dan, sobre los mismos datos, cifras separadas por tres órdenes de magnitud: el modelo va declarado antes que el número.</p>
+<p>Todo ello desemboca en una conclusión que la Parte&nbsp;II recoge. Estas métricas son <em>sintácticas</em>: describen la forma de la tabla publicada, no lo que un adversario puede aprender. Por eso no componen, por eso dependen de hipótesis frágiles y por eso su cifra cambia cuando cambia el mundo. La alternativa que se abre en el capítulo siguiente —y que el capítulo&nbsp;5 formaliza— consiste en medir la privacidad por lo que el <em>mecanismo</em> garantiza, con independencia de los datos y del conocimiento del adversario. Antes de eso, el capítulo&nbsp;4 recorre las técnicas clásicas que estas métricas gobiernan, y muestra hasta dónde llegan.</p>
+</section>
+<section id="errores-comunes" class="level2 unnumbered">
+<h2 class="unnumbered anchored" data-anchor-id="errores-comunes">Errores comunes</h2>
+<ul>
+<li><p>Informar solo de <span class="math inline">\(k\)</span>: es un mínimo, y describe a la persona peor protegida, no a la tabla (figura&nbsp;<a href="#fig:cap03-kminimo" data-reference-type="ref" data-reference="fig:cap03-kminimo">1.2</a>).</p></li>
+<li><p>Creer que <span class="math inline">\(k\)</span>-anonimato protege el atributo sensible: para eso están <span class="math inline">\(l\)</span> y <span class="math inline">\(t\)</span>, y aun así queda el conocimiento externo.</p></li>
+<li><p>Usar <span class="math inline">\(l\)</span>-diversidad simple sobre distribuciones muy sesgadas: dos valores con proporciones 99/1 dan <span class="math inline">\(l=2\)</span> y ninguna protección; la variante entrópica lo detecta.</p></li>
+<li><p>Tomar la unicidad de la muestra como riesgo poblacional: en nuestra medición llega a multiplicarlo por 68.</p></li>
+<li><p>Aplicar el modelo del periodista cuando la muestra no es aleatoria respecto de la población de referencia: es la forma más común de rebajar el número sin rebajar el riesgo.</p></li>
+<li><p>Elegir el modelo de adversario <em>después</em> de ver los resultados.</p></li>
+<li><p>Publicar un informe de riesgo sin hipótesis declaradas, sin semilla y sin fecha de caducidad: no es reproducible y, por tanto, no es verificable.</p></li>
+<li><p>Olvidar una columna al declarar el cuasi-identificador: las métricas saldrán bien y la publicación estará rota.</p></li>
+</ul>
+<blockquote class="blockquote">
+<p><em>Práctica medida y ejercicios — disponibles en la obra completa (papel, PDF y EPUB).</em></p>
+</blockquote>
+<blockquote class="blockquote">
+<p><em>Marcos frente a frente: ENS/UE vs NIST — sección disponible en la obra completa.</em></p>
+</blockquote>
+
+
+
+</section>
+
+<div id="quarto-appendix" class="default"><section class="quarto-appendix-contents" role="doc-bibliography" id="quarto-bibliography"><h2 class="anchored quarto-appendix-heading">Referencias</h2><div id="refs" class="references csl-bib-body hanging-indent" role="list">
+<div id="ref-wp29opinion052014" class="csl-entry" role="listitem">
+Article 29 Data Protection Working Party. 2014. <em>Opinion 05/2014 on Anonymisation Techniques (WP216)</em>. Grupo del Artículo 29.
+</div>
+<div id="ref-dankar2010marketer" class="csl-entry" role="listitem">
+Dankar, Fida Kamal, y Khaled El Emam. 2010. <span>«A Method for Evaluating Marketer Re-identification Risk»</span>. <em>EDBT/ICDT Workshops (PAIS)</em>.
+</div>
+<div id="ref-elemam2008protecting" class="csl-entry" role="listitem">
+El Emam, Khaled, y Fida Kamal Dankar. 2008. <span>«Protecting Privacy Using k-Anonymity»</span>. <em>Journal of the American Medical Informatics Association</em> 15 (5): 627-37.
+</div>
+<div id="ref-edpb2024opinion28" class="csl-entry" role="listitem">
+European Data Protection Board. 2024. <em>Opinion 28/2024 on Certain Data Protection Aspects Related to the Processing of Personal Data in the Context of AI Models</em>. EDPB.
+</div>
+<div id="ref-edpb2026anonimizacion" class="csl-entry" role="listitem">
+European Data Protection Board. 2026. <em>Guidelines 02/2026 on Anonymisation</em>. EDPB.
+</div>
+<div id="ref-ema2018guidance" class="csl-entry" role="listitem">
+European Medicines Agency. 2018. <em>External Guidance on the Implementation of the EMA Policy on the Publication of Clinical Data</em>. EMA.
+</div>
+<div id="ref-ganta2008composition" class="csl-entry" role="listitem">
+Ganta, Srivatsava Ranjit, Shiva Prasad Kasiviswanathan, y Adam Smith. 2008. <span>«Composition Attacks and Auxiliary Information in Data Privacy»</span>. <em>ACM SIGKDD</em>.
+</div>
+<div id="ref-nist2023sp800188" class="csl-entry" role="listitem">
+Garfinkel, Simson, Barbara Guttman, Joseph Near, Aref N. Dajani, y Phyllis Singer. 2023. <em>De-Identifying Government Datasets: Techniques and Governance</em>. NIST Special Publication Nos. 800-188. National Institute of Standards; Technology. <a href="https://doi.org/10.6028/NIST.SP.800-188">https://doi.org/10.6028/NIST.SP.800-188</a>.
+</div>
+<div id="ref-iso27559" class="csl-entry" role="listitem">
+ISO/IEC 27559:2022 — Privacy Enhancing Data De-identification Framework (2022).
+</div>
+<div id="ref-lefevre2006mondrian" class="csl-entry" role="listitem">
+LeFevre, Kristen, David J. DeWitt, y Raghu Ramakrishnan. 2006. <span>«Mondrian Multidimensional k-Anonymity»</span>. <em>IEEE 22nd International Conference on Data Engineering (ICDE)</em>.
+</div>
+<div id="ref-li2007tcloseness" class="csl-entry" role="listitem">
+Li, Ninghui, Tiancheng Li, y Suresh Venkatasubramanian. 2007. <span>«t-Closeness: Privacy Beyond k-Anonymity and l-Diversity»</span>. <em>IEEE 23rd International Conference on Data Engineering (ICDE)</em>.
+</div>
+<div id="ref-machanavajjhala2007ldiversity" class="csl-entry" role="listitem">
+Machanavajjhala, Ashwin, Daniel Kifer, Johannes Gehrke, y Muthuramakrishnan Venkitasubramaniam. 2007. <span>«l-Diversity: Privacy Beyond k-Anonymity»</span>. <em>ACM Transactions on Knowledge Discovery from Data</em> 1 (1).
+</div>
+<div id="ref-meyerson2004complexity" class="csl-entry" role="listitem">
+Meyerson, Adam, y Ryan Williams. 2004. <span>«On the Complexity of Optimal K-Anonymity»</span>. <em>ACM Symposium on Principles of Database Systems (PODS)</em>.
+</div>
+<div id="ref-ohrn1999boolean" class="csl-entry" role="listitem">
+Øhrn, Aleksander, y Lucila Ohno-Machado. 1999. <span>«Using Boolean Reasoning to Anonymize Databases»</span>. <em>Artificial Intelligence in Medicine</em> 15 (3): 235-54.
+</div>
+<div id="ref-prasser2020arx" class="csl-entry" role="listitem">
+Prasser, Fabian, Johanna Eicher, Helmut Spengler, Raffael Bild, y Klaus A. Kuhn. 2020. <span>«Flexible Data Anonymization Using ARX—Current Status and Challenges Ahead»</span>. <em>Software: Practice and Experience</em> 50 (7): 1277-304.
+</div>
+<div id="ref-rocher2019estimating" class="csl-entry" role="listitem">
+Rocher, Luc, Julien M. Hendrickx, y Yves-Alexandre de Montjoye. 2019. <span>«Estimating the Success of Re-identifications in Incomplete Datasets Using Generative Models»</span>. <em>Nature Communications</em> 10: 3069.
+</div>
+<div id="ref-templ2015sdcmicro" class="csl-entry" role="listitem">
+Templ, Matthias, Alexander Kowarik, y Bernhard Meindl. 2015. <span>«Statistical Disclosure Control for Micro-Data Using the R Package sdcMicro»</span>. <em>Journal of Statistical Software</em> 67 (4).
+</div>
+</div></section></div></main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copiado");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copiado");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="./cap02.html" class="pagination-link" aria-label="Capítulo 2. Ataques a la privacidad">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text">Capítulo 2. Ataques a la privacidad</span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+  </div>
+</nav>
+</div> <!-- /content -->
+<footer class="footer">
+  <div class="nav-footer">
+    <div class="nav-footer-left">
+      &nbsp;
+    </div>   
+    <div class="nav-footer-center">
+<p>© 2026 Manuel Muñoz Plá · Edición web bajo licencia <a href="https://creativecommons.org/licenses/by-nc-nd/4.0/deed.es">CC BY-NC-ND 4.0</a> (uso académico con atribución; sin uso comercial ni obras derivadas) · El código va aparte bajo licencia MIT · <a href="https://manpla.net/libros/privacidad-ciencia-datos/">Ficha del libro en manpla.net</a></p>
+</div>
+    <div class="nav-footer-right">
+      &nbsp;
+    </div>
+  </div>
+</footer>
+
+
+
+
+</body></html>

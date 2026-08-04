@@ -1,0 +1,34 @@
+{
+  "hipotesis": {
+    "publicacion": "tabla completa, sin identificadores directos",
+    "cuasi_identificador": [
+      "edad5",
+      "sexo",
+      "provincia"
+    ],
+    "sensible": "diagnostico",
+    "poblacion_referencia": "residentes en España (INE, 1-1-2025)",
+    "n_poblacion": 49128297,
+    "adversario": "dispone de padrón o fuente equivalente y sabe que su objetivo está en la tabla (modelo del fiscal)",
+    "umbral_aceptado": {
+      "riesgo_medio": 0.05,
+      "k_minimo": 5
+    }
+  },
+  "medidas": {
+    "filas": 20000,
+    "clases_equivalencia": 1874,
+    "k": 1,
+    "l_distinct": 1.0,
+    "l_entropica": 1.0,
+    "t": 0.949,
+    "riesgo_fiscal_max": 1.0,
+    "riesgo_fiscal_medio": 0.0937,
+    "riesgo_periodista_max": 0.000407,
+    "filas_unicas_pct": 1.12,
+    "cumple_riesgo_medio": false,
+    "cumple_k": false,
+    "veredicto": "NO publicable tal cual"
+  },
+  "version_codigo": "dd09346"
+}

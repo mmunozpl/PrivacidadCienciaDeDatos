@@ -25,7 +25,7 @@ website:
         href: index.qmd
       - cap01.qmd
       - cap02.qmd
-      - text: "3. Cuantificar el riesgo (en preparación)"
+      - cap03.qmd
       - text: "4. Seudonimización y anonimización clásica (en preparación)"
       - text: "5. Privacidad diferencial (en preparación)"
       - text: "6. DP en el entrenamiento (en preparación)"
