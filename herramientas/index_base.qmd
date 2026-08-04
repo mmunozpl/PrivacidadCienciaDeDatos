@@ -2,6 +2,9 @@
 title: "Privacidad para la ciencia de datos"
 ---
 
+![](figs/portada_web.jpg){width=300 fig-align="center"
+alt="Portada del libro: Privacidad — Ciencia de datos, Manuel Muñoz Plá, qWORD.dev"}
+
 Edición web, en abierto, del libro **Privacidad para la ciencia de
 datos** (Manuel Muñoz Plá, qWORD.dev): del riesgo de reidentificación a
 las tecnologías de privacidad con código —privacidad diferencial, datos

@@ -50,6 +50,18 @@ qmd: figuras
 	done
 	cp herramientas/index_base.qmd $(QMD_DIR)/index.qmd
 	cp herramientas/quarto_armazon.yml $(QMD_DIR)/_quarto.yml
+	$(MAKE) $(QMD_DIR)/figs/portada_web.jpg
+
+# portada para la web: pagina 1 del PDF compuesto (titulo + logo +
+# autor), exportada a JPEG. Requiere la obra completa compilada.
+$(QMD_DIR)/figs/portada_web.jpg: $(LATEX_DIR)/main.pdf
+	mkdir -p $(QMD_DIR)/figs
+	pdftoppm -f 1 -l 1 -r 150 -jpeg -jpegopt quality=92 \
+	  $(LATEX_DIR)/main.pdf $(QMD_DIR)/figs/portada_web
+	mv $(QMD_DIR)/figs/portada_web-01.jpg $@
+
+$(LATEX_DIR)/main.pdf:
+	$(MAKE) completa
 
 # docs/ se regenera DE CERO: es salida pura de quarto. Si algún día
 # lleva CNAME o .nojekyll, van como resources del armazón, no a mano.
