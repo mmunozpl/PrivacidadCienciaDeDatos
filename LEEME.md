@@ -18,7 +18,7 @@ ingeniería*.
 Este repositorio reúne una **vista previa web navegable** del libro y
 el **código reproducible** que genera cada cifra medida. Los cierres
 de cada capítulo —la práctica medida, los ejercicios con su apéndice
-de soluciones y la sección «Marcos frente a frente: ENS/UE vs NIST»—
+de soluciones y la sección «Marcos frente a frente: España/UE vs EE. UU.»—
 viven solo en la **obra completa** (papel, PDF y EPUB), que se
 distribuye por separado.
 
@@ -43,7 +43,7 @@ La edición web se publica con GitHub Pages desde `docs/`:
 > https://mmunozpl.github.io/PrivacidadCienciaDeDatos/
 
 Cada capítulo de la edición web omite sus cierres de pago (práctica
-medida, ejercicios y «Marcos frente a frente: ENS/UE vs NIST»),
+medida, ejercicios y «Marcos frente a frente: España/UE vs EE. UU.»),
 disponibles en la obra completa.
 
 ## Ejecutar el código

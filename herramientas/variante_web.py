@@ -3,7 +3,7 @@
 Equivale a compilar con \\ifcompleta en falso: los bloques exclusivos
 de la obra de pago (papel, PDF y EPUB) se descartan y queda solo su
 nota de edicion. Hoy son dos: «soloimpresa» (practica medida y
-ejercicios) y «ensnist» (marcos ENS/UE vs NIST). Ademas reescribe las
+ejercicios) y «ensnist» (marcos España/UE vs EE. UU.). Ademas reescribe las
 rutas de figuras del PDF al SVG de qmd/figs/. El resultado se escribe
 en .work/capXX_web.tex.
 
@@ -24,8 +24,8 @@ BLOQUES = {
     ),
     "ensnist": (
         "\\begin{quote}\\itshape\n"
-        "Marcos frente a frente: ENS/UE vs NIST --- sección disponible en\n"
-        "la obra completa.\n"
+        "Marcos frente a frente: España/UE vs EE. UU. --- sección\n"
+        "disponible en la obra completa.\n"
         "\\end{quote}\n"
     ),
 }

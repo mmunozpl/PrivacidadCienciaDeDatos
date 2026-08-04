@@ -308,7 +308,7 @@ window.Quarto = {
 <h2 class="anchored" data-anchor-id="sec:cap03-metricas">Las tres métricas clásicas</h2>
 <section id="sec:cap03-k" class="level3">
 <h3 class="anchored" data-anchor-id="sec:cap03-k"><span class="math inline">\(k\)</span>-anonimato: esconderse en el grupo</h3>
-<p>La idea es la del capítulo&nbsp;1: si una fila comparte su combinación de cuasi-identificadores con otras, el adversario no puede distinguirla. Basta con exigir un mínimo.</p>
+<p>La idea es la del capítulo&nbsp;1: si una fila comparte su combinación de cuasi-identificadores con otras, el adversario no puede distinguirla. Basta con exigir un mínimo. El modelo se formuló en 1998 <span class="citation" data-cites="samarati1998protecting">(<a href="#ref-samarati1998protecting" role="doc-biblioref">Samarati y Sweeney 1998</a>)</span> —junto con el propio concepto de cuasi-identificador y con la generalización y la supresión como mecanismos— y se difundió con el artículo de 2002 <span class="citation" data-cites="sweeney2002kanonymity">(<a href="#ref-sweeney2002kanonymity" role="doc-biblioref">Sweeney 2002b</a>)</span>, cuyo hermano del mismo número recoge los algoritmos <span class="citation" data-cites="sweeney2002achieving">(<a href="#ref-sweeney2002achieving" role="doc-biblioref">Sweeney 2002a</a>)</span>.</p>
 <div class="definicion">
 <p><span id="def:kanon" data-label="def:kanon"></span> Una tabla <span class="math inline">\(T\)</span> satisface <em><span class="math inline">\(k\)</span>-anonimato</em> respecto de un cuasi-identificador <span class="math inline">\(Q\)</span> si toda clase de equivalencia (definición&nbsp;<a href="#def:clase" data-reference-type="ref" data-reference="def:clase">[def:clase]</a>) tiene al menos <span class="math inline">\(k\)</span> filas: <span class="math display">\[\min_{x \in T} \; \bigl\lvert [x]_Q \bigr\rvert \;\geq\; k .\]</span></p>
 </div>
@@ -341,10 +341,16 @@ window.Quarto = {
 Los ataques que motivan cada métrica: homogeneidad para <span class="math inline"><em>l</em></span>-diversidad, sesgo y similitud para <span class="math inline"><em>t</em></span>-cercanía.
 </figcaption>
 </figure>
+<figure id="fig:cap03-escalera-parches" data-latex-placement="htbp" class="figure">
+<img src="figs/cap03/fig_09.svg" style="width:96.0%" class="figure-img">
+<figcaption>
+La escalera de parches: cada métrica cubre el agujero de la anterior, y ninguna cubre lo que queda fuera del recuadro.
+</figcaption>
+</figure>
 </section>
 <section id="sec:cap03-limites" class="level3">
 <h3 class="anchored" data-anchor-id="sec:cap03-limites">Lo que ninguna de las tres captura</h3>
-<p>Antes de medir, conviene enumerar los cuatro agujeros que las tres comparten, porque son los que llevan a la Parte&nbsp;II.</p>
+<p>Antes de medir, conviene enumerar los cuatro agujeros que las tres comparten, porque son los que llevan a la Parte&nbsp;II; la figura&nbsp;<a href="#fig:cap03-escalera-parches" data-reference-type="ref" data-reference="fig:cap03-escalera-parches">1.2</a> los sitúa fuera del recuadro que las métricas cubren.</p>
 <p><strong>Composición.</strong> Dos publicaciones que por separado cumplen <span class="math inline">\(k\)</span>-anonimato pueden, juntas, no cumplirlo: basta que las clases de una corten a las de la otra. Es el <em>ataque de composición</em> que formalizan <span class="citation" data-cites="ganta2008composition">Ganta et&nbsp;al. (<a href="#ref-ganta2008composition" role="doc-biblioref">2008</a>)</span>: no existe una regla de composición para estas métricas, y sin ella no se puede gobernar un programa de publicación continuo —justo lo que hace cualquier organismo estadístico—.</p>
 <p><strong>Conocimiento externo.</strong> Todas suponen que el adversario conoce los cuasi-identificadores declarados y nada más. El supuesto A2 dice lo contrario, y el capítulo&nbsp;2 lo demostró con la usuaria de AOL.</p>
 <p><strong>Elección del cuasi-identificador.</strong> Las tres métricas se calculan <em>dado</em> un conjunto <span class="math inline">\(Q\)</span>. Si el analista olvida una columna —la fecha de ingreso, el hospital, la traza de comportamiento—, el número sale bien y la publicación está rota. La métrica no puede avisar de lo que no se le ha dicho que mire.</p>
@@ -426,7 +432,7 @@ Los ataques que motivan cada métrica: homogeneidad para <span class="math inlin
 Distribución de tamaños de clase en el peldaño «provincia»: el 1,1 % de filas solitarias mantiene <span class="math inline"><em>k</em> = 1</span> para toda la tabla.
 </figcaption>
 </figure>
-<p>La figura&nbsp;<a href="#fig:cap03-kminimo" data-reference-type="ref" data-reference="fig:cap03-kminimo">1.2</a> lo dibuja. La lección práctica es doble. Primero, que <strong>informar solo de <span class="math inline">\(k\)</span> es informar del peor caso</strong>, lo cual está bien para un umbral duro y muy mal para describir una publicación: hay que dar también la distribución. Segundo, que la generalización sola no alcanza umbrales de <span class="math inline">\(k\)</span> razonables sobre datos reales; hace falta <em>suprimir</em>.</p>
+<p>La figura&nbsp;<a href="#fig:cap03-kminimo" data-reference-type="ref" data-reference="fig:cap03-kminimo">1.3</a> lo dibuja. La lección práctica es doble. Primero, que <strong>informar solo de <span class="math inline">\(k\)</span> es informar del peor caso</strong>, lo cual está bien para un umbral duro y muy mal para describir una publicación: hay que dar también la distribución. Segundo, que la generalización sola no alcanza umbrales de <span class="math inline">\(k\)</span> razonables sobre datos reales; hace falta <em>suprimir</em>.</p>
 <section id="sec:cap03-supresion" class="level3">
 <h3 class="anchored" data-anchor-id="sec:cap03-supresion">El precio de la supresión</h3>
 <p>Todo algoritmo de <span class="math inline">\(k\)</span>-anonimización real combina las dos herramientas: generaliza hasta donde la utilidad aguanta y suprime lo que queda por debajo del umbral. Medir cuánto hay que suprimir en cada peldaño da la tercera cifra que un informe honesto necesita.</p>
@@ -436,13 +442,19 @@ Distribución de tamaños de clase en el peldaño «provincia»: el 1,1 % de f
 Filas que hay que suprimir para alcanzar <span class="math inline"><em>k</em> ≥ 5</span> en cada peldaño: la generalización previa decide si el precio es del 80 % o del 0,5 %.
 </figcaption>
 </figure>
-<p>Los números de la figura&nbsp;<a href="#fig:cap03-supresion" data-reference-type="ref" data-reference="fig:cap03-supresion">1.3</a> son elocuentes. Con los datos en crudo habría que suprimir la tabla entera. Con el código postal a tres dígitos, el 79,8 %. Con provincia y quinquenios, el 8,8 %. Y con franja etaria, provincia y sexo, solo el 0,48 % —noventa y seis personas de veinte mil—. La conclusión operativa es que <strong>generalizar y suprimir no son alternativas sino complementos</strong>, y que el orden importa: generalizar primero abarata la supresión de forma no lineal.</p>
+<p>Los números de la figura&nbsp;<a href="#fig:cap03-supresion" data-reference-type="ref" data-reference="fig:cap03-supresion">1.4</a> son elocuentes. Con los datos en crudo habría que suprimir la tabla entera. Con el código postal a tres dígitos, el 79,8 %. Con provincia y quinquenios, el 8,8 %. Y con franja etaria, provincia y sexo, solo el 0,48 % —noventa y seis personas de veinte mil—. La conclusión operativa es que <strong>generalizar y suprimir no son alternativas sino complementos</strong>, y que el orden importa: generalizar primero abarata la supresión de forma no lineal.</p>
 <p>Queda la pregunta incómoda: ¿a quién se suprime? A los raros. Es el mismo dilema ético del efecto cebolla (sección&nbsp;<a href="#sec:cap02-cebolla" data-reference-type="ref" data-reference="sec:cap02-cebolla">[sec:cap02-cebolla]</a>) con otro disfraz: la publicación resultante describe peor a las minorías, que es la población para la que más suele hacer falta la estadística pública. Ningún ajuste de <span class="math inline">\(k\)</span> resuelve eso; solo lo hace explícito.</p>
+<figure id="fig:cap03-palancas" data-latex-placement="htbp" class="figure">
+<img src="figs/cap03/fig_11.svg" style="width:98.0%" class="figure-img">
+<figcaption>
+Las dos palancas de la anonimización clásica: generalizar agranda las clases, suprimir retira las que no llegan.
+</figcaption>
+</figure>
 </section>
 <section id="sec:cap03-algoritmos" class="level3">
 <h3 class="anchored" data-anchor-id="sec:cap03-algoritmos">Cómo se alcanza <span class="math inline">\(k\)</span>: los algoritmos</h3>
 <p>La escalera de la tabla&nbsp;<a href="#tab:cap03-escalera" data-reference-type="ref" data-reference="tab:cap03-escalera">1.1</a> la hemos recorrido a mano, peldaño a peldaño, y eso basta para entender el problema. En la práctica se resuelve con algoritmos, y conviene conocer sus nombres porque son los que implementan las herramientas del sector.</p>
-<p>El primer resultado que hay que tener presente es negativo: <strong>encontrar la <span class="math inline">\(k\)</span>-anonimización óptima es NP-difícil</strong> <span class="citation" data-cites="meyerson2004complexity">(<a href="#ref-meyerson2004complexity" role="doc-biblioref">Meyerson y Williams 2004</a>)</span>, entendiendo por óptima la que minimiza la información destruida. Toda herramienta usable es, por tanto, heurística, y su calidad se juzga por cuánta utilidad conserva. Las tres familias clásicas:</p>
+<p>Los algoritmos originales están en el artículo hermano del modelo <span class="citation" data-cites="sweeney2002achieving">(<a href="#ref-sweeney2002achieving" role="doc-biblioref">Sweeney 2002a</a>)</span>, un detalle bibliográfico que se confunde constantemente porque ambos comparten número de revista. El primer resultado que hay que tener presente es negativo: <strong>encontrar la <span class="math inline">\(k\)</span>-anonimización óptima es NP-difícil</strong> <span class="citation" data-cites="meyerson2004complexity">(<a href="#ref-meyerson2004complexity" role="doc-biblioref">Meyerson y Williams 2004</a>)</span>, entendiendo por óptima la que minimiza la información destruida. Toda herramienta usable es, por tanto, heurística, y su calidad se juzga por cuánta utilidad conserva. La figura&nbsp;<a href="#fig:cap03-palancas" data-reference-type="ref" data-reference="fig:cap03-palancas">1.5</a> muestra el efecto de las dos palancas sobre las clases de equivalencia. Las tres familias clásicas:</p>
 <ul>
 <li><p><strong>Generalización global</strong> —Datafly, Incognito—: elige un nivel de la jerarquía por columna y lo aplica a toda la tabla. Es lo que hace nuestra escalera. Ventaja: la tabla resultante es homogénea y fácil de interpretar. Inconveniente: para proteger a la persona más rara hay que generalizar a todo el mundo.</p></li>
 <li><p><strong>Generalización local o multidimensional</strong> —Mondrian <span class="citation" data-cites="lefevre2006mondrian">(<a href="#ref-lefevre2006mondrian" role="doc-biblioref">LeFevre et&nbsp;al. 2006</a>)</span>—: particiona el espacio de cuasi-identificadores en regiones y generaliza cada una por separado, de modo que las zonas densas conservan resolución. Conserva bastante más utilidad; el capítulo&nbsp;4 lo implementa.</p></li>
@@ -460,7 +472,7 @@ Filas que hay que suprimir para alcanzar <span class="math inline"><em>k</em> 
 La escalera de generalización en el espacio utilidad–riesgo: cada peldaño es un punto de operación medido.
 </figcaption>
 </figure>
-<p>La forma de la curva en la figura&nbsp;<a href="#fig:cap03-frontera" data-reference-type="ref" data-reference="fig:cap03-frontera">1.4</a> es la información que un comité necesita. Los primeros peldaños son <em>baratos</em>: pasar de crudo a código postal de tres dígitos cuesta 1,1 bits de utilidad y devuelve una reducción del riesgo del 40 %. Los últimos son <em>caros</em>: bajar de provincia a franja etaria cuesta 1,8 bits para ganar siete puntos de riesgo. Entre medias hay un codo, y ese codo —no el umbral – es lo que hay que discutir.</p>
+<p>La forma de la curva en la figura&nbsp;<a href="#fig:cap03-frontera" data-reference-type="ref" data-reference="fig:cap03-frontera">1.6</a> es la información que un comité necesita. Los primeros peldaños son <em>baratos</em>: pasar de crudo a código postal de tres dígitos cuesta 1,1 bits de utilidad y devuelve una reducción del riesgo del 40 %. Los últimos son <em>caros</em>: bajar de provincia a franja etaria cuesta 1,8 bits para ganar siete puntos de riesgo. Entre medias hay un codo, y ese codo —no el umbral – es lo que hay que discutir.</p>
 <p>Nótese también lo que la curva no dice: nada sobre qué análisis seguirán siendo válidos. La entropía es una medida de utilidad genérica y cómoda; un informe serio la acompañaría de métricas de utilidad <em>específicas</em> de los análisis previstos —error en las tasas de incidencia por provincia, por ejemplo—. Volveremos a ello en el capítulo&nbsp;5, donde la utilidad se medirá contra la consulta concreta que se quiere responder.</p>
 </section>
 </section>
@@ -483,7 +495,7 @@ La escalera de generalización en el espacio utilidad–riesgo: cada peldaño es
 <p>La corrección clásica consiste en postular un modelo para el tamaño poblacional de cada clase y estimar sus parámetros con lo observado. Si una clase aparece <span class="math inline">\(n_j\)</span> veces en una muestra que cubre una fracción <span class="math inline">\(f\)</span> de la población, su tamaño poblacional esperado es <span class="math inline">\(n_j/f\)</span>, y bajo un modelo de Poisson la probabilidad de que esa clase tenga exactamente un individuo es <span class="math display">\[\Pr[F_j = 1] \;=\; \lambda_j e^{-\lambda_j},
   \qquad \lambda_j = n_j / f .\]</span> Es el mismo <span class="math inline">\(\lambda\)</span> del capítulo&nbsp;1, ahora al servicio de la estimación. El problema de este modelo, y la razón de que en nuestra medición se hunda a cero con muestras pequeñas, es que supone <em>homogeneidad</em>: que todas las clases tienen el mismo tamaño esperado. En una población real hay clases enormes (mujeres de 40 a 44 en Madrid) y clases minúsculas (hombres de 95 a 99 en Soria), y esa heterogeneidad cambia el resultado.</p>
 <p>El remedio estándar es el modelo <em>Poisson-Gamma</em>: se admite que cada clase tiene su propio <span class="math inline">\(\lambda_j\)</span> y que esos valores se distribuyen según una Gamma cuyos parámetros se estiman de los datos. La probabilidad de que una clase observada una sola vez no tenga a nadie más en la población resulta ser <span class="math display">\[\Pr[\text{resto}=0 \mid n_j] \;=\;
-  \left( \frac{1/\beta + f}{1/\beta + 1} \right)^{\alpha + n_j},\]</span> con <span class="math inline">\(\alpha\)</span> y <span class="math inline">\(\beta\)</span> ajustados por momentos sobre los recuentos observados. La figura&nbsp;<a href="#fig:cap03-estimadores" data-reference-type="ref" data-reference="fig:cap03-estimadores">1.5</a> compara los dos estimadores con la verdad.</p>
+  \left( \frac{1/\beta + f}{1/\beta + 1} \right)^{\alpha + n_j},\]</span> con <span class="math inline">\(\alpha\)</span> y <span class="math inline">\(\beta\)</span> ajustados por momentos sobre los recuentos observados. La figura&nbsp;<a href="#fig:cap03-estimadores" data-reference-type="ref" data-reference="fig:cap03-estimadores">1.7</a> compara los dos estimadores con la verdad.</p>
 <figure id="fig:cap03-estimadores" data-latex-placement="htbp" class="figure">
 <img src="figs/cap03/fig_06.svg" style="width:82.0%" class="figure-img">
 <figcaption>
@@ -563,12 +575,18 @@ Estimadores de unicidad poblacional frente a la verdad conocida: el ingenuo sobr
 Los tres modelos sobre la misma tabla: tres cifras separadas por tres órdenes de magnitud.
 </figcaption>
 </figure>
-<p>La figura&nbsp;<a href="#fig:cap03-modelos" data-reference-type="ref" data-reference="fig:cap03-modelos">1.6</a> muestra el resultado sobre nuestro peldaño «provincia», y la distancia entre las tres cifras es la moraleja entera de la sección: 1,000 para el fiscal en el peor caso, 0,094 para el comercial, 0,0004 para el periodista. <strong>Tres órdenes de magnitud de diferencia sin cambiar un solo dato.</strong> Quien elige el modelo elige el resultado, y por eso el modelo va declarado en el informe, antes que las medidas.</p>
+<p>La figura&nbsp;<a href="#fig:cap03-modelos" data-reference-type="ref" data-reference="fig:cap03-modelos">1.8</a> muestra el resultado sobre nuestro peldaño «provincia», y la distancia entre las tres cifras es la moraleja entera de la sección: 1,000 para el fiscal en el peor caso, 0,094 para el comercial, 0,0004 para el periodista. <strong>Tres órdenes de magnitud de diferencia sin cambiar un solo dato.</strong> Quien elige el modelo elige el resultado, y por eso el modelo va declarado en el informe, antes que las medidas.</p>
 <p>Una advertencia sobre el riesgo del periodista, que es el más favorable y por tanto el más tentador: su cálculo depende de suponer que la muestra es aleatoria respecto de la población de referencia. En un registro hospitalario esa hipótesis es sencillamente falsa —los pacientes de un hospital no son una muestra aleatoria de la provincia—, y usarlo entonces es maquillar el número. La regla prudente es la que aplica también NIST en su guía de desidentificación: cuando no se puede sostener la hipótesis de muestreo, se usa el modelo del fiscal <span class="citation" data-cites="nist2023sp800188">(<a href="#ref-nist2023sp800188" role="doc-biblioref">Garfinkel et&nbsp;al. 2023</a>)</span>.</p>
+<figure id="fig:cap03-muestrapob" data-latex-placement="htbp" class="figure">
+<img src="figs/cap03/fig_10.svg" style="width:90.0%" class="figure-img">
+<figcaption>
+El mismo perfil, dos riesgos: contar la clase en la muestra (fiscal) o en la población (periodista).
+</figcaption>
+</figure>
 <section id="sec:cap03-kmap" class="level3">
 <h3 class="anchored" data-anchor-id="sec:cap03-kmap">Dos primos cercanos: <span class="math inline">\(k\)</span>-map y <span class="math inline">\(\delta\)</span>-presencia</h3>
 <p>Los tres modelos anteriores tienen dos parientes que aparecen en las herramientas y en las guías, y que conviene distinguir bien.</p>
-<p>El <strong><span class="math inline">\(k\)</span>-map</strong> relaja el <span class="math inline">\(k\)</span>-anonimato en la dirección del periodista: no exige que cada clase tenga <span class="math inline">\(k\)</span> filas <em>en la tabla</em>, sino que se corresponda con al menos <span class="math inline">\(k\)</span> personas <em>en la población</em>. Es mucho menos destructivo —una clase de una sola fila puede ser aceptable si en la población hay cincuenta personas con ese perfil— y por eso NIST lo recomienda para publicaciones que son muestras <span class="citation" data-cites="nist2023sp800188">(<a href="#ref-nist2023sp800188" role="doc-biblioref">Garfinkel et&nbsp;al. 2023</a>)</span>. Su precio es que exige conocer o estimar la población, con toda la incertidumbre de la sección&nbsp;<a href="#sec:cap03-poblacion" data-reference-type="ref" data-reference="sec:cap03-poblacion">1.3</a>.</p>
+<p>El <strong><span class="math inline">\(k\)</span>-map</strong> relaja el <span class="math inline">\(k\)</span>-anonimato en la dirección del periodista: no exige que cada clase tenga <span class="math inline">\(k\)</span> filas <em>en la tabla</em>, sino que se corresponda con al menos <span class="math inline">\(k\)</span> personas <em>en la población</em>. Es mucho menos destructivo —una clase de una sola fila puede ser aceptable si en la población hay cincuenta personas con ese perfil— y por eso NIST lo recomienda para publicaciones que son muestras <span class="citation" data-cites="nist2023sp800188">(<a href="#ref-nist2023sp800188" role="doc-biblioref">Garfinkel et&nbsp;al. 2023</a>)</span>. Su precio es que exige conocer o estimar la población, con toda la incertidumbre de la sección&nbsp;<a href="#sec:cap03-poblacion" data-reference-type="ref" data-reference="sec:cap03-poblacion">1.3</a>. La figura&nbsp;<a href="#fig:cap03-muestrapob" data-reference-type="ref" data-reference="fig:cap03-muestrapob">1.9</a> contrasta las dos cuentas sobre el mismo perfil.</p>
 <p>La <strong><span class="math inline">\(\delta\)</span>-presencia</strong> contesta a otra pregunta, y a menudo la más grave: no «¿quién es esta fila?» sino «¿está fulano en esta tabla?». Si la tabla es el registro de una clínica de adicciones, la mera pertenencia es el dato sensible —es la inferencia de pertenencia del capítulo&nbsp;2, ahora sobre una tabla en vez de sobre un modelo—. Una publicación puede ser impecable en <span class="math inline">\(k\)</span>, <span class="math inline">\(l\)</span> y <span class="math inline">\(t\)</span> y seguir revelando presencia, porque esas tres métricas dan por supuesto que se sabe quién está dentro.</p>
 <p>La lección de conjunto: <strong>cada métrica responde a una pregunta distinta</strong>, y elegirla es elegir de qué se protege uno. La tabla&nbsp;<a href="#tab:cap03-preguntas" data-reference-type="ref" data-reference="tab:cap03-preguntas">1.3</a> las ordena por la pregunta que contestan, que es como deberían presentarse en un informe.</p>
 <div id="tab:cap03-preguntas">
@@ -653,7 +671,7 @@ franja etaria        suprimir  0.5%  -&gt;  error  0.50 puntos</code></pre>
 El coste medido en la consulta que motiva la publicación: generalizar poco obliga a suprimir mucho, y suprimir mucho arruina la consulta.
 </figcaption>
 </figure>
-<p>El resultado de la figura&nbsp;<a href="#fig:cap03-utilidad" data-reference-type="ref" data-reference="fig:cap03-utilidad">1.7</a> es contraintuitivo para quien viene de la métrica genérica y es de enorme valor práctico. Según la entropía, generalizar «cuesta» utilidad de forma monótona: el peldaño de franja etaria es el que menos información conserva (8,2 bits frente a 14,3). Según la consulta que de verdad importa, <strong>ese mismo peldaño es el mejor de todos</strong>, con un error de medio punto porcentual, porque exige suprimir a casi nadie. El peldaño intermedio —código postal a tres dígitos, que parecía conservar mucha información— destroza la consulta con casi doce puntos de error, porque para alcanzar <span class="math inline">\(k\geq5\)</span> hay que tirar cuatro de cada cinco filas y las que se tiran no son aleatorias: son las de las zonas menos pobladas.</p>
+<p>El resultado de la figura&nbsp;<a href="#fig:cap03-utilidad" data-reference-type="ref" data-reference="fig:cap03-utilidad">1.10</a> es contraintuitivo para quien viene de la métrica genérica y es de enorme valor práctico. Según la entropía, generalizar «cuesta» utilidad de forma monótona: el peldaño de franja etaria es el que menos información conserva (8,2 bits frente a 14,3). Según la consulta que de verdad importa, <strong>ese mismo peldaño es el mejor de todos</strong>, con un error de medio punto porcentual, porque exige suprimir a casi nadie. El peldaño intermedio —código postal a tres dígitos, que parecía conservar mucha información— destroza la consulta con casi doce puntos de error, porque para alcanzar <span class="math inline">\(k\geq5\)</span> hay que tirar cuatro de cada cinco filas y las que se tiran no son aleatorias: son las de las zonas menos pobladas.</p>
 <p>De ahí la regla que cierra la sección, y que vale para todo el resto del libro: <strong>la utilidad se mide contra la pregunta que la publicación quiere responder</strong>, no en abstracto. Una anonimización que conserva muchos bits y arruina el análisis previsto es peor que otra que conserva pocos y lo mantiene intacto. En el capítulo&nbsp;5, cuando haya que elegir el valor de <span class="math inline">\(\eps\)</span>, el criterio será exactamente este.</p>
 </section>
 <section id="sec:cap03-informe" class="level2">
@@ -707,7 +725,7 @@ veredicto = NO publicable tal cual</code></pre>
 <section id="errores-comunes" class="level2 unnumbered">
 <h2 class="unnumbered anchored" data-anchor-id="errores-comunes">Errores comunes</h2>
 <ul>
-<li><p>Informar solo de <span class="math inline">\(k\)</span>: es un mínimo, y describe a la persona peor protegida, no a la tabla (figura&nbsp;<a href="#fig:cap03-kminimo" data-reference-type="ref" data-reference="fig:cap03-kminimo">1.2</a>).</p></li>
+<li><p>Informar solo de <span class="math inline">\(k\)</span>: es un mínimo, y describe a la persona peor protegida, no a la tabla (figura&nbsp;<a href="#fig:cap03-kminimo" data-reference-type="ref" data-reference="fig:cap03-kminimo">1.3</a>).</p></li>
 <li><p>Creer que <span class="math inline">\(k\)</span>-anonimato protege el atributo sensible: para eso están <span class="math inline">\(l\)</span> y <span class="math inline">\(t\)</span>, y aun así queda el conocimiento externo.</p></li>
 <li><p>Usar <span class="math inline">\(l\)</span>-diversidad simple sobre distribuciones muy sesgadas: dos valores con proporciones 99/1 dan <span class="math inline">\(l=2\)</span> y ninguna protección; la variante entrópica lo detecta.</p></li>
 <li><p>Tomar la unicidad de la muestra como riesgo poblacional: en nuestra medición llega a multiplicarlo por 68.</p></li>
@@ -720,7 +738,7 @@ veredicto = NO publicable tal cual</code></pre>
 <p><em>Práctica medida y ejercicios — disponibles en la obra completa (papel, PDF y EPUB).</em></p>
 </blockquote>
 <blockquote class="blockquote">
-<p><em>Marcos frente a frente: ENS/UE vs NIST — sección disponible en la obra completa.</em></p>
+<p><em>Marcos frente a frente: España/UE vs EE. UU. — sección disponible en la obra completa.</em></p>
 </blockquote>
 
 
@@ -775,6 +793,15 @@ Prasser, Fabian, Johanna Eicher, Helmut Spengler, Raffael Bild, y Klaus A. Kuhn.
 </div>
 <div id="ref-rocher2019estimating" class="csl-entry" role="listitem">
 Rocher, Luc, Julien M. Hendrickx, y Yves-Alexandre de Montjoye. 2019. <span>«Estimating the Success of Re-identifications in Incomplete Datasets Using Generative Models»</span>. <em>Nature Communications</em> 10: 3069.
+</div>
+<div id="ref-samarati1998protecting" class="csl-entry" role="listitem">
+Samarati, Pierangela, y Latanya Sweeney. 1998. <em>Protecting Privacy when Disclosing Information: k-Anonymity and its Enforcement through Generalization and Suppression</em>. Technical Report SRI-CSL-98-04. Computer Science Laboratory, SRI International.
+</div>
+<div id="ref-sweeney2002achieving" class="csl-entry" role="listitem">
+Sweeney, Latanya. 2002a. <span>«Achieving k-Anonymity Privacy Protection Using Generalization and Suppression»</span>. <em>International Journal of Uncertainty, Fuzziness and Knowledge-Based Systems</em> 10 (5): 571-88.
+</div>
+<div id="ref-sweeney2002kanonymity" class="csl-entry" role="listitem">
+Sweeney, Latanya. 2002b. <span>«k-Anonymity: A Model for Protecting Privacy»</span>. <em>International Journal of Uncertainty, Fuzziness and Knowledge-Based Systems</em> 10 (5): 557-70.
 </div>
 <div id="ref-templ2015sdcmicro" class="csl-entry" role="listitem">
 Templ, Matthias, Alexander Kowarik, y Bernhard Meindl. 2015. <span>«Statistical Disclosure Control for Micro-Data Using the R Package sdcMicro»</span>. <em>Journal of Statistical Software</em> 67 (4).

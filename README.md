@@ -17,7 +17,7 @@ and *Regulation as engineering*.
 This repository holds a **browsable web preview** of the book and the
 **reproducible code** behind every measured figure. Each chapter's
 closing extras —the measured practice, the exercises with their
-solutions appendix, and the «ENS/EU vs NIST» section— live only in
+solutions appendix, and the «EU vs US» section— live only in
 the **complete work** (print, PDF and EPUB), distributed separately.
 
 > 📘 **Book page** and more of the author's work:
@@ -41,7 +41,7 @@ The web edition is published with GitHub Pages from `docs/`:
 > https://mmunozpl.github.io/PrivacidadCienciaDeDatos/
 
 Each chapter of the web edition omits its paid closing sections
-(measured practice, exercises and «ENS/EU vs NIST»), available in the
+(measured practice, exercises and «EU vs US»), available in the
 complete work.
 
 ## Run the code
