@@ -53,7 +53,7 @@ qmd: figuras
 	  quarto pandoc $(WORK)/$${c}_web.tex -f latex -t markdown \
 	    -o $(QMD_DIR)/$$c.qmd || exit 1; \
 	done
-	cp herramientas/index_base.qmd $(QMD_DIR)/index.qmd
+	cp herramientas/index_base.md $(QMD_DIR)/index.qmd
 	cp herramientas/quarto_armazon.yml $(QMD_DIR)/_quarto.yml
 	$(MAKE) $(QMD_DIR)/figs/portada_web.jpg
 

@@ -1,4 +1,4 @@
-# data/ine/ — marginales reales que calibran el dataset del libro
+# data/ine/ — marginales reales que calibran el dataset
 
 Cifras oficiales de población del INE (Estadística Continua de
 Población / Cifras de Población, **a 1 de enero de 2025**),
@@ -11,8 +11,8 @@ ambas tablas).
 | `edad_sexo.csv` | pirámide nacional: edad simple 0–105+ × sexo | 56934 |
 | `provincias.csv` | población por provincia, con el código INE (= dos primeros dígitos del CP) | 56945 (filtrada: todas las edades, ambos sexos) |
 
-`codigo/cap01/generar_dataset.py` muestrea de aquí la edad, el sexo y
+`src/cap01/generar_dataset.py` muestrea de aquí la edad, el sexo y
 el prefijo provincial del código postal; profesión, diagnóstico y el
 sufijo del CP son estilizados. Para refrescar las cifras: volver a
-ejecutar el descargador y regenerar el dataset (los números citados
-en la prosa del cap. 1 deberán actualizarse a la vez).
+ejecutar el descargador y regenerar el dataset. Los datos del INE son
+datos abiertos y conservan sus condiciones de atribución.
