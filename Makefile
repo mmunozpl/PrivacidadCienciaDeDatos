@@ -1,6 +1,7 @@
 # Makefile — orquesta figuras, conversión LaTeX -> Quarto y obra completa.
 #
-#   make figuras    figuras TikZ: PDF (obra completa) + SVG (web)
+#   make figuras    figuras (TikZ, matplotlib o Graphviz):
+#                   PDF (obra completa) + SVG (web)
 #   make qmd        variante web de los capítulos PUBLICADOS
 #   make web        qmd + quarto render -> docs/
 #   make borrador   como qmd, pero incluyendo los aún no publicados
@@ -18,7 +19,7 @@ CAPS := cap01 cap02 cap03 cap04
 # previsualizan con `make borrador`; `make web` no los toca y además
 # borra su .qmd si quedó de una previsualización anterior, para que no
 # puedan llegar a docs/ por descuido.
-CAPS_BORRADOR := cap05
+CAPS_BORRADOR := cap05 cap06
 
 # lo que se convierte a .qmd; `make borrador` lo amplía
 CAPS_QMD ?= $(CAPS)
@@ -27,19 +28,59 @@ LATEX_DIR := latex
 QMD_DIR   := qmd
 WORK      := .work
 
-FIG_SRC := $(wildcard $(LATEX_DIR)/figs/cap*/fig_*.tex)
+# ── las TRES vías para hacer una figura ──────────────────────────────
+# Todas terminan en el mismo .tex standalone, de modo que las reglas de
+# abajo producen el PDF (obra de pago) y el SVG (web) sin enterarse de
+# cómo se hizo. La fuente única es siempre el fichero de más arriba.
+#
+#   fig_NN.tex  escrito a mano  → TikZ: diagramas conceptuales
+#   fig_NN.py   matplotlib      → datos: ejes, escalas, mapas de calor
+#   fig_NN.dot  Graphviz        → grafos con disposición automática
+#
+# Un mismo número de figura usa UNA de las tres, nunca dos.
+FIG_PY     := $(wildcard $(LATEX_DIR)/figs/cap*/fig_*.py)
+FIG_DOT    := $(wildcard $(LATEX_DIR)/figs/cap*/fig_*.dot)
+FIG_GEN    := $(FIG_PY:.py=.tex) $(FIG_DOT:.dot=.tex)
+FIG_MANO   := $(filter-out $(FIG_GEN),$(wildcard $(LATEX_DIR)/figs/cap*/fig_*.tex))
+FIG_SRC    := $(sort $(FIG_MANO) $(FIG_GEN))
 FIG_PDF := $(FIG_SRC:.tex=.pdf)
 FIG_SVG := $(patsubst $(LATEX_DIR)/figs/%.tex,$(QMD_DIR)/figs/%.svg,$(FIG_SRC))
 
 # figuras de las SOLUCIONES: contenido de pago — solo PDF, jamás
 # SVG ni web (por eso quedan fuera de FIG_SRC/FIG_SVG)
-SOL_SRC := $(wildcard $(LATEX_DIR)/figs/soluciones/fig_*.tex)
-SOL_PDF := $(SOL_SRC:.tex=.pdf)
+SOL_PY   := $(wildcard $(LATEX_DIR)/figs/soluciones/fig_*.py)
+SOL_GEN  := $(SOL_PY:.py=.tex)
+SOL_MANO := $(filter-out $(SOL_GEN),$(wildcard $(LATEX_DIR)/figs/soluciones/fig_*.tex))
+SOL_SRC  := $(sort $(SOL_MANO) $(SOL_GEN))
+SOL_PDF  := $(SOL_SRC:.tex=.pdf)
+
+ESTILO := herramientas/estilo_figuras.py
 
 .PHONY: figuras qmd borrador web completa limpiar
 
+# los .tex que salen de un .py o un .dot son eslabón intermedio de la
+# cadena; sin esto make los borra nada más usarlos y hay que rehacerlos
+# en cada pasada. Los borra `make limpiar`, que es donde toca.
+.SECONDARY: $(FIG_GEN) $(SOL_GEN)
+
 # ── figuras ──────────────────────────────────────────────────────────
 figuras: $(FIG_PDF) $(FIG_SVG) $(SOL_PDF)
+
+# matplotlib -> .tex: el guion emite un standalone con el fragmento PGF
+# incrustado, de modo que el TEXTO lo compone LaTeX con las fuentes del
+# libro y no matplotlib. Por eso la tipografía casa con la de TikZ.
+$(LATEX_DIR)/figs/%.tex: $(LATEX_DIR)/figs/%.py $(ESTILO)
+	python3 $<
+
+# Graphviz -> .tex: dot calcula la DISPOSICIÓN y dot2tex la traduce a
+# TikZ, así que las etiquetas también las compone LaTeX.
+# TEXINPUTS: --autosize mide las etiquetas compilando la PLANTILLA en un
+# directorio temporal, y allí el \input{../fig_preamble} no resuelve; con
+# figs/ en la ruta de búsqueda sí, y las cajas salen a la escala buena.
+$(LATEX_DIR)/figs/%.tex: $(LATEX_DIR)/figs/%.dot
+	TEXINPUTS="$(CURDIR)/$(LATEX_DIR)/figs:$${TEXINPUTS}" \
+	  dot2tex --format tikz --texmode raw --autosize --crop \
+	  --template herramientas/plantilla_dot.tex $< > $@
 
 # pdf junto al fuente: main.tex lo resuelve con \includegraphics
 $(LATEX_DIR)/figs/%.pdf: $(LATEX_DIR)/figs/%.tex
@@ -115,5 +156,7 @@ limpiar:
 	rm -f $(LATEX_DIR)/main.bbl $(LATEX_DIR)/main.run.xml
 	rm -rf $(WORK) $(QMD_DIR) .quarto
 	find $(LATEX_DIR)/figs \( -name '*.aux' -o -name '*.log' \
-	  -o -name '*.dvi' -o -name '*.fls' -o -name '*.fdb_latexmk' \) \
-	  -delete
+	  -o -name '*.dvi' -o -name '*.fls' -o -name '*.fdb_latexmk' \
+	  -o -name '*.pgf' \) -delete
+	# los .tex derivados de un .py o un .dot son GENERADOS
+	rm -f $(FIG_GEN) $(SOL_GEN)

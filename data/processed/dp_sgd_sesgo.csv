@@ -1,0 +1,29 @@
+escenario,eje,grupo,exactitud
+sin ruido,tamano de provincia,pequeña (<100),0.594059405940594
+sin ruido,tamano de provincia,mediana,0.5660203139427517
+sin ruido,tamano de provincia,grande (>400),0.5627789637104599
+sin ruido,frecuencia de la clase,clase frecuente,0.565077541642734
+sin ruido,edad,hasta 40,0.6106135986733001
+sin ruido,edad,41-65,0.4549800796812749
+sin ruido,edad,más de 65,0.7090909090909091
+eps=1,tamano de provincia,pequeña (<100),0.5742574257425742
+eps=1,tamano de provincia,mediana,0.564173591874423
+eps=1,tamano de provincia,grande (>400),0.5596739763244711
+eps=1,frecuencia de la clase,clase frecuente,0.5618609994256175
+eps=1,edad,hasta 40,0.6076285240464345
+eps=1,edad,41-65,0.449667994687915
+eps=1,edad,más de 65,0.7096103896103896
+eps=3,tamano de provincia,pequeña (<100),0.5907590759075908
+eps=3,tamano de provincia,mediana,0.5657125269313635
+eps=3,tamano de provincia,grande (>400),0.5592858529012226
+eps=3,frecuencia de la clase,clase frecuente,0.5627800114876508
+eps=3,edad,hasta 40,0.6086235489220564
+eps=3,edad,41-65,0.451261620185923
+eps=3,edad,más de 65,0.7090909090909091
+eps=8,tamano de provincia,pequeña (<100),0.5973597359735974
+eps=8,tamano de provincia,mediana,0.5672514619883041
+eps=8,tamano de provincia,grande (>400),0.5614205317290899
+eps=8,frecuencia de la clase,clase frecuente,0.5648477886272257
+eps=8,edad,hasta 40,0.6096185737976783
+eps=8,edad,41-65,0.4549800796812749
+eps=8,edad,más de 65,0.7096103896103896

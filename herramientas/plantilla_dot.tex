@@ -1,0 +1,49 @@
+% plantilla de dot2tex: envuelve la disposición que calcula Graphviz
+% en el mismo standalone que usan las demás figuras del libro, con el
+% preámbulo compartido, para que las etiquetas las componga LaTeX.
+%
+% Lleva las dos secciones que dot2tex espera de una plantilla propia:
+%   preproc  — el paso --autosize MIDE cada etiqueta con preview.sty,
+%              con el estilo del nodo puesto, y devuelve su caja a
+%              Graphviz, que dimensiona los nodos con ella. Sin esta
+%              sección --autosize no encuentra medida alguna y aborta.
+%   output   — la figura de verdad.
+%
+% La medida usa «article» y NO «standalone»: standalone fija el ancho de
+% página a \maxdimen y preview devolvería ese ancho para toda etiqueta,
+% con lo que la disposición salía cientos de veces más grande.
+%
+% El paso de medida compila esta plantilla en un directorio temporal,
+% donde «../fig_preamble» no resuelve; por eso se prueba primero la ruta
+% relativa (compilación real, desde figs/capNN/) y se cae a la búsqueda
+% por TEXINPUTS, que el Makefile apunta a figs/. Así se mide con la
+% tipografía y los estilos definitivos, no con los de serie.
+<<startpreprocsection>>%
+\documentclass{article}
+\usepackage{tikz}
+\usepackage[active,auctex]{preview}
+<<endpreprocsection>>%
+<<startoutputsection>>
+% border: TikZ no cuenta el grosor del trazo en la caja, y sin margen
+% el recorte parte por la mitad la linea del cluster mas exterior
+\documentclass[tikz,border=2pt]{standalone}
+<<endoutputsection>>
+\IfFileExists{../fig_preamble.tex}{\input{../fig_preamble}}%
+                                  {\input{fig_preamble}}
+<<docpreamble>>%
+
+\begin{document}
+<<startpreprocsection>>%
+<<preproccode>>
+<<endpreprocsection>>%
+<<startoutputsection>>
+% la punta de flecha es la de «flecha» en fig_preamble.tex: la
+% biblioteca cargada allí es arrows.meta, donde «stealth'» no existe
+\begin{tikzpicture}[>={Stealth[length=2.5mm]},
+                    every node/.style={font=\small}]
+<<figpreamble>>%
+<<drawcommands>>
+<<figpostamble>>%
+\end{tikzpicture}
+<<endoutputsection>>
+\end{document}

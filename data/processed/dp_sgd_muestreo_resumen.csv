@@ -1,0 +1,3 @@
+regimen,lotes,media,desviacion,minimo,maximo,vacios
+barajado (DataLoader corriente),540,483.6111111111111,117.05038748281247,1,512,0
+Poisson (DPDataLoader de Opacus),540,483.8703703703704,21.437459682541764,431,555,0

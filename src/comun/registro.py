@@ -25,6 +25,9 @@ def crear_registro(nombre: str) -> logging.Logger:
         )
         log.addHandler(manejador)
         log.setLevel(logging.INFO)
+        # sin propagar al raiz: algunas dependencias (Opacus) lo
+        # configuran al importarse y cada mensaje saldria dos veces
+        log.propagate = False
     return log
 
 
